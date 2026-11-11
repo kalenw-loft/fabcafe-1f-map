@@ -1,0 +1,1651 @@
+<title>FabCafe 1F Map</title>
+<style>
+/* ---------- Tokens (FabCafe Design System) ---------- */
+:root{
+  --red:#d80c0e; --red-deep:#b00a0c; --red-tint:#fdeeee;
+  --ink:#1a1a1a; --paper:#ffffff;
+  --bg:#ffffff; --surface:#f6f6f6; --line:#e8e8e8;
+  --fg:#231815; --fg-muted:#595959; --accent-text:#d80c0e; --focus:#d80c0e;
+  --plan-bg:#f6f6f6; --plan-floor:#ffffff; --furn-fill:#ffffff; --furn-table:#ececec; --hatch:#9a9a9a; --grid:#e06666; --col:#cfcfcf;
+  --sky:#a8dcf7; --leaf:#82c481; --yellow:#fcca00; --lavender:#c6add2; --orange:#f5a200; --gray:#d3d3d4;
+  --font-display:"Helvetica Neue Condensed Bold","HelveticaNeue-CondensedBold","Roboto Condensed","Arial Narrow",sans-serif;
+  --font-text:"Helvetica Neue",Helvetica,Roboto,Arial,"Hiragino Sans","Noto Sans JP",sans-serif;
+  --font-mono:"Roboto Mono",ui-monospace,Menlo,monospace;
+  --r-sm:4px; --r-md:8px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --red-tint:#3a1c1c; --bg:#1a1a1a; --surface:#262626; --line:#3a3a3a;
+    --fg:#f6f6f6; --fg-muted:#b5b5b5; --accent-text:#ff6a5c; --focus:#ff6a5c;
+    --plan-bg:#141414; --plan-floor:#262626; --furn-fill:#262626; --furn-table:#3d3d3d; --hatch:#6a6a6a; --grid:#ff6a5c; --col:#555555;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --red-tint:#3a1c1c; --bg:#1a1a1a; --surface:#262626; --line:#3a3a3a;
+  --fg:#f6f6f6; --fg-muted:#b5b5b5; --accent-text:#ff6a5c; --focus:#ff6a5c;
+  --plan-bg:#141414; --plan-floor:#262626; --furn-fill:#262626; --furn-table:#3d3d3d; --hatch:#6a6a6a; --grid:#ff6a5c; --col:#555555;
+  color-scheme:dark;
+}
+
+/* ---------- Base ---------- */
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font:400 14px/1.45 var(--font-text);-webkit-font-smoothing:antialiased;overflow:hidden}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.cap{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-muted);font-weight:500}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+svg.i{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:square;stroke-linejoin:miter;flex:none}
+[hidden]{display:none!important}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 12px;border:1px solid var(--line);background:var(--bg);border-radius:var(--r-sm);cursor:pointer;font-size:13px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--fg)}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+.btn.primary:hover{background:var(--red-deep);border-color:var(--red-deep)}
+.btn.danger{color:var(--accent-text);border-color:var(--accent-text)}
+.btn.icon{width:32px;padding:0}
+.btn:disabled{opacity:.4;cursor:default;border-color:var(--line)}
+/* hanging active state: square top, rounded bottom (0.275 x height) */
+.hang{border-radius:0 0 9px 9px}
+.hang[aria-pressed="true"],.hang[aria-selected="true"]{background:var(--red);border-color:var(--red);color:#fff}
+
+/* ---------- App grid ---------- */
+.app{height:100%;display:grid;grid-template-columns:228px minmax(0,1fr) 268px;grid-template-rows:56px auto minmax(0,1fr);
+  grid-template-areas:"top top top" "stats stats stats" "left canvas insp"}
+.topbar{grid-area:top;display:flex;align-items:center;gap:12px;padding:0 16px;border-bottom:1px solid var(--line);min-width:0}
+.brand{align-self:stretch;display:flex;align-items:flex-start;gap:10px;flex:none}
+.tag{display:inline-flex;align-items:flex-end;height:44px;padding:0 12px 6px;background:var(--red);color:#fff;font:700 22px/1 var(--font-display);letter-spacing:.01em;border-radius:0 0 12px 12px}
+.logo-tag{display:block;width:110px;height:auto;color:#D80C0E;flex:none}
+.brand-sub{align-self:center;font:700 18px/1 var(--font-display);letter-spacing:.04em}
+.name-input{flex:1 1 auto;min-width:0;max-width:420px;height:34px;padding:0 10px;border:1px solid transparent;border-radius:var(--r-sm);background:transparent;font:700 18px/1 var(--font-display);letter-spacing:.01em}
+.name-input:hover{border-color:var(--line)}
+.name-input:focus{border-color:var(--fg);outline:none}
+.tb-actions{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none}
+.seg{display:flex;align-self:stretch}
+.seg button{border:0;background:transparent;padding:10px 10px 0;cursor:pointer;font-size:13px;font-weight:500;color:var(--fg-muted);height:40px}
+.seg button[aria-pressed="true"]{background:var(--red);color:#fff;border-radius:0 0 11px 11px}
+.menu-wrap{position:relative}
+.menu{position:absolute;right:0;top:calc(100% + 6px);z-index:30;min-width:240px;background:var(--bg);border:1px solid var(--fg);border-radius:var(--r-md);padding:4px}
+.menu button{display:flex;flex-direction:column;align-items:flex-start;width:100%;border:0;background:transparent;text-align:left;padding:8px 10px;border-radius:var(--r-sm);cursor:pointer}
+.menu button:hover,.menu button:focus-visible{background:var(--surface)}
+.menu .sub{font-size:12px;color:var(--fg-muted)}
+
+/* ---------- Stats strip ---------- */
+.stats{grid-area:stats;display:flex;align-items:center;gap:24px;padding:6px 16px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;min-width:0}
+.stat{display:flex;align-items:baseline;gap:8px;flex:none}
+.stat b{font:700 22px/1 var(--font-display);font-variant-numeric:tabular-nums}
+.stat.key b{color:var(--accent-text)}
+.stat small{font-size:12px;color:var(--fg-muted)}
+.chip{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:var(--r-sm);border:1px solid var(--line);background:transparent;font-size:12px;font-weight:500;color:var(--fg-muted);cursor:default}
+.chip.warn{border-color:var(--accent-text);background:var(--red-tint);color:var(--accent-text);cursor:pointer}
+.short-jp{display:none}
+
+/* ---------- Side panes ---------- */
+.left{grid-area:left;border-right:1px solid var(--line);overflow-y:auto;min-height:0}
+.inspector{grid-area:insp;border-left:1px solid var(--line);overflow-y:auto;min-height:0}
+.pane{padding:16px}
+.pane + .pane{border-top:1px solid var(--line)}
+.pane h2{margin:0 0 10px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-muted);font-weight:500}
+.pane h2 + .sub{margin-top:-8px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);cursor:pointer;min-width:0}
+.tile:hover{border-color:var(--fg)}
+.tile svg{width:100%;height:36px;overflow:visible}
+.tile .t1{font-size:12px;font-weight:500;line-height:1.2;text-align:center}
+.tile .t2{font-size:11px;color:var(--fg-muted);line-height:1.2;text-align:center}
+.zone-btns{display:flex;flex-wrap:wrap;gap:6px}
+.zone-btns .btn{height:30px;padding:0 10px;font-size:12px}
+.swatch-dot{width:10px;height:10px;border-radius:2px;flex:none}
+.saved-list{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:4px}
+.saved-list li{display:flex;align-items:center;gap:6px;min-width:0}
+.saved-row{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);cursor:pointer;text-align:left}
+.saved-row:hover{border-color:var(--fg)}
+.saved-row.active{border-color:var(--red);border-left-width:4px;padding-left:7px}
+.saved-row span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.saved-row small{font-size:11px;color:var(--fg-muted)}
+.confirm{flex:1;display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px;border:1px solid var(--accent-text);border-radius:6px;background:var(--red-tint);font-size:12px}
+.confirm span{flex:1 1 100%}
+.row-input{flex:1;min-width:0;height:34px;padding:0 8px;border:1px solid var(--fg);border-radius:6px;background:var(--bg)}
+.btn-row{display:flex;flex-wrap:wrap;gap:6px}
+.muted{color:var(--fg-muted);font-size:12px;margin:0 0 10px}
+
+/* ---------- Inspector ---------- */
+.insp-type{font:700 22px/1.1 var(--font-display);margin:0 0 2px}
+.insp-sub{font-size:12px;color:var(--fg-muted);margin:0 0 14px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px 8px;margin-bottom:14px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field.full{grid-column:1 / -1}
+.field label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-muted);font-weight:500}
+.field input{height:32px;padding:0 8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:13px;min-width:0;width:100%}
+.field input[type=text]{font-family:var(--font-text)}
+.field input:focus{border-color:var(--fg);outline:none}
+.swatches{display:flex;gap:6px;flex-wrap:wrap}
+.swatches button{width:28px;height:28px;border-radius:var(--r-sm);border:1px solid var(--line);cursor:pointer;padding:0}
+.swatches button[aria-pressed="true"]{outline:2px solid var(--red);outline-offset:2px}
+.keys{margin:16px 0 0;padding:12px 0 0;border-top:1px solid var(--line);font-size:12px;color:var(--fg-muted);display:grid;grid-template-columns:auto 1fr;gap:4px 10px}
+kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:11px;padding:1px 5px;border:1px solid var(--line);border-radius:3px;color:var(--fg);white-space:nowrap}
+
+/* ---------- Canvas ---------- */
+.canvas-wrap{grid-area:canvas;position:relative;min-width:0;min-height:0;background:var(--plan-bg);overflow:hidden}
+#plan{position:absolute;inset:0;width:100%;height:100%;touch-action:none;user-select:none;-webkit-user-select:none;display:block}
+.canvas-wrap.panning #plan,.canvas-wrap.space #plan{cursor:grab}
+.canvas-tools{position:absolute;left:12px;bottom:12px;display:flex;flex-wrap:wrap;gap:6px;max-width:calc(100% - 24px)}
+.tool-group{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.tool-group button{width:36px;height:36px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--fg)}
+.tool-group button + button{border-left:1px solid var(--line)}
+.tool-group button:hover{background:var(--surface)}
+.tool-group button:disabled{opacity:.35;cursor:default;background:transparent}
+.tool-group button.snap{width:auto;padding:0 10px;gap:6px;display:flex;align-items:center;font-size:12px;font-weight:500}
+.tool-group button.snap[aria-pressed="true"]{background:var(--red);color:#fff;border-radius:0 0 10px 10px}
+.zoom-read{position:absolute;right:12px;bottom:12px;font-size:11px;color:var(--fg-muted);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);padding:2px 6px}
+.inline-edit{position:absolute;z-index:20;height:34px;min-width:140px;padding:0 8px;border:2px solid var(--red);border-radius:var(--r-sm);background:var(--bg);font:700 15px/1 var(--font-display)}
+.no-plan{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--fg-muted)}
+
+/* ---------- Sheet tabs (phone) ---------- */
+.sheet-tabs{display:none}
+
+/* ---------- Modal / toast ---------- */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
+.modal-card{width:min(560px,100%);max-height:calc(100% - 32px);overflow:auto;background:var(--bg);border:1px solid var(--fg);border-radius:var(--r-md);padding:20px}
+.modal-card h3{margin:0 0 6px;font:700 22px/1.1 var(--font-display)}
+.modal-card p{margin:0 0 12px;color:var(--fg-muted);font-size:13px}
+.modal-card textarea{width:100%;height:180px;padding:10px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);font:12px/1.4 var(--font-mono);resize:vertical}
+.modal-card img{display:block;max-width:100%;border:1px solid var(--line);border-radius:var(--r-sm);margin-bottom:12px;background:#fff}
+.modal-card .err{color:var(--accent-text);font-size:13px;min-height:1.2em;margin:6px 0}
+.modal-card .actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:12px}
+.toast{position:fixed;left:50%;top:64px;transform:translateX(-50%);z-index:60;background:var(--ink);color:#fff;padding:8px 14px;border-radius:var(--r-sm);font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .logo-tag{color:#FFFFFF}}
+:root[data-theme="dark"] .logo-tag{color:#FFFFFF}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .toast{background:#f6f6f6;color:#1a1a1a}}
+
+/* ---------- Phone ---------- */
+@media (max-width: 760px){
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:52px auto minmax(0,1fr) 44px minmax(0,38vh);
+    grid-template-areas:"top" "stats" "canvas" "tabs" "sheet"}
+  .app.collapsed{grid-template-rows:52px auto minmax(0,1fr) 44px 0}
+  .topbar{gap:8px;padding:0 16px}
+  .logo-tag{width:96px}
+  .brand-sub{font-size:15px}
+  .name-input{font-size:16px;padding:0 6px}
+  .tb-actions{gap:4px}
+  .tb-actions .btn .lbl{display:none}
+  .tb-actions .btn{width:34px;padding:0}
+  .seg button{padding:10px 7px 0;font-size:12px}
+  .seg .long{display:none}
+  .seg .short-jp{display:inline}
+  .tg-edit{display:none!important}
+  .tool-group button.snap .lbl{display:none}
+  .stats{gap:16px;padding:6px 16px}
+  .stat b{font-size:18px}
+  .left,.inspector{grid-area:sheet;border:0;border-top:1px solid var(--line)}
+  .app[data-sheet="inspect"] .left{display:none}
+  .app:not([data-sheet="inspect"]) .inspector{display:none}
+  .app[data-sheet="add"] #pane-layouts{display:none}
+  .app[data-sheet="layouts"] #pane-add{display:none}
+  .pane + .pane{border-top:0}
+  .tiles{grid-template-columns:repeat(auto-fill,minmax(84px,1fr))}
+  .sheet-tabs{grid-area:tabs;display:flex;border-top:1px solid var(--line);padding:0 16px;gap:4px;background:var(--bg)}
+  .sheet-tabs button{flex:1;border:0;background:transparent;font-size:13px;font-weight:500;color:var(--fg-muted);cursor:pointer;height:38px}
+  .sheet-tabs button[aria-selected="true"]{background:var(--red);color:#fff;border-radius:0 0 10px 10px}
+  .canvas-tools{left:8px;bottom:8px;max-width:calc(100% - 16px)}
+  .tool-group button{width:34px;height:34px}
+  .zoom-read{display:none}
+}
+@media (max-width: 420px){
+  .brand-sub{display:none}
+  .logo-tag{width:80px}
+  #btn-memo{display:none} /* reachable from the print dialog (編集) */
+  .menu{position:fixed;left:16px;right:16px;top:56px;min-width:0}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- Full-screen pages (貼り紙) ---------- */
+.notes{position:fixed;inset:0;z-index:50;background:var(--bg);color:var(--fg);overflow:auto;padding-block:env(safe-area-inset-top,0px) 48px}
+.notes-bar{position:sticky;top:0;display:flex;align-items:center;gap:12px;padding:0 16px;height:56px;background:var(--bg);border-bottom:1px solid var(--line)}
+.notes-bar .grow{flex:1}
+.notes-foot{max-width:720px;margin:32px auto 0;padding:0 16px;color:var(--fg-muted);font-size:12px}
+
+/* ---------- Machine sign (貼り紙) ---------- */
+.sign-page{max-width:900px;margin:32px auto 0;padding:0 16px}
+.sign{position:relative;aspect-ratio:297/210;border:2px solid var(--fg);border-radius:var(--r-md);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3%;padding:5%;text-align:center;background:#fff;color:#231815}
+.sign .sign-logo{position:absolute;top:0;left:6%;width:19%;min-width:96px;height:auto;color:#D80C0E}
+.sign .icon{width:22%;max-width:180px;aspect-ratio:1}
+.sign .jp{font:700 clamp(24px,5.4vw,52px)/1.3 "Hiragino Sans","Noto Sans JP",sans-serif;margin:0;text-wrap:balance}
+.sign .en{font:700 clamp(16px,3.2vw,30px)/1.25 var(--font-display);margin:0;letter-spacing:.01em}
+.sign .small{font-size:clamp(11px,1.6vw,15px);color:#595959;margin:0}
+@media print{
+  body.sign-open .app{display:none!important}
+  body.sign-open .notes{position:static;overflow:visible;padding:0}
+  body.sign-open .notes-bar,body.sign-open .notes-foot{display:none}
+  body.sign-open .sign-page{max-width:none;margin:0;padding:0}
+  body.sign-open .sign{height:180mm;aspect-ratio:auto;border:0}
+  body.sign-open .sign .jp{font-size:46px}
+  body.sign-open .sign .en{font-size:28px}
+  body.sign-open .sign .small{font-size:13px}
+  @page{size:A4 landscape;margin:12mm}
+}
+</style>
+<style id="plan-css"></style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Roboto+Condensed:wght@700&family=Roboto+Mono:wght@400&family=Roboto:wght@300;400&display=swap">
+
+<div class="app" id="app" data-sheet="add">
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand"><svg class="logo-tag" viewBox="0 0 283.47 113.40" role="img" aria-label="FabCafe"><path fill="currentColor" d="M117.00 56.59C120.68 56.59 121.41 52.90 121.41 45.73C121.41 38.54 120.68 34.87 117.00 34.87C113.25 34.87 112.52 38.54 112.52 45.73C112.52 52.90 113.25 56.59 117.00 56.59ZM225.64 34.13C222.27 34.13 221.29 37.63 221.29 40.69L221.29 41.98L229.94 41.98C229.76 36.95 229.14 34.13 225.64 34.13ZM117.74 81.41C116.09 81.41 115.76 83.06 115.76 86.27C115.76 89.48 116.09 91.13 117.74 91.13C119.41 91.13 119.74 89.48 119.74 86.27C119.74 83.06 119.41 81.41 117.74 81.41ZM238.04 47.01L221.29 47.01L221.29 49.65C221.29 53.52 222.33 57.32 225.46 57.32C228.28 57.32 229.45 55.17 229.94 51.12L237.54 51.12C237.24 58.80 233.56 63.08 225.58 63.08C213.31 63.08 212.82 53.64 212.82 45.42C212.82 36.58 214.54 28.36 225.95 28.36C235.83 28.36 238.04 34.99 238.04 45.11L238.04 47.01ZM234.11 83.41L233.02 84.65C232.06 85.72 231.67 86.41 231.67 87.81L231.67 88.22L228.27 88.22L228.27 87.15C228.27 85.31 228.73 84.24 229.97 82.84L231.01 81.66C231.78 80.81 232.06 79.85 232.06 78.75C232.06 77.35 231.42 76.42 230.19 76.42C228.79 76.42 228.24 77.65 228.24 79.44L228.24 80.12L224.61 80.12L224.61 79.49C224.61 76.20 226.43 73.84 230.05 73.84C233.89 73.84 235.84 75.92 235.84 79.13C235.84 80.61 235.43 81.93 234.11 83.41M228.07 90.03H231.86V93.65H228.07ZZM217.12 94.04C215.63 94.04 214.60 93.46 213.77 92.09L213.71 92.09L213.71 93.65L210.09 93.65L210.09 74.06L213.88 74.06L213.88 80.26L213.94 80.26C214.73 79.08 215.69 78.50 217.12 78.50C220.22 78.50 221.65 80.78 221.65 86.27C221.65 91.76 220.22 94.04 217.12 94.04ZM204.49 93.65C204.24 93.19 204.14 92.61 204.02 92.12L203.97 92.12C203.09 93.65 202.02 94.04 200.21 94.04C197.57 94.04 196.64 91.79 196.64 89.81C196.64 87.04 197.77 85.91 200.37 85.20L202.51 84.62C203.64 84.32 204.02 83.88 204.02 82.90C204.02 81.77 203.53 81.08 202.27 81.08C201.11 81.08 200.51 81.85 200.51 83.00L200.51 83.41L197.11 83.41L197.11 83.06C197.11 79.65 199.44 78.50 202.29 78.50C206.79 78.50 207.65 80.37 207.65 83.03L207.65 90.80C207.65 92.17 207.73 92.80 208.11 93.65L204.49 93.65ZM195.86 76.44C195.61 76.42 195.37 76.42 195.12 76.42C194.05 76.42 193.66 76.75 193.66 77.60L193.66 78.89L195.86 78.89L195.86 81.47L193.66 81.47L193.66 93.65L189.87 93.65L189.87 81.47L187.95 81.47L187.95 78.89L189.87 78.89L189.87 77.21C189.87 74.55 191.38 73.67 193.83 73.67C194.52 73.67 195.17 73.70 195.86 73.75L195.86 76.44ZM183.05 58.80L182.92 58.80C180.96 62.23 178.57 63.08 174.52 63.08C168.63 63.08 166.55 58.06 166.55 53.64C166.55 47.44 169.06 44.93 174.89 43.34L179.68 42.04C182.19 41.37 183.05 40.39 183.05 38.18C183.05 35.66 181.94 34.13 179.12 34.13C176.54 34.13 175.20 35.85 175.20 38.42L175.20 39.35L167.59 39.35L167.59 38.54C167.59 30.94 172.81 28.36 179.19 28.36C189.25 28.36 191.15 32.53 191.15 38.48L191.15 55.85C191.15 58.92 191.34 60.33 192.19 62.23L184.09 62.23C183.54 61.19 183.29 59.90 183.05 58.80ZM180.49 93.65L176.86 93.65L176.86 91.92L176.80 91.92C176.01 93.38 174.64 94.04 173.04 94.04C170.69 94.04 169.28 92.75 169.28 89.84L169.28 78.89L173.07 78.89L173.07 89.07C173.07 90.55 173.57 91.13 174.69 91.13C175.98 91.13 176.70 90.33 176.70 88.69L176.70 78.89L180.49 78.89L180.49 93.65ZM161.70 94.04C157.15 94.12 155.89 91.40 155.89 86.27C155.89 81.22 157.37 78.50 161.70 78.50C166.26 78.42 167.52 81.14 167.52 86.27C167.52 91.32 166.04 94.04 161.70 94.04ZM151.82 92.66C150.50 97.77 149.65 98.49 146.15 98.49L144.61 98.49L144.61 95.66C144.94 95.71 145.27 95.74 145.60 95.74C147.00 95.74 147.52 94.97 147.63 93.65L143.48 78.89L147.44 78.89L149.62 89.10L149.68 89.10L151.60 78.89L155.39 78.89L151.82 92.66ZM134.37 40.33C134.37 27.02 136.02 17.57 149.27 17.57C161.91 17.57 162.83 26.83 162.83 33.21L153.99 33.21C153.99 26.83 152.70 24.07 148.72 24.07C144.25 24.07 143.20 28.55 143.20 40.94C143.20 54.19 145.04 56.59 148.84 56.59C152.03 56.59 154.36 54.93 154.36 45.48L163.20 45.48C163.20 54.93 160.86 63.08 149.27 63.08C136.02 63.08 134.37 53.64 134.37 40.33ZM131.27 94.04C126.71 94.12 125.44 91.40 125.44 86.27C125.44 81.22 126.93 78.50 131.27 78.50C135.82 78.42 137.09 81.14 137.09 86.27C137.09 91.32 135.60 94.04 131.27 94.04ZM123.53 93.65L119.90 93.65L119.90 92.09L119.85 92.09C119.02 93.46 117.98 94.04 116.50 94.04C113.40 94.04 111.97 91.76 111.97 86.27C111.97 80.78 113.40 78.50 116.50 78.50C117.93 78.50 118.89 79.08 119.68 80.26L119.74 80.26L119.74 74.06L123.53 74.06L123.53 93.65ZM104.42 81.47L102.22 81.47L102.22 89.46C102.22 90.61 102.47 91.07 103.57 91.07C103.87 91.07 104.17 91.05 104.42 91.02L104.42 93.65C103.60 93.74 102.83 93.82 101.95 93.82C98.98 93.82 98.44 92.91 98.44 89.92L98.44 81.47L96.51 81.47L96.51 78.89L98.44 78.89L98.44 74.66L102.22 74.66L102.22 78.89L104.42 78.89L104.42 81.47ZM92.17 93.65C91.93 93.19 91.82 92.61 91.71 92.12L91.65 92.12C90.78 93.65 89.71 94.04 87.89 94.04C85.26 94.04 84.32 91.79 84.32 89.81C84.32 87.04 85.45 85.91 88.06 85.20L90.20 84.62C91.32 84.32 91.71 83.88 91.71 82.90C91.71 81.77 91.22 81.08 89.95 81.08C88.80 81.08 88.19 81.85 88.19 83.00L88.19 83.41L84.79 83.41L84.79 83.06C84.79 79.65 87.12 78.50 89.98 78.50C94.48 78.50 95.33 80.37 95.33 83.03L95.33 90.80C95.33 92.17 95.41 92.80 95.80 93.65L92.17 93.65ZM82.52 93.65L78.73 93.65L78.73 83.47C78.73 81.99 78.24 81.41 77.11 81.41C75.82 81.41 75.11 82.21 75.11 83.86L75.11 93.65L71.32 93.65L71.32 74.06L75.11 74.06L75.11 80.40L75.16 80.40C75.87 79.13 77.16 78.50 78.76 78.50C81.12 78.50 82.52 79.79 82.52 82.70L82.52 93.65ZM66.73 93.65L62.42 93.65L60.48 83.16L60.42 83.16L58.58 93.65L54.19 93.65L50.98 78.89L54.77 78.89L56.50 89.37L56.55 89.37L58.39 78.89L62.51 78.89L64.46 89.37L64.51 89.37L66.30 78.89L69.92 78.89L66.73 93.65ZM50.81 18.43L75.29 18.43L75.29 25.66L59.64 25.66L59.64 35.97L71.64 35.97L71.64 43.21L59.64 43.21L59.64 62.23L50.81 62.23L50.81 18.43ZM86.58 28.36C96.65 28.36 98.55 32.53 98.55 38.48L98.55 55.85C98.55 58.92 98.73 60.33 99.59 62.23L91.49 62.23C90.94 61.19 90.70 59.90 90.45 58.80L90.32 58.80C88.36 62.23 85.97 63.08 81.92 63.08C76.03 63.08 73.94 58.06 73.94 53.64C73.94 47.44 76.46 44.93 82.29 43.34L87.08 42.04C89.59 41.37 90.45 40.39 90.45 38.18C90.45 35.66 89.34 34.13 86.52 34.13C83.94 34.13 82.60 35.85 82.60 38.42L82.60 39.35L74.99 39.35L74.99 38.54C74.99 30.94 80.21 28.36 86.58 28.36ZM104.05 18.43L112.52 18.43L112.52 32.29L112.64 32.29C114.42 29.65 116.57 28.36 119.76 28.36C126.69 28.36 129.88 33.46 129.88 45.73C129.88 58.00 126.69 63.08 119.76 63.08C116.44 63.08 114.12 61.80 112.27 58.73L112.15 58.73L112.15 62.23L104.05 62.23L104.05 18.43ZM193.94 29.22L198.23 29.22L198.23 25.48C198.23 19.53 201.60 17.57 207.07 17.57C208.60 17.57 210.07 17.63 211.60 17.75L211.60 23.76C211.05 23.70 210.50 23.70 209.95 23.70C207.55 23.70 206.70 24.44 206.70 26.34L206.70 29.22L211.60 29.22L211.60 34.99L206.70 34.99L206.70 62.23L198.23 62.23L198.23 34.99L193.94 34.99L193.94 29.22ZM0.00 0.00L0.00 82.43C0.00 99.46 13.93 113.39 30.96 113.39L252.50 113.39C269.53 113.39 283.47 99.46 283.47 82.43L283.47 0.00L0.00 0.00ZM131.27 81.08C129.40 81.08 129.23 83.25 129.23 86.27C129.23 89.29 129.40 91.46 131.27 91.46C132.80 91.46 133.29 89.95 133.29 86.27C133.29 82.59 132.80 81.08 131.27 81.08ZM82.05 52.72C82.05 55.24 82.97 57.32 85.23 57.32C87.50 57.32 90.45 55.85 90.45 52.23L90.45 45.73C89.28 46.59 87.87 47.14 86.83 47.38C83.40 48.12 82.05 49.77 82.05 52.72ZM87.95 89.40C87.95 90.53 88.36 91.46 89.37 91.46C90.39 91.46 91.71 90.80 91.71 89.18L91.71 86.27C91.19 86.65 90.56 86.90 90.09 87.01C88.55 87.34 87.95 88.08 87.95 89.40ZM174.65 52.72C174.65 55.24 175.57 57.32 177.84 57.32C180.10 57.32 183.05 55.85 183.05 52.23L183.05 45.73C181.88 46.59 180.47 47.14 179.43 47.38C175.99 48.12 174.65 49.77 174.65 52.72ZM200.26 89.40C200.26 90.53 200.68 91.46 201.69 91.46C202.70 91.46 204.02 90.80 204.02 89.18L204.02 86.27C203.50 86.65 202.87 86.90 202.41 87.01C200.87 87.34 200.26 88.08 200.26 89.40ZM215.89 81.41C214.21 81.41 213.88 83.06 213.88 86.27C213.88 89.48 214.21 91.13 215.89 91.13C217.53 91.13 217.86 89.48 217.86 86.27C217.86 83.06 217.53 81.41 215.89 81.41ZM161.70 81.08C159.84 81.08 159.68 83.25 159.68 86.27C159.68 89.29 159.84 91.46 161.70 91.46C163.25 91.46 163.74 89.95 163.74 86.27C163.74 82.59 163.25 81.08 161.70 81.08Z"/></svg><span class="brand-sub">1F MAP</span></div>
+    <label class="sr" for="layout-name" data-i18n="layoutName">Layout name</label>
+    <input id="layout-name" class="name-input" type="text" autocomplete="off" spellcheck="false">
+    <div class="tb-actions">
+      <div class="menu-wrap">
+        <button class="btn" id="btn-presets" aria-haspopup="true" aria-expanded="false" aria-controls="menu-presets">
+          <svg class="i" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg><span class="lbl" data-i18n="presets">Presets</span></button>
+        <div class="menu" id="menu-presets" hidden>
+          <button data-preset="cafe" id="preset-cafe"><span data-i18n="pCafe"></span><span class="sub" data-i18n="pCafeSub"></span></button>
+          <button data-preset="talkback" id="preset-talkback"><span data-i18n="pTalkBack"></span><span class="sub" data-i18n="pTalkBackSub"></span></button>
+          <button data-preset="talk" id="preset-talk"><span data-i18n="pTalk"></span><span class="sub" data-i18n="pTalkSub"></span></button>
+          <button data-preset="workshop" id="preset-workshop"><span data-i18n="pWork"></span><span class="sub" data-i18n="pWorkSub"></span></button>
+          <button data-preset="breakfast" id="preset-breakfast"><span data-i18n="pBreak"></span><span class="sub" data-i18n="pBreakSub"></span></button>
+          <button data-preset="empty" id="preset-empty"><span data-i18n="pEmpty"></span><span class="sub" data-i18n="pEmptySub"></span></button>
+        </div>
+      </div>
+      <div class="menu-wrap">
+        <button class="btn" id="btn-share" aria-haspopup="true" aria-expanded="false" aria-controls="menu-share">
+          <svg class="i" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 13v8h16v-8"/></svg><span class="lbl" data-i18n="share">Share</span></button>
+        <div class="menu" id="menu-share" hidden>
+          <button id="share-code"><span data-i18n="copyCode"></span><span class="sub" data-i18n="copyCodeSub"></span></button>
+          <button id="share-import"><span data-i18n="importCode"></span><span class="sub" data-i18n="importCodeSub"></span></button>
+          <button id="share-pdf"><span data-i18n="savePdf"></span><span class="sub" data-i18n="savePdfSub"></span></button>
+          <button id="share-image"><span data-i18n="copyImage"></span><span class="sub" data-i18n="copyImageSub"></span></button>
+        </div>
+      </div>
+      <button class="btn" id="btn-sign"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h16v12H4zM12 16v5M8 21h8M12 7v4M12 13v1"/></svg><span class="lbl">貼り紙</span></button>
+      <button class="btn" id="btn-memo"><svg class="i" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM9 11h7M9 15h7M9 7h4"/></svg><span class="lbl" data-i18n="memo">Staff sheet</span></button>
+      <button class="btn primary" id="btn-print"><svg class="i" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H4v-8h16v8h-3M7 14h10v7H7z"/></svg><span class="lbl" data-i18n="print">Print</span></button>
+      <div class="seg" role="group" aria-label="Language">
+        <button id="lang-en" aria-pressed="true">EN</button>
+        <button id="lang-jp" aria-pressed="false"><span class="long">日本語</span><span class="short-jp">JP</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live stats -->
+  <div class="stats" id="stats" aria-live="polite">
+    <div class="stat key"><span class="cap" data-i18n="seats">Seats</span><b id="st-seats">0</b></div>
+    <div class="stat"><span class="cap" data-i18n="tables">Tables</span><b id="st-tables">0</b></div>
+    <div class="stat"><span class="cap" data-i18n="standing">Standing</span><b id="st-standing">0</b><small data-i18n="standingSub">at 0.5 m²/person</small></div>
+    <div class="stat"><span class="cap" data-i18n="freeFloor">Free floor</span><b id="st-floor">0</b><small>m²</small></div>
+    <button class="chip" id="st-warn" type="button"></button>
+  </div>
+
+  <!-- Left: palette + layouts -->
+  <aside class="left">
+    <section class="pane" id="pane-add" aria-labelledby="h-furn">
+      <h2 id="h-furn" data-i18n="furniture">Furniture</h2>
+      <div class="tiles" id="tiles"></div>
+      <h2 data-i18n="annotate">Annotate</h2>
+      <div class="zone-btns" id="zone-btns"></div>
+    </section>
+    <section class="pane" id="pane-layouts" aria-labelledby="h-saved">
+      <h2 id="h-saved" data-i18n="saved">Saved layouts</h2>
+      <ul class="saved-list" id="saved-list"></ul>
+      <div class="btn-row">
+        <button class="btn primary" id="btn-save" data-i18n="save">Save</button>
+        <button class="btn" id="btn-saveas" data-i18n="saveAs">Save as</button>
+      </div>
+    </section>
+  </aside>
+
+  <!-- Canvas -->
+  <main class="canvas-wrap" id="canvas-wrap">
+    <svg id="plan" xmlns="http://www.w3.org/2000/svg" aria-label="FabCafe Tokyo 1F plan" role="img">
+      <defs>
+        <pattern id="hatch" patternUnits="userSpaceOnUse" width="220" height="220" patternTransform="rotate(45)">
+          <line class="hatch-line" x1="0" y1="0" x2="0" y2="220"/>
+        </pattern>
+      </defs>
+      <g id="g-base"></g>
+      <g id="g-items"></g>
+      <g id="g-ui" class="ui"></g>
+    </svg>
+    <input id="inline-edit" class="inline-edit" type="text" autocomplete="off" hidden>
+    <div class="canvas-tools" id="canvas-tools">
+      <div class="tool-group">
+        <button id="tool-zoom-out" data-i18n-title="zoomOut"><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+        <button id="tool-zoom-in" data-i18n-title="zoomIn"><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg></button>
+        <button id="tool-fit" data-i18n-title="fit"><svg class="i" viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button>
+      </div>
+      <div class="tool-group">
+        <button id="tool-undo" data-i18n-title="undo"><svg class="i" viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-4"/></svg></button>
+        <button id="tool-redo" data-i18n-title="redo"><svg class="i" viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h4"/></svg></button>
+      </div>
+      <div class="tool-group tg-edit">
+        <button id="tool-rot-l" data-i18n-title="rotL"><svg class="i" viewBox="0 0 24 24"><path d="M4 4v6h6"/><path d="M5 15a8 8 0 1 0 1-7l-2 2"/></svg></button>
+        <button id="tool-rot-r" data-i18n-title="rotR"><svg class="i" viewBox="0 0 24 24"><path d="M20 4v6h-6"/><path d="M19 15a8 8 0 1 1-1-7l2 2"/></svg></button>
+        <button id="tool-dup" data-i18n-title="dup"><svg class="i" viewBox="0 0 24 24"><path d="M8 8h12v12H8z"/><path d="M4 16V4h12"/></svg></button>
+        <button id="tool-del" data-i18n-title="remove"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+      </div>
+      <div class="tool-group">
+        <button id="tool-snap" class="snap" aria-pressed="true" data-i18n-title="snap"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h4v4H4zM16 4h4v4h-4zM4 16h4v4H4zM16 16h4v4h-4zM8 6h8M8 18h8M6 8v8M18 8v8"/></svg><span class="lbl" data-i18n="snap">Snap 50</span></button>
+      </div>
+    </div>
+    <div class="zoom-read mono" id="zoom-read"></div>
+  </main>
+
+  <!-- Right: inspector -->
+  <aside class="inspector pane" id="pane-inspect" aria-labelledby="insp-type">
+    <div id="insp-empty">
+      <h2 data-i18n="selection">Selection</h2>
+      <p class="insp-type" data-i18n="nothing">Nothing selected</p>
+      <p class="insp-sub" data-i18n="nothingHint"></p>
+    </div>
+    <div id="insp-multi" hidden>
+      <h2 data-i18n="selection">Selection</h2>
+      <p class="insp-type" id="insp-multi-count"></p>
+      <p class="insp-sub" id="insp-multi-sub"></p>
+    </div>
+    <div id="insp-one" hidden>
+      <h2 data-i18n="selection">Selection</h2>
+      <p class="insp-type" id="insp-type"></p>
+      <p class="insp-sub" id="insp-typesub"></p>
+      <div class="fields">
+        <div class="field"><label for="insp-x" data-i18n="x">X (mm)</label><input id="insp-x" type="number" step="10" inputmode="numeric"></div>
+        <div class="field"><label for="insp-y" data-i18n="y">Y (mm)</label><input id="insp-y" type="number" step="10" inputmode="numeric"></div>
+        <div class="field" id="f-w"><label for="insp-w" id="lbl-w" data-i18n="w">Width (mm)</label><input id="insp-w" type="number" step="50" min="100" inputmode="numeric"></div>
+        <div class="field" id="f-h"><label for="insp-h" data-i18n="h">Depth (mm)</label><input id="insp-h" type="number" step="50" min="100" inputmode="numeric"></div>
+        <div class="field" id="f-rot"><label for="insp-rot" data-i18n="rot">Rotation</label><input id="insp-rot" type="number" step="15" inputmode="numeric"></div>
+        <div class="field" id="f-fs"><label for="insp-fs" data-i18n="fs">Text size</label><input id="insp-fs" type="number" step="50" min="100" inputmode="numeric"></div>
+        <div class="field full"><label for="insp-label" data-i18n="label">Label</label><input id="insp-label" type="text" autocomplete="off"></div>
+        <div class="field full" id="f-color"><label data-i18n="color">Color</label><div class="swatches" id="insp-colors"></div></div>
+      </div>
+    </div>
+    <div class="btn-row" id="insp-actions" hidden>
+      <button class="btn" id="insp-rot-l"><svg class="i" viewBox="0 0 24 24"><path d="M4 4v6h6"/><path d="M5 15a8 8 0 1 0 1-7l-2 2"/></svg>15°</button>
+      <button class="btn" id="insp-rot-r"><svg class="i" viewBox="0 0 24 24"><path d="M20 4v6h-6"/><path d="M19 15a8 8 0 1 1-1-7l2 2"/></svg>15°</button>
+      <button class="btn" id="insp-dup" data-i18n="dup">Duplicate</button>
+      <button class="btn danger" id="insp-del" data-i18n="remove">Delete</button>
+    </div>
+    <div class="keys" id="keys"></div>
+  </aside>
+
+  <!-- Phone sheet tabs -->
+  <nav class="sheet-tabs" role="tablist" aria-label="Panels">
+    <button role="tab" id="tab-add" aria-selected="true" data-tab="add" data-i18n="add">Add</button>
+    <button role="tab" id="tab-layouts" aria-selected="false" data-tab="layouts" data-i18n="layouts">Layouts</button>
+    <button role="tab" id="tab-inspect" aria-selected="false" data-tab="inspect" data-i18n="inspect">Inspect</button>
+  </nav>
+</div>
+
+<!-- Modal (share / import / image) -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <h3 id="modal-title"></h3>
+    <p id="modal-hint"></p>
+    <img id="modal-img" alt="" hidden>
+    <label class="sr" for="modal-text" data-i18n="layoutCode">Layout code</label>
+    <textarea id="modal-text" spellcheck="false" hidden></textarea>
+    <div id="modal-file-row" hidden><label class="cap" for="modal-file" data-i18n="fileLbl">or choose a .json file</label><br><input id="modal-file" type="file" accept=".json,application/json"></div>
+    <div class="err" id="modal-err"></div>
+    <div class="actions">
+      <button class="btn" id="modal-close" data-i18n="close">Close</button>
+      <button class="btn primary" id="modal-go" hidden></button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="plan-data.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* ======================= Helpers ======================= */
+const NS = 'http://www.w3.org/2000/svg';
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+function el(tag, attrs, parent){
+  const n = document.createElementNS(NS, tag);
+  if (attrs) for (const k in attrs) if (attrs[k] !== undefined && attrs[k] !== null) n.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(n);
+  return n;
+}
+const rad = d => d * Math.PI / 180;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const round = (v, s) => Math.round(v / s) * s;
+const norm360 = r => ((Math.round(r) % 360) + 360) % 360;
+
+/* ======================= Catalog ======================= */
+const CAT = {
+  'chair':            {w:420,  h:420, round:false, seats:1, en:'Chair',        jp:'椅子'},
+  'stool':            {w:360,  h:360, round:true,  seats:1, en:'Stool',        jp:'スツール'},
+  'table-sq':         {w:700,  h:700, round:false, table:true, size:true, en:'Square table', jp:'角テーブル'},
+  'table-round':      {w:600,  h:600, round:true,  table:true, size:true, en:'Round table',  jp:'丸テーブル'},
+  'table-long':       {w:1800, h:600, round:false, table:true, size:true, en:'Long table',   jp:'長テーブル'},
+  'table-bar':        {w:1200, h:450, round:false, table:true, size:true, en:'Bar table',    jp:'バーテーブル'},
+  'sofa':             {w:1600, h:750, round:false, seats:2, en:'Sofa',         jp:'ソファ'},
+  'podium':           {w:600,  h:450, round:false, en:'Podium',       jp:'演台'},
+  'easel':            {w:600,  h:400, round:false, en:'Easel / sign', jp:'イーゼル・看板'},
+  'projector-screen': {w:2000, h:200, round:false, en:'Screen',       jp:'スクリーン'},
+  'tv':               {w:1400, h:300, round:false, en:'TV monitor',   jp:'モニター'},
+  'plant':            {w:500,  h:500, round:true,  en:'Plant',        jp:'植栽'},
+  'zone':             {w:3000, h:2000, round:false, size:true, annot:true, en:'Zone', jp:'ゾーン'},
+  'note':             {w:1200, h:400, round:false, annot:true, en:'Note', jp:'メモ'}
+};
+const FURN_TYPES = Object.keys(CAT).filter(k => !CAT[k].annot);
+const COLORS = {sky:'#a8dcf7', leaf:'#82c481', yellow:'#fcca00', lavender:'#c6add2', orange:'#f5a200', gray:'#d3d3d4'};
+const ZONE_PRESETS = [
+  {label:'Stage ステージ', color:'yellow', w:4000, h:2000},
+  {label:'Reception 受付', color:'sky', w:2400, h:1500},
+  {label:'Ai展示', color:'lavender', w:3000, h:2000},
+  {label:'Food フード', color:'orange', w:3600, h:1500},
+  {label:'Standing 立ち', color:'leaf', w:4000, h:3000}
+];
+
+/* ======================= i18n ======================= */
+const T = {
+  en:{
+    layoutName:'Layout name', presets:'Presets', share:'Share',
+    pCafe:'Cafe (current)', pCafeSub:'通常営業 · as drawn on the 2026/02 plan',
+    pTalkBack:'Talk – back half (奥半面)', pTalkBackSub:'Back-half chairs in rows · front desk · food · machine signs',
+    pTalk:'Talk ~50', pTalkSub:'トーク · staggered rows, speaker chairs, standing at the back',
+    pWork:'Workshop', pWorkSub:'ワークショップ · long-table islands, 6 seats each',
+    pBreak:'Breakfast 朝会', pBreakSub:'Long-table rows, food line, standing zone',
+    pEmpty:'Empty', pEmptySub:'空 · clear all movable items',
+    copyCode:'Copy layout code', copyCodeSub:'Text a teammate can paste in', importCode:'Paste / import', importCodeSub:'From a code or a .json file',
+    savePdf:'Save PDF to print', savePdfSub:'A4 portrait, with layout name and seats',
+    memo:'Staff sheet', print:'Print PDF',
+    copyImage:'Copy image', copyImageSub:'PNG of the plan for Slack or slides',
+    seats:'Seats', tables:'Tables', standing:'Standing', standingSub:'ppl at 0.5 m² each', freeFloor:'Free floor',
+    conflicts:'{n} items clash', conflict1:'1 item clashes', noConflicts:'No clashes',
+    furniture:'Furniture', annotate:'Zones & notes', zone:'Zone', note:'Note', saved:'Saved layouts', save:'Save', saveAs:'Save as', rename:'Rename', del:'Delete', cancel:'Cancel', load:'Load',
+    noSaved:'Nothing saved yet. Save keeps the layout in this browser; use Share to send it to someone.',
+    confirmDel:'Delete “{n}”? This can’t be undone.',
+    selection:'Selection', nothing:'Nothing selected', nothingHint:'Click an item to edit it. Drag on empty floor to select several, or add furniture from the left.',
+    multi:'{n} items selected', multiSub:'Drag, nudge with arrow keys, rotate or delete them together.',
+    x:'X (mm)', y:'Y (mm)', w:'Width (mm)', h:'Depth (mm)', diam:'Diameter (mm)', rot:'Rotation (°)', fs:'Text size (mm)', label:'Label', color:'Color',
+    zoomIn:'Zoom in', zoomOut:'Zoom out', fit:'Fit to plan', undo:'Undo', redo:'Redo', rotL:'Rotate −15°', rotR:'Rotate +15°', dup:'Duplicate', remove:'Delete', snap:'Snap 50',
+    add:'Add', layouts:'Layouts', inspect:'Inspect',
+    layoutCode:'Layout code', fileLbl:'or choose a .json file', close:'Close',
+    codeTitle:'Layout code', codeHint:'Copy all of this text and send it. The other person opens 1F Map → Share → Paste / import.',
+    importTitle:'Paste or import a layout', importHint:'Paste a layout code, or pick a .json file. It replaces the current layout (Undo brings it back).', importGo:'Import', importErr:'That doesn’t look like a 1F Map layout code.',
+    imgTitle:'Layout image', imgHint:'Your browser didn’t allow copying. Right-click or long-press the image to save or copy it.',
+    copied:'Layout code copied', imgCopied:'Image copied', savedT:'Saved', deleted:'Deleted', imported:'Layout imported', loaded:'Loaded',
+    untitled:'Untitled layout', copySuffix:' copy', dblHint:'Double-click to rename',
+    keys:[['Drag','move'],['Shift-click','add to selection'],['R','rotate 15° (Shift 90°, Alt back)'],['Arrows','nudge 50 mm (Shift 10)'],['Cmd/Ctrl D','duplicate'],['Delete','remove'],['Cmd/Ctrl Z','undo (Shift redo)'],['Space-drag','pan · wheel zooms']],
+    noPlan:'Floor data (plan-data.js) did not load.'
+  },
+  jp:{
+    layoutName:'レイアウト名', presets:'プリセット', share:'共有',
+    pCafe:'通常営業', pCafeSub:'Cafe (current) · 2026/02 配置図のまま',
+    pTalkBack:'奥半面トーク', pTalkBackSub:'奥半面の椅子を並べ替え・受付・フード・機材の貼り紙',
+    pTalk:'トーク 約50名', pTalkSub:'Talk · 千鳥配置の客席・登壇者席・後方は立ち見',
+    pWork:'ワークショップ', pWorkSub:'Workshop · 長テーブルの島、各6席',
+    pBreak:'朝会ブレックファスト', pBreakSub:'Breakfast · 長テーブル、フード、立ちエリア',
+    pEmpty:'空', pEmptySub:'Empty · 可動家具をすべて外す',
+    copyCode:'レイアウトコードをコピー', copyCodeSub:'チームに送って貼り付けてもらう', importCode:'貼り付け・読み込み', importCodeSub:'コードまたは .json ファイルから',
+    savePdf:'印刷用PDFを保存', savePdfSub:'A4 縦・レイアウト名と席数入り',
+    memo:'当日シート', print:'印刷用PDF',
+    copyImage:'画像をコピー', copyImageSub:'Slack やスライド用の PNG',
+    seats:'席数', tables:'テーブル', standing:'立席', standingSub:'名（1人 0.5㎡）', freeFloor:'空き床',
+    conflicts:'{n} 件が干渉', conflict1:'1 件が干渉', noConflicts:'干渉なし',
+    furniture:'家具', annotate:'ゾーン・メモ', zone:'ゾーン', note:'メモ', saved:'保存したレイアウト', save:'保存', saveAs:'別名で保存', rename:'名前を変更', del:'削除', cancel:'キャンセル', load:'開く',
+    noSaved:'まだ保存はありません。保存はこのブラウザ内のみ。人に送るときは「共有」を使ってください。',
+    confirmDel:'「{n}」を削除しますか？元に戻せません。',
+    selection:'選択中', nothing:'未選択', nothingHint:'アイテムをクリックで編集。空いた床をドラッグで複数選択。左から家具を追加できます。',
+    multi:'{n} 個を選択中', multiSub:'まとめてドラッグ・矢印キーで移動・回転・削除できます。',
+    x:'X（mm）', y:'Y（mm）', w:'幅（mm）', h:'奥行（mm）', diam:'直径（mm）', rot:'回転（°）', fs:'文字サイズ（mm）', label:'ラベル', color:'色',
+    zoomIn:'拡大', zoomOut:'縮小', fit:'全体表示', undo:'元に戻す', redo:'やり直す', rotL:'−15° 回転', rotR:'+15° 回転', dup:'複製', remove:'削除', snap:'50mm スナップ',
+    add:'追加', layouts:'レイアウト', inspect:'詳細',
+    layoutCode:'レイアウトコード', fileLbl:'または .json ファイルを選択', close:'閉じる',
+    codeTitle:'レイアウトコード', codeHint:'このテキストをすべてコピーして送ってください。受け取った人は 1F Map →「共有」→「貼り付け・読み込み」。',
+    importTitle:'レイアウトを読み込む', importHint:'コードを貼り付けるか .json を選択。今のレイアウトと置き換わります（元に戻すで復元可）。', importGo:'読み込む', importErr:'1F Map のレイアウトコードではないようです。',
+    imgTitle:'レイアウト画像', imgHint:'ブラウザがコピーを許可しませんでした。画像を右クリック／長押しで保存・コピーしてください。',
+    copied:'コードをコピーしました', imgCopied:'画像をコピーしました', savedT:'保存しました', deleted:'削除しました', imported:'読み込みました', loaded:'開きました',
+    untitled:'無題のレイアウト', copySuffix:' のコピー', dblHint:'ダブルクリックで名前変更',
+    keys:[['ドラッグ','移動'],['Shift+クリック','選択に追加'],['R','15°回転（Shift 90°、Alt 逆）'],['矢印','50mm 移動（Shift 10）'],['Cmd/Ctrl D','複製'],['Delete','削除'],['Cmd/Ctrl Z','元に戻す（Shift でやり直し）'],['Space+ドラッグ','パン・ホイールで拡大']],
+    noPlan:'床データ（plan-data.js）を読み込めませんでした。'
+  }
+};
+let lang = 'en';
+const t = (k, n) => { const s = (T[lang][k] !== undefined ? T[lang][k] : T.en[k]); return typeof s === 'string' && n !== undefined ? s.replace('{n}', n) : s; };
+const catName = type => CAT[type] ? (lang === 'jp' ? CAT[type].jp : CAT[type].en) : type;
+const catSub = type => CAT[type] ? (lang === 'jp' ? CAT[type].en : CAT[type].jp) : '';
+
+/* ======================= Storage ======================= */
+const KEY = 'fabcafe-1f-map:v1';
+function readStore(){ try { const s = JSON.parse(localStorage.getItem(KEY)); return (s && typeof s === 'object') ? s : {}; } catch(e){ return {}; } }
+function writeStore(s){ try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e){} }
+let store = readStore();
+if (!Array.isArray(store.layouts)) store.layouts = [];
+
+/* ======================= Plan geometry ======================= */
+const PLAN = window.PLAN;
+function pip(p, poly){
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++){
+    const xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+    if (((yi > p[1]) !== (yj > p[1])) && (p[0] < (xj - xi) * (p[1] - yi) / (yj - yi) + xi)) inside = !inside;
+  }
+  return inside;
+}
+function polyArea(poly){ let a = 0; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) a += (poly[j][0] + poly[i][0]) * (poly[j][1] - poly[i][1]); return Math.abs(a / 2); }
+function centroid(poly){ let x = 0, y = 0; poly.forEach(p => { x += p[0]; y += p[1]; }); return [x / poly.length, y / poly.length]; }
+function bbox(poly){ const xs = poly.map(p => p[0]), ys = poly.map(p => p[1]); return {minX:Math.min(...xs), minY:Math.min(...ys), maxX:Math.max(...xs), maxY:Math.max(...ys)}; }
+function rectPoly(x, y, w, h, rot){
+  const c = Math.cos(rad(rot || 0)), s = Math.sin(rad(rot || 0)), hw = w / 2, hh = h / 2;
+  return [[-hw,-hh],[hw,-hh],[hw,hh],[-hw,hh]].map(([a,b]) => [x + a * c - b * s, y + a * s + b * c]);
+}
+function circlePoly(x, y, r, n){ n = n || 12; const out = []; for (let i = 0; i < n; i++){ const a = i / n * Math.PI * 2; out.push([x + r * Math.cos(a), y + r * Math.sin(a)]); } return out; }
+function sectorPoly(x, y, r, a0, sweep){ const out = [[x,y]]; const n = 8; for (let i = 0; i <= n; i++){ const a = rad(a0 + sweep * i / n); out.push([x + r * Math.cos(a), y + r * Math.sin(a)]); } return out; }
+function segInter(a, b, c, d){
+  const o = (p, q, r) => (q[0]-p[0])*(r[1]-p[1]) - (q[1]-p[1])*(r[0]-p[0]);
+  const d1 = o(c,d,a), d2 = o(c,d,b), d3 = o(a,b,c), d4 = o(a,b,d);
+  return ((d1 > 0) !== (d2 > 0)) && ((d3 > 0) !== (d4 > 0));
+}
+function ptSegDist(p, a, b){
+  const dx = b[0]-a[0], dy = b[1]-a[1], L = dx*dx + dy*dy;
+  let u = L ? ((p[0]-a[0])*dx + (p[1]-a[1])*dy) / L : 0; u = clamp(u, 0, 1);
+  return Math.hypot(p[0] - (a[0] + u*dx), p[1] - (a[1] + u*dy));
+}
+function segSegDist(a, b, c, d){ if (segInter(a,b,c,d)) return 0; return Math.min(ptSegDist(a,c,d), ptSegDist(b,c,d), ptSegDist(c,a,b), ptSegDist(d,a,b)); }
+function polysIntersect(A, B){
+  for (const p of A) if (pip(p, B)) return true;
+  for (const p of B) if (pip(p, A)) return true;
+  for (let i = 0; i < A.length; i++){ const a = A[i], b = A[(i+1) % A.length];
+    for (let j = 0; j < B.length; j++) if (segInter(a, b, B[j], B[(j+1) % B.length])) return true; }
+  return false;
+}
+function segPolyDist(a, b, P){
+  if (pip(a, P) || pip(b, P)) return 0;
+  let m = Infinity; for (let i = 0; i < P.length; i++) m = Math.min(m, segSegDist(a, b, P[i], P[(i+1) % P.length]));
+  return m;
+}
+// fixed elements -> collision polygons (doors / windows don't block)
+function fixedPoly(f){
+  if (f.shape === 'circle') return circlePoly(f.x, f.y, f.r || 100);
+  if (f.shape === 'poly' && f.points) return f.points;
+  if (f.shape === 'rect') return rectPoly(f.x, f.y, f.w || 100, f.h || 100, f.rot);
+  return null;
+}
+let FLOOR = [], FLOOR_AREA = 0, WALL_SEGS = [], FIXED_POLYS = [], ROOM_POLYS = [], DOOR_POLYS = [], FIXED_AREA = 0;
+function prepGeometry(){
+  FLOOR = (PLAN.floor || []).map(p => [+p[0], +p[1]]);
+  FLOOR_AREA = FLOOR.length > 2 ? polyArea(FLOOR) : 0;
+  WALL_SEGS = [];
+  (PLAN.walls || []).forEach(w => {
+    const pts = w.points || []; const n = pts.length; const half = (w.thick || 150) / 2;
+    for (let i = 0; i < n - 1; i++) WALL_SEGS.push([pts[i], pts[i+1], half]);
+    if (w.closed && n > 2) WALL_SEGS.push([pts[n-1], pts[0], half]);
+  });
+  FIXED_POLYS = []; DOOR_POLYS = []; FIXED_AREA = 0;
+  (PLAN.fixed || []).forEach(f => {
+    if (f.kind === 'door' && f.shape === 'arc'){ DOOR_POLYS.push(sectorPoly(f.x, f.y, f.r || 800, f.rot || 0, f.sweep || 90)); return; }
+    if (f.kind === 'door' || f.kind === 'window') return;
+    const p = fixedPoly(f); if (!p) return;
+    FIXED_POLYS.push(p);
+    if (FLOOR.length && pip(centroid(p), FLOOR)) FIXED_AREA += polyArea(p);
+  });
+  ROOM_POLYS = (PLAN.rooms || []).map(r => r.points);
+}
+const EDGE_TOL = 150;
+function distToFloorEdge(p){ let m = Infinity; for (let i = 0; i < FLOOR.length; i++) m = Math.min(m, ptSegDist(p, FLOOR[i], FLOOR[(i+1) % FLOOR.length])); return m; }
+// returns null or reason string; opts.doors also avoids door swings, opts.extra = polygons to avoid
+function clash(P, opts){
+  opts = opts || {};
+  // 150 mm tolerance on the floor edge: the trace is approximate and furniture sits against the glass
+  if (FLOOR.length > 2) for (const c of P) if (!pip(c, FLOOR) && distToFloorEdge(c) > EDGE_TOL) return 'outside';
+  for (const [a, b, half] of WALL_SEGS) if (segPolyDist(a, b, P) < half) return 'wall';
+  for (const F of FIXED_POLYS) if (polysIntersect(P, F)) return 'fixed';
+  for (const R of ROOM_POLYS) if (R && R.length > 2 && polysIntersect(P, R)) return 'room';
+  if (opts.doors) for (const D of DOOR_POLYS) if (polysIntersect(P, D)) return 'door';
+  if (opts.extra) for (const E of opts.extra) if (polysIntersect(P, E)) return 'item';
+  return null;
+}
+
+/* ======================= Layout state + history ======================= */
+let L = {name:'', items:[]};
+let currentId = null;              // id of the saved layout this draft came from
+let sel = new Set();
+let nextId = 1;
+const newId = () => 'i' + (nextId++) + Math.random().toString(36).slice(2, 5);
+const size = it => ({w: it.w || CAT[it.type].w, h: CAT[it.type].round ? (it.w || CAT[it.type].w) : (it.h || CAT[it.type].h)});
+const byId = id => L.items.find(i => i.id === id);
+// inset (mm) shrinks the footprint for clash checks: the trace is approximate, so touching is not a clash
+function itemPoly(it, inset){
+  const s = size(it), k = 2 * (inset || 0);
+  return CAT[it.type].round ? circlePoly(it.x, it.y, Math.max(20, s.w / 2 - (inset || 0)), 10) : rectPoly(it.x, it.y, Math.max(40, s.w - k), Math.max(40, s.h - k), it.rot);
+}
+function sanitize(items){
+  const out = [];
+  (items || []).forEach(o => {
+    if (!o || !CAT[o.type] || !isFinite(+o.x) || !isFinite(+o.y)) return;
+    const it = {id:newId(), type:o.type, x:Math.round(+o.x), y:Math.round(+o.y), rot:norm360(+o.rot || 0)};
+    if (o.w) it.w = Math.max(100, Math.round(+o.w));
+    if (o.h) it.h = Math.max(100, Math.round(+o.h));
+    if (o.label) it.label = String(o.label).slice(0, 80);
+    if (o.color && COLORS[o.color]) it.color = o.color;
+    if (o.fs) it.fs = clamp(Math.round(+o.fs), 100, 2000);
+    out.push(it);
+  });
+  return out;
+}
+const snapshot = () => JSON.stringify({name:L.name, items:L.items.map(({id, ...r}) => r)});
+let hist = [], hi = -1;
+function resetHistory(){ hist = [snapshot()]; hi = 0; updateUndo(); }
+function commit(){
+  const s = snapshot();
+  if (s !== hist[hi]){ hist = hist.slice(0, hi + 1); hist.push(s); if (hist.length > 200) hist.shift(); hi = hist.length - 1; }
+  saveDraft(); render(); updateUndo(); emit();
+}
+function restore(s){
+  const o = JSON.parse(s); const prevSel = Array.from(sel).map(id => { const it = byId(id); return it ? L.items.indexOf(it) : -1; });
+  L = {name:o.name, items:sanitize(o.items)};
+  sel = new Set(prevSel.filter(i => i >= 0 && i < L.items.length).map(i => L.items[i].id));
+  $('#layout-name').value = L.name; saveDraft(); render(); updateUndo(); emit();
+}
+function undo(){ if (hi > 0){ hi--; restore(hist[hi]); } }
+function redo(){ if (hi < hist.length - 1){ hi++; restore(hist[hi]); } }
+function updateUndo(){ $('#tool-undo').disabled = hi <= 0; $('#tool-redo').disabled = hi >= hist.length - 1; }
+let draftTimer = 0;
+function saveDraft(){
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(() => { store.draft = {name:L.name, items:L.items.map(({id, ...r}) => r), currentId}; writeStore(store); }, 250);
+}
+
+/* ======================= Viewport ======================= */
+const svg = $('#plan'), gBase = $('#g-base'), gItems = $('#g-items'), gUI = $('#g-ui'), wrap = $('#canvas-wrap');
+let EXT = {minX:0, minY:0, maxX:10000, maxY:10000};
+let cam = {cx:5000, cy:5000, s:20};   // s = mm per screen px
+function wrapSize(){ const r = wrap.getBoundingClientRect(); return {W:Math.max(1, r.width), H:Math.max(1, r.height), r}; }
+function applyCam(){
+  const {W, H} = wrapSize();
+  svg.setAttribute('viewBox', [cam.cx - W * cam.s / 2, cam.cy - H * cam.s / 2, W * cam.s, H * cam.s].join(' '));
+  $('#zoom-read').textContent = '1 m = ' + Math.round(1000 / cam.s) + ' px';
+  renderUI();
+}
+function fit(){
+  const {W, H} = wrapSize();
+  const tools = W < 520 ? 60 : 64;
+  cam.cx = (EXT.minX + EXT.maxX) / 2; cam.cy = (EXT.minY + EXT.maxY) / 2;
+  cam.s = Math.max((EXT.maxX - EXT.minX) / (W - 16), (EXT.maxY - EXT.minY) / (H - tools));
+  cam.cy += tools * cam.s / 2 - 8 * cam.s;
+  applyCam();
+}
+function toMM(clientX, clientY){
+  try { const m = svg.getScreenCTM(); if (m){ const p = new DOMPoint(clientX, clientY).matrixTransform(m.inverse()); if (isFinite(p.x) && isFinite(p.y)) return [p.x, p.y]; } } catch(e){}
+  const {W, H, r} = wrapSize(); return [cam.cx + (clientX - r.left - W / 2) * cam.s, cam.cy + (clientY - r.top - H / 2) * cam.s];
+}
+function zoomAt(f, clientX, clientY){
+  const {W, H, r} = wrapSize();
+  if (clientX === undefined){ clientX = r.left + W / 2; clientY = r.top + H / 2; }
+  const p = toMM(clientX, clientY);
+  cam.s = clamp(cam.s / f, 1.5, 200);
+  cam.cx = p[0] - (clientX - r.left - W / 2) * cam.s;
+  cam.cy = p[1] - (clientY - r.top - H / 2) * cam.s;
+  applyCam();
+}
+
+/* ======================= Plan CSS (shared by page + PNG export) ======================= */
+function planCSS(c){
+  return `
+  .plan-bg{fill:${c.bg}}
+  .floor{fill:${c.floor};stroke:none}
+  .wall{fill:none;stroke:${c.fg};stroke-linejoin:miter;stroke-linecap:square}
+  .room{fill:url(#hatch);stroke:${c.fg};stroke-width:1.2px;vector-effect:non-scaling-stroke}
+  .hatch-line{stroke:${c.hatch};stroke-width:18}
+  .room-lbl{fill:${c.fg};font-family:${c.fontText};font-weight:700;text-anchor:middle;paint-order:stroke;stroke:${c.floor};stroke-width:60px}
+  .room-sub{fill:${c.muted};font-weight:400}
+  .fx-col{fill:${c.col};stroke:${c.fg};stroke-width:1.2px;vector-effect:non-scaling-stroke}
+  .fx-body{fill:${c.table};stroke:${c.fg};stroke-width:1.2px;vector-effect:non-scaling-stroke}
+  .fx-disp{fill:${c.muted};stroke:${c.fg};stroke-width:1px;vector-effect:non-scaling-stroke}
+  .fx-win{fill:${c.floor};stroke:${c.fg};stroke-width:1px;vector-effect:non-scaling-stroke}
+  .fx-door{fill:none;stroke:${c.fg};stroke-width:1.2px;vector-effect:non-scaling-stroke}
+  .fx-swing{fill:none;stroke:${c.muted};stroke-width:1px;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
+  .fx-lbl{fill:${c.muted};font-family:${c.fontText};font-size:190px;text-anchor:middle;paint-order:stroke;stroke:${c.floor};stroke-width:50px}
+  .gridline{stroke:${c.grid};stroke-width:1px;stroke-dasharray:10 4 2 4;vector-effect:non-scaling-stroke;opacity:.65}
+  .gridbub{fill:${c.floor};stroke:${c.grid};stroke-width:1.2px;vector-effect:non-scaling-stroke}
+  .gridtxt{fill:${c.grid};font-family:${c.fontDisplay};font-weight:700;font-size:260px;text-anchor:middle;dominant-baseline:central}
+  .sb-a{fill:${c.fg}} .sb-b{fill:${c.floor};stroke:${c.fg};stroke-width:1px;vector-effect:non-scaling-stroke}
+  .sb-t{fill:${c.fg};font-family:${c.fontText};font-size:200px;text-anchor:middle}
+  .tb-1{fill:${c.fg};font-family:${c.fontDisplay};font-weight:700;font-size:380px;text-anchor:end}
+  .tb-2{fill:${c.muted};font-family:${c.fontText};font-size:220px;text-anchor:end}
+  .tb-rule{stroke:${c.red};stroke-width:3px;vector-effect:non-scaling-stroke}
+  .it{cursor:move}
+  .it-body{fill:${c.furn};stroke:${c.fg};stroke-width:1.2px;vector-effect:non-scaling-stroke}
+  .it-table{fill:${c.table};stroke:${c.fg};stroke-width:1.2px;vector-effect:non-scaling-stroke}
+  .it-dark{fill:${c.fg};stroke:none}
+  .it-line{fill:none;stroke:${c.fg};stroke-width:1px;vector-effect:non-scaling-stroke}
+  .it-plant{fill:${c.leaf};fill-opacity:.55;stroke:${c.fg};stroke-width:1px;vector-effect:non-scaling-stroke}
+  .hit{fill:transparent;stroke:none}
+  .zone-body{stroke-width:1.5px;vector-effect:non-scaling-stroke}
+  .zone-lbl{fill:${c.fg};font-family:${c.fontDisplay};font-weight:700;letter-spacing:.02em}
+  .note-txt{fill:${c.fg};font-family:${c.fontDisplay};font-weight:700;text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:${c.floor};stroke-width:70px;stroke-linejoin:round}
+  .sel-box{fill:none;stroke:${c.red};stroke-width:2px;vector-effect:non-scaling-stroke}
+  .warn-box{fill:none;stroke:${c.red};stroke-width:1.5px;stroke-dasharray:5 3;vector-effect:non-scaling-stroke}
+  .handle{fill:${c.red};cursor:nwse-resize}
+  .band{fill:${c.red};fill-opacity:.08;stroke:${c.red};stroke-width:1px;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
+  `;
+}
+const FONT_D = '"Helvetica Neue Condensed Bold","HelveticaNeue-CondensedBold","Roboto Condensed","Arial Narrow",sans-serif';
+const FONT_T = '"Helvetica Neue",Helvetica,Roboto,Arial,"Hiragino Sans","Noto Sans JP",sans-serif';
+const CSS_VARS = {bg:'var(--plan-bg)', floor:'var(--plan-floor)', fg:'var(--fg)', muted:'var(--fg-muted)', hatch:'var(--hatch)', grid:'var(--grid)', furn:'var(--furn-fill)', table:'var(--furn-table)', red:'var(--red)', leaf:'var(--leaf)', col:'var(--col)', fontText:FONT_T, fontDisplay:FONT_D};
+const CSS_LIGHT = {bg:'#ffffff', floor:'#ffffff', fg:'#231815', muted:'#595959', hatch:'#9a9a9a', grid:'#e06666', furn:'#ffffff', table:'#ececec', red:'#d80c0e', leaf:'#82c481', col:'#cfcfcf', fontText:FONT_T, fontDisplay:FONT_D};
+$('#plan-css').textContent = planCSS(CSS_VARS);
+
+/* ======================= Base plan (not editable) ======================= */
+function txt(parent, x, y, s, attrs){ const n = el('text', Object.assign({x, y}, attrs || {}), parent); n.textContent = s; return n; }
+function drawBase(){
+  gBase.innerHTML = '';
+  const V = PLAN.view || bbox(FLOOR.length ? FLOOR : [[0,0],[10000,10000]]);
+  const gx = (PLAN.grid && PLAN.grid.x) || [], gy = (PLAN.grid && PLAN.grid.y) || [];
+  EXT = {minX:V.minX - 1000, minY:V.minY - 1000, maxX:V.maxX + 200, maxY:V.maxY + 1700};
+  el('rect', {class:'plan-bg', x:EXT.minX - 50000, y:EXT.minY - 50000, width:EXT.maxX - EXT.minX + 100000, height:EXT.maxY - EXT.minY + 100000}, gBase);
+  if (FLOOR.length > 2) el('polygon', {class:'floor', points:FLOOR.map(p => p.join(',')).join(' ')}, gBase);
+  // grid
+  const gG = el('g', {}, gBase);
+  gx.forEach(g => { el('line', {class:'gridline', x1:g.v, y1:EXT.minY + 650, x2:g.v, y2:V.maxY}, gG);
+    el('circle', {class:'gridbub', cx:g.v, cy:EXT.minY + 330, r:300}, gG); txt(gG, g.v, EXT.minY + 330, g.id, {class:'gridtxt'}); });
+  gy.forEach(g => { el('line', {class:'gridline', x1:EXT.minX + 650, y1:g.v, x2:V.maxX, y2:g.v}, gG);
+    el('circle', {class:'gridbub', cx:EXT.minX + 330, cy:g.v, r:300}, gG); txt(gG, EXT.minX + 330, g.v, g.id, {class:'gridtxt'}); });
+  // rooms (hatched)
+  (PLAN.rooms || []).forEach(r => {
+    if (!r.points || r.points.length < 3) return;
+    el('polygon', {class:'room', points:r.points.map(p => p.join(',')).join(' ')}, gBase);
+  });
+  // walls
+  (PLAN.walls || []).forEach(w => {
+    if (!w.points || w.points.length < 2) return;
+    el(w.closed ? 'polygon' : 'polyline', {class:'wall', points:w.points.map(p => p.join(',')).join(' '), 'stroke-width':w.thick || 150}, gBase);
+  });
+  // fixed elements
+  const gF = el('g', {}, gBase), labels = [];
+  (PLAN.fixed || []).forEach(f => {
+    const k = f.kind;
+    if (f.shape === 'arc'){
+      const r = f.r || 800, a0 = rad(f.rot || 0), a1 = rad((f.rot || 0) + (f.sweep || 90));
+      const p0 = [f.x + r * Math.cos(a0), f.y + r * Math.sin(a0)], p1 = [f.x + r * Math.cos(a1), f.y + r * Math.sin(a1)];
+      el('line', {class:'fx-door', x1:f.x, y1:f.y, x2:p1[0], y2:p1[1]}, gF);
+      el('path', {class:'fx-swing', d:`M${p0[0]},${p0[1]} A${r},${r} 0 0 ${(f.sweep || 90) > 0 ? 1 : 0} ${p1[0]},${p1[1]}`}, gF);
+      return;
+    }
+    const cls = k === 'column' ? 'fx-col' : (k === 'display' || k === 'screen') ? 'fx-disp' : k === 'window' ? 'fx-win' : 'fx-body';
+    if (f.shape === 'circle') el('circle', {class:cls, cx:f.x, cy:f.y, r:f.r || 100}, gF);
+    else if (f.shape === 'poly' && f.points) el('polygon', {class:cls, points:f.points.map(p => p.join(',')).join(' ')}, gF);
+    else if (f.shape === 'rect') el('rect', {class:cls, x:-(f.w || 100) / 2, y:-(f.h || 100) / 2, width:f.w || 100, height:f.h || 100, transform:`translate(${f.x} ${f.y}) rotate(${f.rot || 0})`}, gF);
+    if ((f.label_en || f.label_jp) && k !== 'column'){
+      const p = f.shape === 'poly' && f.points ? centroid(f.points) : [f.x, f.y];
+      const thin = f.shape === 'rect' && Math.min(f.w || 0, f.h || 0) < 400;
+      const off = thin ? (Math.min(f.w, f.h) / 2 + 260) * (p[1] < (V.minY + V.maxY) / 2 ? 1 : -1) : 70;
+      labels.push({f, x:p[0], y:p[1] + off, rotate: thin && (f.h || 0) > (f.w || 0) ? -90 : 0});
+    }
+  });
+  // room labels + fixed labels on top
+  const gL = el('g', {id:'g-labels'}, gBase);
+  gL.dataset.labels = '1';
+  drawBaseLabels(gL, labels);
+  // scale bar 0-1-2-5 m
+  const sx = V.minX + 600, sy = V.maxY + 500, gS = el('g', {}, gBase);
+  [[0,1000,'sb-a'],[1000,2000,'sb-b'],[2000,5000,'sb-a']].forEach(([a,b,c]) => el('rect', {class:c, x:sx + a, y:sy, width:b - a, height:140}, gS));
+  el('rect', {class:'sb-b', x:sx, y:sy, width:5000, height:140, fill:'none'}, gS);
+  [[0,'0'],[1000,'1m'],[2000,'2m'],[5000,'5m']].forEach(([d,s]) => txt(gS, sx + d, sy + 400, s, {class:'sb-t'}));
+  // title block
+  const tx = V.maxX - 200, ty = V.maxY + 750, gT = el('g', {id:'g-title'}, gBase);
+  el('line', {class:'tb-rule', x1:tx - 5200, y1:ty - 480, x2:tx, y2:ty - 480}, gT);
+  txt(gT, tx, ty, 'FabCafe Tokyo 1F · 1:100 · source 2026/02', {class:'tb-1'});
+  txt(gT, tx, ty + 330, '', {class:'tb-2', id:'tb-layout'});
+}
+let BASE_LABELS = [];
+function drawBaseLabels(gL, labels){
+  if (labels) BASE_LABELS = labels;
+  gL = gL || $('#g-labels'); if (!gL) return;
+  gL.innerHTML = '';
+  (PLAN.rooms || []).forEach(r => {
+    if (!r.points || r.points.length < 3) return;
+    const [cx, cy] = centroid(r.points); const b = bbox(r.points);
+    const fs = clamp(Math.min(b.maxX - b.minX, b.maxY - b.minY) / 5, 160, 300);
+    const main = lang === 'jp' ? (r.label_jp || r.label_en) : (r.label_en || r.label_jp);
+    const sub = lang === 'jp' ? r.label_en : r.label_jp;
+    if (main) txt(gL, cx, cy, main, {class:'room-lbl', 'font-size':fs});
+    if (sub && sub !== main) txt(gL, cx, cy + fs * 1.1, sub, {class:'room-lbl room-sub', 'font-size':fs * 0.78});
+  });
+  BASE_LABELS.forEach(l => {
+    const s = lang === 'jp' ? (l.f.label_jp || l.f.label_en) : (l.f.label_en || l.f.label_jp);
+    txt(gL, l.x, l.y, s, {class:'fx-lbl', transform: l.rotate ? `rotate(${l.rotate} ${l.x} ${l.y})` : null, 'dominant-baseline':'central'});
+  });
+}
+
+/* ======================= Item drawing ======================= */
+function drawShape(g, type, w, h, it){
+  const hw = w / 2, hh = h / 2;
+  switch (type){
+    case 'chair':
+      el('rect', {class:'it-body', x:-hw, y:-hh, width:w, height:h, rx:50}, g);
+      el('rect', {class:'it-dark', x:-hw, y:-hh, width:w, height:90}, g); break;
+    case 'stool':
+      el('circle', {class:'it-body', r:hw}, g); el('circle', {class:'it-line', r:hw * 0.55}, g); break;
+    case 'table-sq': case 'table-long': case 'table-bar':
+      el('rect', {class:'it-table', x:-hw, y:-hh, width:w, height:h, rx:20}, g); break;
+    case 'table-round':
+      el('circle', {class:'it-table', r:hw}, g); break;
+    case 'sofa':
+      el('rect', {class:'it-body', x:-hw, y:-hh, width:w, height:h, rx:70}, g);
+      el('rect', {class:'it-dark', x:-hw, y:-hh, width:w, height:190, rx:40}, g);
+      el('line', {class:'it-line', x1:-hw + 170, y1:-hh + 190, x2:-hw + 170, y2:hh}, g);
+      el('line', {class:'it-line', x1:hw - 170, y1:-hh + 190, x2:hw - 170, y2:hh}, g);
+      el('line', {class:'it-line', x1:0, y1:-hh + 190, x2:0, y2:hh - 60}, g); break;
+    case 'podium':
+      el('rect', {class:'it-table', x:-hw, y:-hh, width:w, height:h}, g);
+      el('line', {class:'it-line', x1:-hw + 70, y1:-hh + 110, x2:hw - 70, y2:-hh + 110}, g); break;
+    case 'easel':
+      el('rect', {class:'it-body', x:-hw, y:-hh, width:w, height:h}, g);
+      el('line', {class:'it-line', x1:-hw, y1:-hh, x2:hw, y2:hh}, g); el('line', {class:'it-line', x1:hw, y1:-hh, x2:-hw, y2:hh}, g); break;
+    case 'projector-screen':
+      el('rect', {class:'it-dark', x:-hw, y:-hh, width:w, height:h}, g); break;
+    case 'tv':
+      el('rect', {class:'it-dark', x:-hw, y:-hh, width:w, height:h * 0.55}, g);
+      el('rect', {class:'it-body', x:-hw * 0.35, y:-hh + h * 0.55, width:w * 0.35, height:h * 0.45}, g); break;
+    case 'plant':
+      el('circle', {class:'it-plant', r:hw}, g);
+      for (let i = 0; i < 4; i++){ const a = rad(i * 45 + 22); el('line', {class:'it-line', x1:-Math.cos(a) * hw * .75, y1:-Math.sin(a) * hw * .75, x2:Math.cos(a) * hw * .75, y2:Math.sin(a) * hw * .75}, g); }
+      break;
+    case 'zone': {
+      const col = COLORS[(it && it.color) || 'sky'];
+      el('rect', {class:'zone-body', x:-hw, y:-hh, width:w, height:h, fill:col, 'fill-opacity':.35, stroke:col}, g);
+      if (it){ const fs = clamp(Math.min(w, h) / 5, 180, 360);
+        txt(g, -hw + fs * 0.6, -hh + fs * 1.35, (it.label || t('zone')).toUpperCase(), {class:'zone-lbl', 'font-size':fs}); }
+      break; }
+    case 'note': {
+      const fs = (it && it.fs) || 320;
+      txt(g, 0, 0, (it && it.label) || t('note'), {class:'note-txt', 'font-size':fs}); break; }
+  }
+}
+function noteBox(it){ const fs = it.fs || 320; const s = it.label || t('note'); let wch = 0; for (const ch of s) wch += ch.charCodeAt(0) > 0x2e80 ? 1 : 0.58; return {w:Math.max(400, wch * fs + 120), h:fs * 1.4}; }
+
+/* ======================= Render ======================= */
+let clashIds = new Set();
+let lastStats = {seats:0, tables:0, standing:0, freeFloor:0, clashes:0};
+function computeStats(){
+  let seats = 0, tables = 0, foot = 0;
+  clashIds = new Set();
+  L.items.forEach(it => {
+    const c = CAT[it.type]; if (c.annot) return;
+    seats += c.seats || 0; if (c.table) tables++;
+    const s = size(it);
+    if (FLOOR.length < 3 || pip([it.x, it.y], FLOOR)) foot += c.round ? Math.PI * s.w * s.w / 4 : s.w * s.h;
+    if (clash(itemPoly(it, 60))) clashIds.add(it.id);
+  });
+  // furniture overlapping furniture (a chair pushed in at a table is normal, so seat-vs-table is skipped)
+  const solid = L.items.filter(it => !CAT[it.type].annot), polys = solid.map(it => itemPoly(it, 60));
+  const isSeat = it => it.type === 'chair' || it.type === 'stool' || it.type === 'sofa';
+  for (let i = 0; i < solid.length; i++) for (let j = i + 1; j < solid.length; j++){
+    const a = solid[i], b = solid[j];
+    if ((isSeat(a) && CAT[b.type].table) || (isSeat(b) && CAT[a.type].table)) continue;
+    const sa = size(a), sb = size(b);
+    if (Math.abs(a.x - b.x) > (Math.max(sa.w, sa.h) + Math.max(sb.w, sb.h)) * 0.75) continue;
+    if (Math.abs(a.y - b.y) > (Math.max(sa.w, sa.h) + Math.max(sb.w, sb.h)) * 0.75) continue;
+    if (polysIntersect(polys[i], polys[j])){ clashIds.add(a.id); clashIds.add(b.id); }
+  }
+  const free = Math.max(0, FLOOR_AREA - FIXED_AREA - foot) / 1e6;
+  $('#st-seats').textContent = seats;
+  $('#st-tables').textContent = tables;
+  $('#st-standing').textContent = Math.floor(free / 0.5);
+  $('#st-floor').textContent = free.toFixed(1);
+  const w = $('#st-warn'), n = clashIds.size;
+  w.className = 'chip' + (n ? ' warn' : '');
+  w.innerHTML = n
+    ? '<svg class="i" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M12 3L2 20h20zM12 10v4M12 17v1"/></svg>' + (n === 1 ? t('conflict1') : t('conflicts', n))
+    : '<svg class="i" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M5 12l5 5 9-10"/></svg>' + t('noConflicts');
+  w.disabled = !n;
+  lastStats = {seats, tables, standing:Math.floor(free / 0.5), freeFloor:+free.toFixed(1), clashes:clashIds.size};
+  const tb = $('#tb-layout'); if (tb) tb.textContent = (L.name || t('untitled')) + ' · ' + seats + ' ' + t('seats').toLowerCase();
+}
+function render(){
+  gItems.innerHTML = '';
+  const order = {zone:0, note:2};
+  const items = L.items.slice().sort((a, b) => (order[a.type] ?? 1) - (order[b.type] ?? 1));
+  computeStats();
+  items.forEach(it => {
+    const g = el('g', {class:'it', 'data-id':it.id, transform:`translate(${it.x} ${it.y}) rotate(${it.rot || 0})`}, gItems);
+    let s = size(it);
+    if (it.type === 'note') s = noteBox(it);
+    drawShape(g, it.type, s.w, s.h, it);
+    el('rect', {class:'hit', x:-s.w / 2, y:-s.h / 2, width:s.w, height:s.h}, g);
+    if (clashIds.has(it.id)) el('rect', {class:'warn-box', x:-s.w / 2 - 50, y:-s.h / 2 - 50, width:s.w + 100, height:s.h + 100}, g);
+    if (sel.has(it.id)) el('rect', {class:'sel-box', x:-s.w / 2 - 60, y:-s.h / 2 - 60, width:s.w + 120, height:s.h + 120}, g);
+  });
+  renderUI(); updateInspector();
+  // only rebuild the saved list when it actually changed (keeps rename/confirm rows stable while editing)
+  const sig = [lang, currentId, store.layouts.map(x => x.id + x.name + x.updated).join('|')].join('#');
+  if (sig !== savedSig && !pendingDelete && !renaming){ savedSig = sig; renderSaved(); }
+}
+let savedSig = '';
+function renderUI(){
+  gUI.innerHTML = '';
+  if (sel.size === 1){
+    const it = byId(Array.from(sel)[0]);
+    if (it && it.type === 'zone'){
+      const s = size(it), hs = 14 * cam.s;
+      const c = rectPoly(it.x, it.y, s.w, s.h, it.rot)[2];
+      el('rect', {class:'handle', 'data-handle':it.id, x:c[0] - hs / 2, y:c[1] - hs / 2, width:hs, height:hs, transform:`rotate(${it.rot || 0} ${c[0]} ${c[1]})`}, gUI);
+    }
+  }
+  if (drag && drag.mode === 'band'){
+    const x = Math.min(drag.x0, drag.x1), y = Math.min(drag.y0, drag.y1);
+    el('rect', {class:'band', x, y, width:Math.abs(drag.x1 - drag.x0), height:Math.abs(drag.y1 - drag.y0)}, gUI);
+  }
+}
+let rafPending = false;
+function renderSoon(){ if (rafPending) return; rafPending = true; requestAnimationFrame(() => { rafPending = false; render(); }); }
+
+/* ======================= Inspector ======================= */
+const inp = id => $('#' + id);
+function setVal(id, v){ const n = inp(id); if (document.activeElement !== n) n.value = v; }
+function updateInspector(){
+  const one = sel.size === 1 ? byId(Array.from(sel)[0]) : null;
+  $('#insp-empty').hidden = sel.size !== 0;
+  $('#insp-multi').hidden = sel.size < 2;
+  $('#insp-one').hidden = !one;
+  $('#insp-actions').hidden = sel.size === 0;
+  if (sel.size > 1){ $('#insp-multi-count').textContent = t('multi', sel.size); $('#insp-multi-sub').textContent = t('multiSub'); }
+  if (!one) return;
+  const c = CAT[one.type], s = size(one);
+  $('#insp-type').textContent = one.type === 'zone' || one.type === 'note' ? (one.label || catName(one.type)) : catName(one.type);
+  $('#insp-typesub').textContent = (one.type === 'zone' || one.type === 'note') ? catName(one.type) + ' · ' + t('dblHint') : catSub(one.type) + (c.round ? ' · Ø' + s.w : ' · ' + s.w + ' × ' + s.h) + ' mm';
+  setVal('insp-x', Math.round(one.x)); setVal('insp-y', Math.round(one.y)); setVal('insp-rot', norm360(one.rot || 0));
+  $('#f-w').hidden = !c.size; $('#f-h').hidden = !c.size || c.round;
+  $('#lbl-w').textContent = c.round ? t('diam') : t('w');
+  setVal('insp-w', s.w); setVal('insp-h', s.h);
+  $('#f-fs').hidden = one.type !== 'note'; setVal('insp-fs', one.fs || 320);
+  $('#f-rot').hidden = c.round && one.type !== 'plant' ? true : false;
+  setVal('insp-label', one.label || '');
+  $('#f-color').hidden = one.type !== 'zone';
+  $$('#insp-colors button').forEach(b => b.setAttribute('aria-pressed', String((one.color || 'sky') === b.dataset.color)));
+}
+function bindInspector(){
+  const num = (id, fn) => inp(id).addEventListener('change', () => { const it = sel.size === 1 && byId(Array.from(sel)[0]); const v = parseFloat(inp(id).value); if (!it || !isFinite(v)) return; fn(it, v); commit(); });
+  num('insp-x', (it, v) => it.x = Math.round(v));
+  num('insp-y', (it, v) => it.y = Math.round(v));
+  num('insp-rot', (it, v) => it.rot = norm360(v));
+  num('insp-w', (it, v) => it.w = clamp(Math.round(v), 100, 30000));
+  num('insp-h', (it, v) => it.h = clamp(Math.round(v), 100, 30000));
+  num('insp-fs', (it, v) => it.fs = clamp(Math.round(v), 100, 2000));
+  inp('insp-label').addEventListener('input', () => { const it = sel.size === 1 && byId(Array.from(sel)[0]); if (!it) return; it.label = inp('insp-label').value.slice(0, 80); renderSoon(); });
+  inp('insp-label').addEventListener('change', commit);
+  const sw = $('#insp-colors');
+  Object.keys(COLORS).forEach(k => {
+    const b = document.createElement('button'); b.type = 'button'; b.id = 'insp-color-' + k; b.dataset.color = k; b.style.background = COLORS[k]; b.setAttribute('aria-label', k);
+    b.addEventListener('click', () => { const it = sel.size === 1 && byId(Array.from(sel)[0]); if (!it) return; it.color = k; commit(); });
+    sw.appendChild(b);
+  });
+  $('#insp-rot-l').addEventListener('click', () => rotateSel(-15));
+  $('#insp-rot-r').addEventListener('click', () => rotateSel(15));
+  $('#insp-dup').addEventListener('click', duplicateSel);
+  $('#insp-del').addEventListener('click', deleteSel);
+}
+
+/* ======================= Edit actions ======================= */
+function viewCenter(){ return [Math.round(cam.cx / 50) * 50, Math.round(cam.cy / 50) * 50]; }
+function addItem(type, extra){
+  const [x, y] = viewCenter();
+  const it = Object.assign({id:newId(), type, x, y, rot:0}, extra || {});
+  L.items.push(it); sel = new Set([it.id]); commit();
+  if (isPhone()) setSheet('inspect');
+  return it;
+}
+function rotateSel(d){ if (!sel.size) return; sel.forEach(id => { const it = byId(id); if (it) it.rot = norm360((it.rot || 0) + d); }); commit(); }
+function nudgeSel(dx, dy){ if (!sel.size) return; sel.forEach(id => { const it = byId(id); if (it){ it.x += dx; it.y += dy; } }); commit(); }
+function deleteSel(){ if (!sel.size) return; L.items = L.items.filter(i => !sel.has(i.id)); sel.clear(); commit(); }
+function duplicateSel(){
+  if (!sel.size) return; const ns = new Set();
+  L.items.filter(i => sel.has(i.id)).forEach(i => { const c = Object.assign({}, i, {id:newId(), x:i.x + 300, y:i.y + 300}); L.items.push(c); ns.add(c.id); });
+  sel = ns; commit();
+}
+
+/* ======================= Presets ======================= */
+function pickDisplay(){
+  const c = (PLAN.fixed || []).filter(f => (f.kind === 'display' || f.kind === 'screen') && f.shape === 'rect');
+  c.sort((a, b) => Math.max(b.w, b.h) - Math.max(a.w, a.h));
+  if (c.length) return {x:c[0].x, y:c[0].y, len:Math.max(c[0].w, c[0].h)};
+  const b = bbox(FLOOR); return {x:(b.minX + b.maxX) / 2, y:b.minY, len:2000};
+}
+function presetCafe(){ return sanitize(PLAN.furniture || []); }
+// Talk ~50: seated theater rows (no centre aisle) in the hall facing the large display, staggered so each row looks
+// between the heads in front; speaker chairs on the stage; no rear rows: the back is standing room.
+function presetTalk(){
+  const out = [], TARGET = 50, CH = 420;
+  // stage, podium and speaker chairs (facing the audience: rot 0 = facing +y)
+  out.push({type:'zone', x:10022, y:1850, rot:0, w:5000, h:1200, label:'Stage ステージ', color:'yellow'});
+  out.push({type:'podium', x:12300, y:1850, rot:0});
+  const speakers = [9200, 9900, 10600];
+  speakers.forEach(x => out.push({type:'chair', x, y:1800, rot:0}));
+  out.push({type:'note', x:9900, y:2250, rot:0, label:'Speakers 登壇者', fs:150});
+  // audience: one continuous block of 8 per row (no centre aisle), pitch 520, row pitch 900;
+  // odd rows shifted half a seat (stagger)
+  const COLS = [0, 1, 2, 3, 4, 5, 6, 7].map(i => 8800 + i * 520);
+  const rows = [3000, 3900, 4800, 5700];
+  let seated = 0;
+  rows.forEach((y, r) => {
+    const off = r % 2 ? 260 : 0;
+    COLS.forEach(x0 => {
+      const x = x0 + off;
+      if (clash(rectPoly(x, y, CH + 60, CH + 60, 180), {doors:true})) return;
+      out.push({type:'chair', x, y, rot:180}); seated++;
+    });
+  });
+  // standing room at the back instead of more rows
+  const stand = Math.max(0, TARGET - seated);
+  out.push({type:'zone', x:10350, y:8300, rot:0, w:3500, h:4300, label:'Standing 立ち見 ~' + stand, color:'leaf'}); // 15 m², room for ~30 at 0.5 m²
+  out.push({type:'note', x:10350, y:10050, rot:0, label:'Seated 着席 ' + seated + ' + Standing 立ち見 ' + stand + ' = ' + (seated + stand), fs:170});
+  out.push(...(PLAN.furniture || []).filter(f => f.type === 'plant'));
+  return sanitize(out);
+}
+function scanPlace(w, h, margin, avoid, opts){
+  const b = bbox(FLOOR), step = 300;
+  for (let y = b.minY + h / 2 + 100; y <= b.maxY - h / 2; y += step)
+    for (let x = b.minX + w / 2 + 100; x <= b.maxX - w / 2; x += step){
+      const inner = rectPoly(x, y, w, h, 0);
+      if (clash(inner, {doors:true, extra:avoid})) continue;
+      if (opts && opts.strict && clash(rectPoly(x, y, w + margin * 2, h + margin * 2, 0), {doors:true})) continue;
+      return [x, y];
+    }
+  return null;
+}
+function island(x, y, out){
+  out.push({type:'table-long', x, y, rot:0});
+  [-600, 0, 600].forEach(dx => { out.push({type:'chair', x:x + dx, y:y - 540, rot:0}); out.push({type:'chair', x:x + dx, y:y + 540, rot:180}); });
+}
+function islands(max, avoid){
+  const out = [], W = 1800, H = 1500, M = 450;
+  for (let i = 0; i < max; i++){
+    const p = scanPlace(W, H, M, avoid, {strict:true});
+    if (!p) break;
+    island(p[0], p[1], out);
+    avoid.push(rectPoly(p[0], p[1], W + 900, H + 900, 0));
+  }
+  return out;
+}
+function presetWorkshop(){
+  const avoid = [], out = [];
+  const S = pickDisplay();
+  out.push({type:'zone', x:S.x, y:S.y + 1000, rot:0, w:Math.max(3000, S.len + 600), h:1200, label:'Stage ステージ', color:'yellow'});
+  avoid.push(rectPoly(S.x, S.y + 1000, Math.max(3000, S.len + 600) + 600, 1800, 0));
+  out.push(...islands(8, avoid));
+  return sanitize(out);
+}
+function presetBreakfast(){
+  const avoid = [], out = [];
+  // food line: two long tables end to end
+  const fp = scanPlace(3600, 600, 600, avoid, {strict:true});
+  if (fp){
+    out.push({type:'zone', x:fp[0], y:fp[1], rot:0, w:4200, h:1500, label:'Food フード', color:'orange'});
+    out.push({type:'table-long', x:fp[0] - 900, y:fp[1], rot:0}, {type:'table-long', x:fp[0] + 900, y:fp[1], rot:0});
+    avoid.push(rectPoly(fp[0], fp[1], 4200 + 900, 1500 + 1800, 0));
+  }
+  out.push(...islands(4, avoid));
+  const sp = scanPlace(4000, 3000, 300, avoid);
+  if (sp) out.push({type:'zone', x:sp[0], y:sp[1], rot:0, w:4000, h:3000, label:'Standing 立ち', color:'leaf'});
+  return sanitize(out);
+}
+// Talk in the back half (奥半面 = everything north of Y2, east of X2): the 26 chairs that sit there in the
+// cafe layout are re-used as theater rows facing the large display; the tables there go to storage.
+// The entrance-side (front half) furniture stays as it is.
+const BACK_HALF = it => it.y < 10730 && it.x > 6160;
+function presetTalkBack(){
+  const out = [];
+  // keep front-half furniture as drawn
+  (PLAN.furniture || []).forEach(f => { if (!BACK_HALF(f)) out.push(f); });
+  const nChairs = (PLAN.furniture || []).filter(f => f.type === 'chair' && BACK_HALF(f)).length; // 26
+  // stage + podium in front of the large display
+  out.push({type:'zone', x:10022, y:1850, rot:0, w:5000, h:1200, label:'Stage ステージ', color:'yellow'});
+  out.push({type:'podium', x:12300, y:1850, rot:0});
+  // theater rows: 3 + aisle + 3, facing the display (rot 180 = facing up)
+  const cols = [8850, 9350, 9850, 11170, 11670, 12170], rows = [2900, 3800, 4700, 5600, 6500];
+  let n = 0;
+  for (const y of rows){
+    const xs = n + cols.length <= nChairs ? cols : [9850, 11170, 9350, 11670, 8850, 12170].slice(0, nChairs - n);
+    for (const x of xs){ if (n >= nChairs) break; out.push({type:'chair', x, y, rot:180}); n++; }
+  }
+  // front desk by the entrance
+  out.push({type:'zone', x:1300, y:14200, rot:0, w:2400, h:1500, label:'Reception 受付', color:'sky'});
+  out.push({type:'table-bar', x:1300, y:14250, rot:0});
+  // food in the fab area, away from the machines
+  out.push({type:'zone', x:11300, y:9400, rot:0, w:1500, h:4700, label:'Food フード', color:'orange'});
+  out.push({type:'table-long', x:11300, y:8850, rot:90}, {type:'table-long', x:11300, y:10650, rot:90});
+  // no-drinks signs at the machines
+  out.push({type:'easel', x:8350, y:8950, rot:0, label:'No drinks sign'}, {type:'easel', x:8350, y:11000, rot:0, label:'No drinks sign'});
+  out.push({type:'note', x:9300, y:9550, rot:0, label:'機材に飲み物NG', fs:170}, {type:'note', x:9300, y:9850, rot:0, label:'No drinks on machines', fs:170});
+  return sanitize(out);
+}
+const PRESETS = {
+  cafe:{fn:presetCafe, name:() => lang === 'jp' ? '通常営業 Cafe' : 'Cafe (current) 通常営業'},
+  talkback:{fn:presetTalkBack, name:() => lang === 'jp' ? '奥半面トーク Talk' : 'Talk – back half 奥半面トーク'},
+  talk:{fn:presetTalk, name:() => lang === 'jp' ? 'トーク 約50名' : 'Talk ~50 トーク'},
+  workshop:{fn:presetWorkshop, name:() => lang === 'jp' ? 'ワークショップ' : 'Workshop ワークショップ'},
+  breakfast:{fn:presetBreakfast, name:() => lang === 'jp' ? '朝会 Breakfast' : 'Breakfast 朝会'},
+  empty:{fn:() => [], name:() => lang === 'jp' ? '空' : 'Empty 空'}
+};
+function applyPreset(k){
+  const p = PRESETS[k]; if (!p) return;
+  L.items = p.fn(); L.name = p.name(); currentId = null; sel.clear();
+  $('#layout-name').value = L.name; commit();
+}
+
+/* ======================= Saved layouts ======================= */
+let pendingDelete = null, renaming = null;
+function renderSaved(){
+  const ul = $('#saved-list'); ul.innerHTML = '';
+  if (!store.layouts.length){ const p = document.createElement('li'); p.className = 'muted'; p.textContent = t('noSaved'); ul.appendChild(p); return; }
+  store.layouts.forEach(s => {
+    const li = document.createElement('li');
+    if (pendingDelete === s.id){
+      const box = document.createElement('div'); box.className = 'confirm';
+      const sp = document.createElement('span'); sp.textContent = t('confirmDel', s.name);
+      const yes = mkBtn(t('del'), 'btn primary', () => { store.layouts = store.layouts.filter(x => x.id !== s.id); if (currentId === s.id) currentId = null; pendingDelete = null; writeStore(store); saveDraft(); renderSaved(); toast(t('deleted')); });
+      yes.id = 'confirm-del-yes';
+      const no = mkBtn(t('cancel'), 'btn', () => { pendingDelete = null; renderSaved(); });
+      no.id = 'confirm-del-no';
+      box.append(sp, yes, no); li.appendChild(box); ul.appendChild(li); setTimeout(() => no.focus(), 0); return;
+    }
+    if (renaming === s.id){
+      const i = document.createElement('input'); i.className = 'row-input'; i.id = 'rename-' + s.id; i.value = s.name;
+      const done = ok => { if (renaming !== s.id) return; renaming = null; if (ok && i.value.trim()){ s.name = i.value.trim().slice(0, 80); if (currentId === s.id){ L.name = s.name; $('#layout-name').value = L.name; commit(); } writeStore(store); } renderSaved(); };
+      i.addEventListener('keydown', e => { if (e.key === 'Enter') done(true); if (e.key === 'Escape') done(false); });
+      i.addEventListener('blur', () => done(true));
+      li.appendChild(i); ul.appendChild(li); setTimeout(() => { i.focus(); i.select(); }, 0); return;
+    }
+    const b = document.createElement('button'); b.className = 'saved-row' + (s.id === currentId ? ' active' : ''); b.type = 'button'; b.id = 'saved-' + s.id;
+    const n = document.createElement('span'); n.textContent = s.name;
+    const d = document.createElement('small'); d.textContent = new Date(s.updated).toLocaleString(lang === 'jp' ? 'ja-JP' : 'en-GB', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) + ' · ' + s.items.length + ' items';
+    b.append(n, d);
+    b.addEventListener('click', () => { L = {name:s.name, items:sanitize(s.items)}; currentId = s.id; sel.clear(); $('#layout-name').value = L.name; resetHistory(); saveDraft(); render(); emit(); toast(t('loaded')); });
+    const rn = mkIcon('<path d="M4 20h4L19 9l-4-4L4 16z"/>', t('rename'), () => { renaming = s.id; pendingDelete = null; renderSaved(); }); rn.id = 'rename-btn-' + s.id;
+    const dl = mkIcon('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>', t('del'), () => { pendingDelete = s.id; renaming = null; renderSaved(); }); dl.id = 'delete-btn-' + s.id;
+    li.append(b, rn, dl); ul.appendChild(li);
+  });
+}
+function mkBtn(label, cls, fn){ const b = document.createElement('button'); b.type = 'button'; b.className = cls; b.textContent = label; b.addEventListener('click', fn); return b; }
+function mkIcon(path, label, fn){ const b = document.createElement('button'); b.type = 'button'; b.className = 'btn icon'; b.title = label; b.setAttribute('aria-label', label); b.innerHTML = '<svg class="i" viewBox="0 0 24 24">' + path + '</svg>'; b.addEventListener('click', fn); return b; }
+function saveLayout(asNew){
+  const items = L.items.map(({id, ...r}) => r);
+  let s = !asNew && currentId && store.layouts.find(x => x.id === currentId);
+  if (s){ s.name = L.name || t('untitled'); s.items = items; s.updated = Date.now(); }
+  else {
+    let name = L.name || t('untitled');
+    if (asNew && store.layouts.some(x => x.name === name)) name += t('copySuffix');
+    s = {id:'L' + Date.now().toString(36), name, items, updated:Date.now()};
+    store.layouts.unshift(s); currentId = s.id; L.name = name; $('#layout-name').value = name; commit();
+  }
+  writeStore(store); saveDraft(); renderSaved(); emit(); toast(t('savedT'));
+  if (asNew){ const n = $('#layout-name'); n.focus(); n.select(); }
+}
+
+/* ======================= Share ======================= */
+function layoutCode(){ const o = {app:'fabcafe-1f-map', v:1, name:L.name, items:L.items.map(({id, ...r}) => r)}; if (window.FC_MEMO) o.memo = window.FC_MEMO.get(); return JSON.stringify(o); }
+function openModal(kind, extra){
+  const m = $('#modal'); m.hidden = false; m.dataset.kind = kind;
+  const ta = $('#modal-text'), img = $('#modal-img'), go = $('#modal-go');
+  $('#modal-err').textContent = ''; img.hidden = true; ta.hidden = true; go.hidden = true; $('#modal-file-row').hidden = true;
+  if (kind === 'code'){ $('#modal-title').textContent = t('codeTitle'); $('#modal-hint').textContent = t('codeHint'); ta.hidden = false; ta.readOnly = true; ta.value = layoutCode(); setTimeout(() => { ta.focus(); ta.select(); }, 0); }
+  if (kind === 'import'){ $('#modal-title').textContent = t('importTitle'); $('#modal-hint').textContent = t('importHint'); ta.hidden = false; ta.readOnly = false; ta.value = ''; $('#modal-file-row').hidden = false; $('#modal-file').value = ''; go.hidden = false; go.textContent = t('importGo'); setTimeout(() => ta.focus(), 0); }
+  if (kind === 'image'){ $('#modal-title').textContent = t('imgTitle'); $('#modal-hint').textContent = t('imgHint'); img.hidden = false; img.src = extra; img.alt = L.name; setTimeout(() => $('#modal-close').focus(), 0); }
+}
+function closeModal(){ $('#modal').hidden = true; }
+function doImport(text){
+  let o; try { o = JSON.parse(text); } catch(e){ o = null; }
+  const items = o && (Array.isArray(o) ? o : o.items);
+  if (!Array.isArray(items)){ $('#modal-err').textContent = t('importErr'); return; }
+  L = {name:(o && o.name) ? String(o.name).slice(0, 80) : t('untitled'), items:sanitize(items)};
+  currentId = null; sel.clear(); $('#layout-name').value = L.name; commit();
+  if (o && o.memo && typeof o.memo === 'object' && window.FC_MEMO) window.FC_MEMO.set(o.memo);
+  closeModal(); toast(t('imported'));
+}
+function exportSVGString(){
+  const clone = svg.cloneNode(true);
+  clone.querySelector('#g-ui') && clone.querySelector('#g-ui').remove();
+  clone.querySelectorAll('.sel-box,.warn-box').forEach(n => n.remove());
+  const W = EXT.maxX - EXT.minX, H = EXT.maxY - EXT.minY, PX = 2400;
+  clone.setAttribute('viewBox', [EXT.minX, EXT.minY, W, H].join(' '));
+  clone.setAttribute('width', PX); clone.setAttribute('height', Math.round(PX * H / W));
+  clone.removeAttribute('style'); clone.removeAttribute('class');
+  const st = document.createElementNS(NS, 'style'); st.textContent = planCSS(CSS_LIGHT); clone.insertBefore(st, clone.firstChild);
+  return {str:new XMLSerializer().serializeToString(clone), w:PX, h:Math.round(PX * H / W)};
+}
+function makePNG(){
+  return new Promise((res, rej) => {
+    const {str, w, h} = exportSVGString();
+    const img = new Image();
+    img.onload = () => { const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, w, h); x.drawImage(img, 0, 0, w, h); c.toBlob(b => b ? res(b) : rej(new Error('png')), 'image/png'); };
+    img.onerror = rej;
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(str);
+  });
+}
+window.__planPNG = () => makePNG();
+function blobToDataURL(b){ return new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(b); }); }
+function copyImage(){
+  const p = makePNG();
+  const fallback = () => p.then(blobToDataURL).then(u => openModal('image', u)).catch(() => {});
+  try {
+    if (navigator.clipboard && navigator.clipboard.write && window.ClipboardItem){
+      navigator.clipboard.write([new ClipboardItem({'image/png': p})]).then(() => toast(t('imgCopied'))).catch(fallback);
+    } else fallback();
+  } catch(e){ fallback(); }
+}
+function copyCode(){
+  const s = layoutCode();
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(s).then(() => toast(t('copied'))).catch(() => openModal('code')); return; }
+  } catch(e){}
+  openModal('code');
+}
+
+/* ======================= Toast / menus / sheet ======================= */
+let toastTimer = 0;
+function toast(s){ const n = $('#toast'); n.textContent = s; n.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => n.classList.remove('on'), 1800); }
+function closeMenus(except){ ['presets', 'share'].forEach(k => { if (k === except) return; $('#menu-' + k).hidden = true; $('#btn-' + k).setAttribute('aria-expanded', 'false'); }); }
+function toggleMenu(k){ const m = $('#menu-' + k), open = m.hidden; closeMenus(k); m.hidden = !open; $('#btn-' + k).setAttribute('aria-expanded', String(open)); if (open) m.querySelector('button').focus(); }
+const isPhone = () => window.matchMedia('(max-width: 760px)').matches;
+function setSheet(k, toggle){
+  const app = $('#app');
+  if (toggle && app.dataset.sheet === k) app.classList.toggle('collapsed'); else app.classList.remove('collapsed');
+  app.dataset.sheet = k;
+  $$('.sheet-tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === k)));
+  requestAnimationFrame(applyCam);
+}
+
+/* ======================= Language ======================= */
+function applyLang(){
+  document.documentElement.lang = lang === 'jp' ? 'ja' : 'en';
+  $$('[data-i18n]').forEach(n => { const v = t(n.dataset.i18n); if (typeof v === 'string') n.textContent = v; });
+  $$('[data-i18n-title]').forEach(n => { const v = t(n.dataset.i18nTitle); n.title = v; n.setAttribute('aria-label', v); });
+  $('#lang-en').setAttribute('aria-pressed', String(lang === 'en'));
+  $('#lang-jp').setAttribute('aria-pressed', String(lang === 'jp'));
+  const keys = $('#keys'); keys.innerHTML = '';
+  t('keys').forEach(([k, v]) => { const a = document.createElement('kbd'); a.textContent = k; const b = document.createElement('span'); b.textContent = v; keys.append(a, b); });
+  buildPalette(); drawBaseLabels(); render();
+}
+function setLang(l){ lang = l; store.lang = l; writeStore(store); applyLang(); emit(); }
+
+/* ======================= Palette ======================= */
+function buildPalette(){
+  const tiles = $('#tiles'); tiles.innerHTML = '';
+  FURN_TYPES.forEach(type => {
+    const c = CAT[type], b = document.createElement('button'); b.type = 'button'; b.className = 'tile'; b.id = 'add-' + type;
+    const m = 120, W = Math.max(c.w, 900) + m, H = Math.max(c.h, 450) + m;
+    const s = el('svg', {viewBox:`${-W / 2} ${-H / 2} ${W} ${H}`, 'aria-hidden':'true'});
+    drawShape(el('g', {}, s), type, c.w, c.h, null);
+    const a = document.createElement('span'); a.className = 't1'; a.textContent = catName(type);
+    const z = document.createElement('span'); z.className = 't2'; z.textContent = catSub(type);
+    b.append(s, a, z); b.addEventListener('click', () => addItem(type));
+    tiles.appendChild(b);
+  });
+  const zb = $('#zone-btns'); zb.innerHTML = '';
+  ZONE_PRESETS.forEach((z, i) => {
+    const b = mkBtn('', 'btn', () => addItem('zone', {w:z.w, h:z.h, label:z.label, color:z.color})); b.id = 'add-zone-' + i;
+    const dot = document.createElement('span'); dot.className = 'swatch-dot'; dot.style.background = COLORS[z.color];
+    b.append(dot, document.createTextNode(z.label)); zb.appendChild(b);
+  });
+  const bz = mkBtn('', 'btn', () => addItem('zone', {w:3000, h:2000, label:t('zone'), color:'gray'})); bz.id = 'add-zone';
+  bz.innerHTML = '<svg class="i" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>'; bz.append(document.createTextNode(t('zone'))); zb.appendChild(bz);
+  const bn = mkBtn('', 'btn', () => addItem('note', {label:t('note'), fs:320})); bn.id = 'add-note';
+  bn.innerHTML = '<svg class="i" viewBox="0 0 24 24"><path d="M5 5h14M12 5v14"/></svg>'; bn.append(document.createTextNode(t('note'))); zb.appendChild(bn);
+}
+
+/* ======================= Inline rename (zones / notes) ======================= */
+function startInlineEdit(id){
+  const it = byId(id); if (!it || (it.type !== 'zone' && it.type !== 'note')) return;
+  const n = $('#inline-edit'), {r, W, H} = wrapSize();
+  const s = it.type === 'note' ? noteBox(it) : size(it);
+  const top = it.type === 'note' ? [it.x, it.y] : rectPoly(it.x, it.y, s.w, s.h, it.rot)[0];
+  const sx = (top[0] - cam.cx) / cam.s + W / 2, sy = (top[1] - cam.cy) / cam.s + H / 2;
+  n.hidden = false; n.value = it.label || '';
+  n.style.left = clamp(sx - (it.type === 'note' ? 70 : 0), 8, W - 160) + 'px';
+  n.style.top = clamp(sy - (it.type === 'note' ? 17 : 0), 8, H - 42) + 'px';
+  n.dataset.id = id; n.focus(); n.select();
+}
+function endInlineEdit(ok){
+  const n = $('#inline-edit'); if (n.hidden) return;
+  const it = byId(n.dataset.id); n.hidden = true;
+  if (ok && it){ it.label = n.value.trim().slice(0, 80) || it.label; commit(); }
+}
+
+/* ======================= Pointer interaction ======================= */
+let drag = null, spaceDown = false;
+const pointers = new Map();
+let snapOn = true;
+function itemFromTarget(tg){ const g = tg.closest && tg.closest('.it'); return g ? g.dataset.id : null; }
+svg.addEventListener('pointerdown', e => {
+  endInlineEdit(true); closeMenus();
+  pointers.set(e.pointerId, {x:e.clientX, y:e.clientY, type:e.pointerType});
+  try { svg.setPointerCapture(e.pointerId); } catch(_){}
+  if (pointers.size === 2){
+    if (drag && drag.mode === 'move' && drag.moved) commit();
+    const [a, b] = Array.from(pointers.values());
+    drag = {mode:'pinch', d:Math.hypot(a.x - b.x, a.y - b.y), mx:(a.x + b.x) / 2, my:(a.y + b.y) / 2};
+    renderUI(); return;
+  }
+  if (pointers.size > 2) return;
+  const [mx, my] = toMM(e.clientX, e.clientY);
+  if (e.button === 1 || spaceDown || e.button === 2){ e.preventDefault(); drag = {mode:'pan', px:e.clientX, py:e.clientY}; wrap.classList.add('panning'); return; }
+  const h = e.target.closest && e.target.closest('[data-handle]');
+  if (h){
+    const it = byId(h.dataset.handle); const s = size(it);
+    drag = {mode:'resize', id:it.id, tl:rectPoly(it.x, it.y, s.w, s.h, it.rot)[0], moved:false}; return;
+  }
+  const id = itemFromTarget(e.target);
+  if (id){
+    if (e.shiftKey){ if (sel.has(id)) sel.delete(id); else sel.add(id); render(); if (!sel.has(id)) return; }
+    else if (!sel.has(id)){ sel = new Set([id]); render(); }
+    const orig = new Map(); sel.forEach(i => { const it = byId(i); if (it) orig.set(i, [it.x, it.y]); });
+    drag = {mode:'move', lead:id, sx:mx, sy:my, orig, moved:false, shift:e.shiftKey, px:e.clientX, py:e.clientY};
+    return;
+  }
+  if (e.pointerType === 'touch'){ drag = {mode:'pan', px:e.clientX, py:e.clientY, tap:true, moved:false}; return; }
+  drag = {mode:'band', x0:mx, y0:my, x1:mx, y1:my, base:e.shiftKey ? new Set(sel) : new Set()};
+  if (!e.shiftKey && sel.size){ sel.clear(); render(); }
+});
+svg.addEventListener('pointermove', e => {
+  if (pointers.has(e.pointerId)) pointers.set(e.pointerId, {x:e.clientX, y:e.clientY, type:e.pointerType});
+  if (!drag) return;
+  if (drag.mode === 'pinch'){
+    if (pointers.size < 2) return;
+    const [a, b] = Array.from(pointers.values());
+    const d = Math.hypot(a.x - b.x, a.y - b.y), mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+    cam.cx -= (mx - drag.mx) * cam.s; cam.cy -= (my - drag.my) * cam.s;
+    if (drag.d > 0) zoomAt(d / drag.d, mx, my); else applyCam();
+    drag.d = d; drag.mx = mx; drag.my = my; return;
+  }
+  if (drag.mode === 'pan'){
+    cam.cx -= (e.clientX - drag.px) * cam.s; cam.cy -= (e.clientY - drag.py) * cam.s;
+    if (Math.abs(e.clientX - drag.px) + Math.abs(e.clientY - drag.py) > 0) drag.moved = true;
+    drag.px = e.clientX; drag.py = e.clientY; applyCam(); return;
+  }
+  const [mx, my] = toMM(e.clientX, e.clientY);
+  if (drag.mode === 'move'){
+    if (!drag.moved && Math.hypot(e.clientX - drag.px, e.clientY - drag.py) < 3) return;
+    drag.moved = true;
+    let dx = mx - drag.sx, dy = my - drag.sy;
+    const lo = drag.orig.get(drag.lead);
+    if (snapOn && lo){ dx = round(lo[0] + dx, 50) - lo[0]; dy = round(lo[1] + dy, 50) - lo[1]; }
+    drag.orig.forEach((o, i) => { const it = byId(i); if (it){ it.x = Math.round(o[0] + dx); it.y = Math.round(o[1] + dy); } });
+    renderSoon(); return;
+  }
+  if (drag.mode === 'resize'){
+    const it = byId(drag.id); if (!it) return;
+    const c = Math.cos(rad(it.rot || 0)), s = Math.sin(rad(it.rot || 0));
+    const vx = mx - drag.tl[0], vy = my - drag.tl[1];
+    let w = vx * c + vy * s, h = -vx * s + vy * c;
+    if (snapOn){ w = round(w, 50); h = round(h, 50); }
+    w = Math.max(300, w); h = Math.max(300, h);
+    it.w = Math.round(w); it.h = Math.round(h);
+    it.x = Math.round(drag.tl[0] + (w / 2) * c - (h / 2) * s); it.y = Math.round(drag.tl[1] + (w / 2) * s + (h / 2) * c);
+    drag.moved = true; renderSoon(); return;
+  }
+  if (drag.mode === 'band'){
+    drag.x1 = mx; drag.y1 = my;
+    const x0 = Math.min(drag.x0, mx), x1 = Math.max(drag.x0, mx), y0 = Math.min(drag.y0, my), y1 = Math.max(drag.y0, my);
+    sel = new Set(drag.base);
+    L.items.forEach(it => { if (it.x >= x0 && it.x <= x1 && it.y >= y0 && it.y <= y1) sel.add(it.id); });
+    renderSoon();
+  }
+});
+function endPointer(e){
+  pointers.delete(e.pointerId);
+  if (!drag) return;
+  if (drag.mode === 'pinch'){ if (pointers.size < 2) drag = null; return; }
+  const d = drag; drag = null; wrap.classList.remove('panning');
+  if (d.mode === 'move'){
+    if (d.moved) commit();
+    else if (!d.shift && sel.size > 1){ sel = new Set([d.lead]); render(); }
+    if (!d.moved && isPhone() && sel.size === 1) setSheet('inspect');
+  }
+  else if (d.mode === 'resize'){ if (d.moved) commit(); }
+  else if (d.mode === 'band'){ render(); }
+  else if (d.mode === 'pan' && d.tap && !d.moved && sel.size){ sel.clear(); render(); }
+}
+svg.addEventListener('pointerup', endPointer);
+svg.addEventListener('pointercancel', endPointer);
+svg.addEventListener('contextmenu', e => e.preventDefault());
+svg.addEventListener('dblclick', e => { const id = itemFromTarget(e.target); if (id) startInlineEdit(id); });
+svg.addEventListener('wheel', e => {
+  e.preventDefault();
+  if (e.ctrlKey || e.deltaMode !== 0 || Math.abs(e.deltaY) >= 40 && e.deltaX === 0){
+    zoomAt(Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0025)), e.clientX, e.clientY);
+  } else { cam.cx += e.deltaX * cam.s; cam.cy += e.deltaY * cam.s; applyCam(); }
+}, {passive:false});
+
+/* ======================= Keyboard ======================= */
+const isField = n => n && (n.tagName === 'INPUT' || n.tagName === 'TEXTAREA' || n.tagName === 'SELECT' || n.isContentEditable);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape'){ if (!$('#modal').hidden){ closeModal(); return; } closeMenus(); if (!$('#inline-edit').hidden){ endInlineEdit(false); return; } if (pendingDelete || renaming) return; if (!isField(e.target) && sel.size){ sel.clear(); render(); } return; }
+  if (isField(e.target) || !$('#modal').hidden) return;
+  const mod = e.metaKey || e.ctrlKey;
+  if (e.key === ' '){ if (e.target.tagName === 'BUTTON') return; e.preventDefault(); spaceDown = true; wrap.classList.add('space'); return; }
+  if (mod && (e.key === 'z' || e.key === 'Z')){ e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
+  if (mod && (e.key === 'y' || e.key === 'Y')){ e.preventDefault(); redo(); return; }
+  if (mod && (e.key === 'd' || e.key === 'D')){ e.preventDefault(); duplicateSel(); return; }
+  if (mod && (e.key === 'a' || e.key === 'A')){ e.preventDefault(); sel = new Set(L.items.map(i => i.id)); render(); return; }
+  if (mod) return;
+  const step = e.shiftKey ? 10 : 50;
+  if (e.key.startsWith('Arrow') && sel.size){
+    e.preventDefault();
+    nudgeSel(e.key === 'ArrowLeft' ? -step : e.key === 'ArrowRight' ? step : 0, e.key === 'ArrowUp' ? -step : e.key === 'ArrowDown' ? step : 0); return;
+  }
+  if ((e.key === 'r' || e.key === 'R' || e.code === 'KeyR') && sel.size){ e.preventDefault(); rotateSel(e.shiftKey ? 90 : e.altKey ? -15 : 15); return; }
+  if ((e.key === 'Delete' || e.key === 'Backspace') && sel.size){ e.preventDefault(); deleteSel(); return; }
+  if (e.key === '+' || e.key === '='){ zoomAt(1.25); return; }
+  if (e.key === '-' || e.key === '_'){ zoomAt(0.8); return; }
+  if (e.key === '0'){ fit(); return; }
+});
+document.addEventListener('keyup', e => { if (e.key === ' '){ spaceDown = false; wrap.classList.remove('space'); } });
+window.addEventListener('blur', () => { spaceDown = false; wrap.classList.remove('space'); });
+
+/* ======================= Wire up chrome ======================= */
+function wire(){
+  $('#layout-name').addEventListener('change', e => { L.name = e.target.value.trim().slice(0, 80) || t('untitled'); e.target.value = L.name; commit(); });
+  $('#layout-name').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
+  $('#btn-presets').addEventListener('click', e => { e.stopPropagation(); toggleMenu('presets'); });
+  $('#btn-share').addEventListener('click', e => { e.stopPropagation(); toggleMenu('share'); });
+  $$('#menu-presets [data-preset]').forEach(b => b.addEventListener('click', () => { closeMenus(); applyPreset(b.dataset.preset); }));
+  $('#share-code').addEventListener('click', () => { closeMenus(); copyCode(); });
+  $('#share-import').addEventListener('click', () => { closeMenus(); openModal('import'); });
+  $('#share-image').addEventListener('click', () => { closeMenus(); copyImage(); });
+  $('#share-pdf').addEventListener('click', () => closeMenus());
+  document.addEventListener('click', e => { if (!e.target.closest('.menu-wrap')) closeMenus(); });
+  $('#lang-en').addEventListener('click', () => setLang('en'));
+  $('#lang-jp').addEventListener('click', () => setLang('jp'));
+  $('#modal-close').addEventListener('click', closeModal);
+  $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+  $('#modal-go').addEventListener('click', () => doImport($('#modal-text').value));
+  $('#modal-file').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (!f) return; f.text().then(s => { $('#modal-text').value = s; doImport(s); }); });
+  $('#btn-save').addEventListener('click', () => saveLayout(false));
+  $('#btn-saveas').addEventListener('click', () => saveLayout(true));
+  $('#tool-zoom-in').addEventListener('click', () => zoomAt(1.25));
+  $('#tool-zoom-out').addEventListener('click', () => zoomAt(0.8));
+  $('#tool-fit').addEventListener('click', fit);
+  $('#tool-undo').addEventListener('click', undo);
+  $('#tool-redo').addEventListener('click', redo);
+  $('#tool-rot-l').addEventListener('click', () => rotateSel(-15));
+  $('#tool-rot-r').addEventListener('click', () => rotateSel(15));
+  $('#tool-dup').addEventListener('click', duplicateSel);
+  $('#tool-del').addEventListener('click', deleteSel);
+  $('#tool-snap').addEventListener('click', e => { snapOn = !snapOn; e.currentTarget.setAttribute('aria-pressed', String(snapOn)); store.snap = snapOn; writeStore(store); });
+  $('#st-warn').addEventListener('click', () => { if (!clashIds.size) return; sel = new Set(clashIds); render(); if (isPhone()) setSheet('inspect'); });
+  $$('.sheet-tabs button').forEach(b => b.addEventListener('click', () => setSheet(b.dataset.tab, true)));
+  const ie = $('#inline-edit');
+  ie.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); endInlineEdit(true); } else if (e.key === 'Escape'){ e.preventDefault(); endInlineEdit(false); } });
+  ie.addEventListener('blur', () => endInlineEdit(true));
+  bindInspector();
+  let lastW = 0;
+  new ResizeObserver(() => { const {W} = wrapSize(); if (!lastW) { lastW = W; return; } lastW = W; applyCam(); }).observe(wrap);
+}
+
+/* ======================= Public API (staff sheet + print modules) ======================= */
+const listeners = [];
+function emit(){ const info = {id:currentId || 'draft', name:L.name || t('untitled'), lang}; listeners.forEach(fn => { try { fn(info); } catch(e){ console.error(e); } }); }
+// light-theme SVG of any item list (defaults to the current layout); used for print pages
+function svgFor(items, name){
+  if (!items){ const {str} = exportSVGString(); return str; }
+  const keep = L, keepSel = sel, keepStats = lastStats;
+  L = {name:name || L.name, items:sanitize(items)}; sel = new Set(); render();
+  const {str} = exportSVGString();
+  L = keep; sel = keepSel; render(); lastStats = keepStats;
+  return str;
+}
+window.FC_MAP = {
+  getLayout: () => ({id:currentId || 'draft', name:L.name || t('untitled'), items:L.items.map(({id, ...r}) => r)}),
+  stats: () => Object.assign({}, lastStats),
+  svg: svgFor,
+  presetItems: k => PRESETS[k] ? PRESETS[k].fn().map(({id, ...r}) => r) : null,
+  annotations: () => L.items.filter(it => CAT[it.type].annot && it.label).map(it => ({type:it.type, label:it.label, color:it.type === 'zone' ? (COLORS[it.color] || it.color || null) : null})),
+  lang: () => lang,
+  onChange: fn => { listeners.push(fn); },
+  toast: s => toast(s)
+};
+
+/* ======================= Init ======================= */
+function init(){
+  if (!PLAN || !PLAN.view){
+    const d = document.createElement('div'); d.className = 'no-plan'; d.textContent = T.en.noPlan + ' / ' + T.jp.noPlan; wrap.appendChild(d); return;
+  }
+  lang = store.lang === 'jp' ? 'jp' : 'en';
+  snapOn = store.snap !== false; $('#tool-snap').setAttribute('aria-pressed', String(snapOn));
+  prepGeometry(); drawBase(); wire();
+  const dr = store.draft;
+  if (dr && Array.isArray(dr.items)){ L = {name:dr.name || t('untitled'), items:sanitize(dr.items)}; currentId = store.layouts.some(x => x.id === dr.currentId) ? dr.currentId : null; }
+  else { L = {name:PRESETS.cafe.name(), items:presetCafe()}; }
+  $('#layout-name').value = L.name;
+  resetHistory();
+  applyLang();
+  requestAnimationFrame(fit);
+  emit();
+}
+init();
+})();
+</script>
+
+<section class="notes" id="sign" hidden aria-label="機材の貼り紙">
+  <div class="notes-bar">
+    <button class="btn" id="sign-back"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span class="lbl">1Fマップ</span></button>
+    <span class="grow"></span>
+    <button class="btn primary" id="sign-print"><svg class="i" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H4v-8h16v8h-3M7 14h10v7H7z"/></svg><span class="lbl" id="sign-print-lbl">PDFで保存 · Save PDF</span></button>
+  </div>
+  <div class="sign-page">
+    <div class="sign">
+      <svg class="sign-logo" viewBox="0 0 283.47 113.40" role="img" aria-label="FabCafe"><path fill="currentColor" d="M117.00 56.59C120.68 56.59 121.41 52.90 121.41 45.73C121.41 38.54 120.68 34.87 117.00 34.87C113.25 34.87 112.52 38.54 112.52 45.73C112.52 52.90 113.25 56.59 117.00 56.59ZM225.64 34.13C222.27 34.13 221.29 37.63 221.29 40.69L221.29 41.98L229.94 41.98C229.76 36.95 229.14 34.13 225.64 34.13ZM117.74 81.41C116.09 81.41 115.76 83.06 115.76 86.27C115.76 89.48 116.09 91.13 117.74 91.13C119.41 91.13 119.74 89.48 119.74 86.27C119.74 83.06 119.41 81.41 117.74 81.41ZM238.04 47.01L221.29 47.01L221.29 49.65C221.29 53.52 222.33 57.32 225.46 57.32C228.28 57.32 229.45 55.17 229.94 51.12L237.54 51.12C237.24 58.80 233.56 63.08 225.58 63.08C213.31 63.08 212.82 53.64 212.82 45.42C212.82 36.58 214.54 28.36 225.95 28.36C235.83 28.36 238.04 34.99 238.04 45.11L238.04 47.01ZM234.11 83.41L233.02 84.65C232.06 85.72 231.67 86.41 231.67 87.81L231.67 88.22L228.27 88.22L228.27 87.15C228.27 85.31 228.73 84.24 229.97 82.84L231.01 81.66C231.78 80.81 232.06 79.85 232.06 78.75C232.06 77.35 231.42 76.42 230.19 76.42C228.79 76.42 228.24 77.65 228.24 79.44L228.24 80.12L224.61 80.12L224.61 79.49C224.61 76.20 226.43 73.84 230.05 73.84C233.89 73.84 235.84 75.92 235.84 79.13C235.84 80.61 235.43 81.93 234.11 83.41M228.07 90.03H231.86V93.65H228.07ZZM217.12 94.04C215.63 94.04 214.60 93.46 213.77 92.09L213.71 92.09L213.71 93.65L210.09 93.65L210.09 74.06L213.88 74.06L213.88 80.26L213.94 80.26C214.73 79.08 215.69 78.50 217.12 78.50C220.22 78.50 221.65 80.78 221.65 86.27C221.65 91.76 220.22 94.04 217.12 94.04ZM204.49 93.65C204.24 93.19 204.14 92.61 204.02 92.12L203.97 92.12C203.09 93.65 202.02 94.04 200.21 94.04C197.57 94.04 196.64 91.79 196.64 89.81C196.64 87.04 197.77 85.91 200.37 85.20L202.51 84.62C203.64 84.32 204.02 83.88 204.02 82.90C204.02 81.77 203.53 81.08 202.27 81.08C201.11 81.08 200.51 81.85 200.51 83.00L200.51 83.41L197.11 83.41L197.11 83.06C197.11 79.65 199.44 78.50 202.29 78.50C206.79 78.50 207.65 80.37 207.65 83.03L207.65 90.80C207.65 92.17 207.73 92.80 208.11 93.65L204.49 93.65ZM195.86 76.44C195.61 76.42 195.37 76.42 195.12 76.42C194.05 76.42 193.66 76.75 193.66 77.60L193.66 78.89L195.86 78.89L195.86 81.47L193.66 81.47L193.66 93.65L189.87 93.65L189.87 81.47L187.95 81.47L187.95 78.89L189.87 78.89L189.87 77.21C189.87 74.55 191.38 73.67 193.83 73.67C194.52 73.67 195.17 73.70 195.86 73.75L195.86 76.44ZM183.05 58.80L182.92 58.80C180.96 62.23 178.57 63.08 174.52 63.08C168.63 63.08 166.55 58.06 166.55 53.64C166.55 47.44 169.06 44.93 174.89 43.34L179.68 42.04C182.19 41.37 183.05 40.39 183.05 38.18C183.05 35.66 181.94 34.13 179.12 34.13C176.54 34.13 175.20 35.85 175.20 38.42L175.20 39.35L167.59 39.35L167.59 38.54C167.59 30.94 172.81 28.36 179.19 28.36C189.25 28.36 191.15 32.53 191.15 38.48L191.15 55.85C191.15 58.92 191.34 60.33 192.19 62.23L184.09 62.23C183.54 61.19 183.29 59.90 183.05 58.80ZM180.49 93.65L176.86 93.65L176.86 91.92L176.80 91.92C176.01 93.38 174.64 94.04 173.04 94.04C170.69 94.04 169.28 92.75 169.28 89.84L169.28 78.89L173.07 78.89L173.07 89.07C173.07 90.55 173.57 91.13 174.69 91.13C175.98 91.13 176.70 90.33 176.70 88.69L176.70 78.89L180.49 78.89L180.49 93.65ZM161.70 94.04C157.15 94.12 155.89 91.40 155.89 86.27C155.89 81.22 157.37 78.50 161.70 78.50C166.26 78.42 167.52 81.14 167.52 86.27C167.52 91.32 166.04 94.04 161.70 94.04ZM151.82 92.66C150.50 97.77 149.65 98.49 146.15 98.49L144.61 98.49L144.61 95.66C144.94 95.71 145.27 95.74 145.60 95.74C147.00 95.74 147.52 94.97 147.63 93.65L143.48 78.89L147.44 78.89L149.62 89.10L149.68 89.10L151.60 78.89L155.39 78.89L151.82 92.66ZM134.37 40.33C134.37 27.02 136.02 17.57 149.27 17.57C161.91 17.57 162.83 26.83 162.83 33.21L153.99 33.21C153.99 26.83 152.70 24.07 148.72 24.07C144.25 24.07 143.20 28.55 143.20 40.94C143.20 54.19 145.04 56.59 148.84 56.59C152.03 56.59 154.36 54.93 154.36 45.48L163.20 45.48C163.20 54.93 160.86 63.08 149.27 63.08C136.02 63.08 134.37 53.64 134.37 40.33ZM131.27 94.04C126.71 94.12 125.44 91.40 125.44 86.27C125.44 81.22 126.93 78.50 131.27 78.50C135.82 78.42 137.09 81.14 137.09 86.27C137.09 91.32 135.60 94.04 131.27 94.04ZM123.53 93.65L119.90 93.65L119.90 92.09L119.85 92.09C119.02 93.46 117.98 94.04 116.50 94.04C113.40 94.04 111.97 91.76 111.97 86.27C111.97 80.78 113.40 78.50 116.50 78.50C117.93 78.50 118.89 79.08 119.68 80.26L119.74 80.26L119.74 74.06L123.53 74.06L123.53 93.65ZM104.42 81.47L102.22 81.47L102.22 89.46C102.22 90.61 102.47 91.07 103.57 91.07C103.87 91.07 104.17 91.05 104.42 91.02L104.42 93.65C103.60 93.74 102.83 93.82 101.95 93.82C98.98 93.82 98.44 92.91 98.44 89.92L98.44 81.47L96.51 81.47L96.51 78.89L98.44 78.89L98.44 74.66L102.22 74.66L102.22 78.89L104.42 78.89L104.42 81.47ZM92.17 93.65C91.93 93.19 91.82 92.61 91.71 92.12L91.65 92.12C90.78 93.65 89.71 94.04 87.89 94.04C85.26 94.04 84.32 91.79 84.32 89.81C84.32 87.04 85.45 85.91 88.06 85.20L90.20 84.62C91.32 84.32 91.71 83.88 91.71 82.90C91.71 81.77 91.22 81.08 89.95 81.08C88.80 81.08 88.19 81.85 88.19 83.00L88.19 83.41L84.79 83.41L84.79 83.06C84.79 79.65 87.12 78.50 89.98 78.50C94.48 78.50 95.33 80.37 95.33 83.03L95.33 90.80C95.33 92.17 95.41 92.80 95.80 93.65L92.17 93.65ZM82.52 93.65L78.73 93.65L78.73 83.47C78.73 81.99 78.24 81.41 77.11 81.41C75.82 81.41 75.11 82.21 75.11 83.86L75.11 93.65L71.32 93.65L71.32 74.06L75.11 74.06L75.11 80.40L75.16 80.40C75.87 79.13 77.16 78.50 78.76 78.50C81.12 78.50 82.52 79.79 82.52 82.70L82.52 93.65ZM66.73 93.65L62.42 93.65L60.48 83.16L60.42 83.16L58.58 93.65L54.19 93.65L50.98 78.89L54.77 78.89L56.50 89.37L56.55 89.37L58.39 78.89L62.51 78.89L64.46 89.37L64.51 89.37L66.30 78.89L69.92 78.89L66.73 93.65ZM50.81 18.43L75.29 18.43L75.29 25.66L59.64 25.66L59.64 35.97L71.64 35.97L71.64 43.21L59.64 43.21L59.64 62.23L50.81 62.23L50.81 18.43ZM86.58 28.36C96.65 28.36 98.55 32.53 98.55 38.48L98.55 55.85C98.55 58.92 98.73 60.33 99.59 62.23L91.49 62.23C90.94 61.19 90.70 59.90 90.45 58.80L90.32 58.80C88.36 62.23 85.97 63.08 81.92 63.08C76.03 63.08 73.94 58.06 73.94 53.64C73.94 47.44 76.46 44.93 82.29 43.34L87.08 42.04C89.59 41.37 90.45 40.39 90.45 38.18C90.45 35.66 89.34 34.13 86.52 34.13C83.94 34.13 82.60 35.85 82.60 38.42L82.60 39.35L74.99 39.35L74.99 38.54C74.99 30.94 80.21 28.36 86.58 28.36ZM104.05 18.43L112.52 18.43L112.52 32.29L112.64 32.29C114.42 29.65 116.57 28.36 119.76 28.36C126.69 28.36 129.88 33.46 129.88 45.73C129.88 58.00 126.69 63.08 119.76 63.08C116.44 63.08 114.12 61.80 112.27 58.73L112.15 58.73L112.15 62.23L104.05 62.23L104.05 18.43ZM193.94 29.22L198.23 29.22L198.23 25.48C198.23 19.53 201.60 17.57 207.07 17.57C208.60 17.57 210.07 17.63 211.60 17.75L211.60 23.76C211.05 23.70 210.50 23.70 209.95 23.70C207.55 23.70 206.70 24.44 206.70 26.34L206.70 29.22L211.60 29.22L211.60 34.99L206.70 34.99L206.70 62.23L198.23 62.23L198.23 34.99L193.94 34.99L193.94 29.22ZM0.00 0.00L0.00 82.43C0.00 99.46 13.93 113.39 30.96 113.39L252.50 113.39C269.53 113.39 283.47 99.46 283.47 82.43L283.47 0.00L0.00 0.00ZM131.27 81.08C129.40 81.08 129.23 83.25 129.23 86.27C129.23 89.29 129.40 91.46 131.27 91.46C132.80 91.46 133.29 89.95 133.29 86.27C133.29 82.59 132.80 81.08 131.27 81.08ZM82.05 52.72C82.05 55.24 82.97 57.32 85.23 57.32C87.50 57.32 90.45 55.85 90.45 52.23L90.45 45.73C89.28 46.59 87.87 47.14 86.83 47.38C83.40 48.12 82.05 49.77 82.05 52.72ZM87.95 89.40C87.95 90.53 88.36 91.46 89.37 91.46C90.39 91.46 91.71 90.80 91.71 89.18L91.71 86.27C91.19 86.65 90.56 86.90 90.09 87.01C88.55 87.34 87.95 88.08 87.95 89.40ZM174.65 52.72C174.65 55.24 175.57 57.32 177.84 57.32C180.10 57.32 183.05 55.85 183.05 52.23L183.05 45.73C181.88 46.59 180.47 47.14 179.43 47.38C175.99 48.12 174.65 49.77 174.65 52.72ZM200.26 89.40C200.26 90.53 200.68 91.46 201.69 91.46C202.70 91.46 204.02 90.80 204.02 89.18L204.02 86.27C203.50 86.65 202.87 86.90 202.41 87.01C200.87 87.34 200.26 88.08 200.26 89.40ZM215.89 81.41C214.21 81.41 213.88 83.06 213.88 86.27C213.88 89.48 214.21 91.13 215.89 91.13C217.53 91.13 217.86 89.48 217.86 86.27C217.86 83.06 217.53 81.41 215.89 81.41ZM161.70 81.08C159.84 81.08 159.68 83.25 159.68 86.27C159.68 89.29 159.84 91.46 161.70 91.46C163.25 91.46 163.74 89.95 163.74 86.27C163.74 82.59 163.25 81.08 161.70 81.08Z"/></svg>
+      <svg class="icon" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" fill="none" stroke="#d80c0e" stroke-width="8"/>
+        <path d="M36 30h28l-4 46H40z" fill="none" stroke="#231815" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M38 46h24" stroke="#231815" stroke-width="4"/>
+        <path d="M19 81L81 19" stroke="#d80c0e" stroke-width="8"/>
+      </svg>
+      <p class="jp">機材の上に飲み物を<br>置かないでください</p>
+      <p class="en">Please don’t put drinks on the machines</p>
+      <p class="small">こぼれると故障の原因になります · Spills can break the equipment</p>
+    </div>
+  </div>
+  <p class="notes-foot">「PDFで保存」→ A4 横で印刷。機材ごとに1枚ずつ貼ってください。マップ上の「No drinks sign」の位置が目安です。</p>
+</section>
+<script>
+(function(){
+  var sign=document.getElementById('sign'), sbtn=document.getElementById('btn-sign');
+  function showSign(on){ sign.hidden=!on; document.body.classList.toggle('sign-open',on); (on?document.getElementById('sign-back'):sbtn).focus(); }
+  sbtn.addEventListener('click',function(){showSign(true)});
+  document.getElementById('sign-back').addEventListener('click',function(){showSign(false)});
+  // The page runs in a sandboxed frame where window.print() is blocked, so the sign is drawn to a
+  // canvas, wrapped in a one-page A4-landscape PDF and offered through the downloads capability.
+  var dlP = (window.claude && window.claude.use) ? window.claude.use('downloads').catch(function(){return null}) : Promise.resolve(null);
+  window.__dlP = dlP; // shared with the print composer
+
+  var LOGO_IMG=null;
+  function loadLogo(){
+    if (LOGO_IMG) return Promise.resolve();
+    var svg=document.querySelector('#sign .sign-logo').outerHTML.replace('fill="currentColor"','fill="#D80C0E"').replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="1134" height="454" ');
+    return new Promise(function(res){ var im=new Image(); im.onload=function(){LOGO_IMG=im;res()}; im.onerror=function(){res()}; im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg); });
+  }
+  function drawSign(){
+    var W=2339, H=1654, c=document.createElement('canvas'); c.width=W; c.height=H; var x=c.getContext('2d');
+    var JP='"Hiragino Sans","Noto Sans JP",sans-serif', EN='"Helvetica Neue","Roboto Condensed",Arial,sans-serif';
+    x.fillStyle='#fff'; x.fillRect(0,0,W,H); x.textAlign='center'; x.textBaseline='alphabetic';
+    // keep everything 12 mm inside the paper edge (printers can't print to the edge): a hairline frame is
+    // the sign's surface, and the official FabCafe tag (design system file) hangs from its top edge
+    var M=Math.round(W/297*12);
+    x.strokeStyle='#231815'; x.lineWidth=4; x.strokeRect(M,M,W-2*M,H-2*M);
+    if (LOGO_IMG) x.drawImage(LOGO_IMG, M+110, M, 440, 440 * 113.40 / 283.47);
+    // no-drinks icon
+    var cx=W/2, cy=520, R=200; x.lineWidth=36; x.strokeStyle='#d80c0e'; x.beginPath(); x.arc(cx,cy,R,0,Math.PI*2); x.stroke();
+    x.lineWidth=22; x.strokeStyle='#231815'; x.lineJoin='round'; x.beginPath(); x.moveTo(cx-64,cy-90); x.lineTo(cx+64,cy-90); x.lineTo(cx+46,cy+118); x.lineTo(cx-46,cy+118); x.closePath(); x.stroke();
+    x.lineWidth=18; x.beginPath(); x.moveTo(cx-55,cy-18); x.lineTo(cx+55,cy-18); x.stroke();
+    x.lineWidth=36; x.strokeStyle='#d80c0e'; x.beginPath(); x.moveTo(cx-R*0.707,cy+R*0.707); x.lineTo(cx+R*0.707,cy-R*0.707); x.stroke();
+    x.fillStyle='#231815'; x.font='700 150px '+JP; x.fillText('機材の上に飲み物を',W/2,960); x.fillText('置かないでください',W/2,1140);
+    x.font='700 92px '+EN; x.fillText('Please don’t put drinks on the machines',W/2,1330);
+    x.fillStyle='#595959'; x.font='400 50px '+JP; x.fillText('こぼれると故障の原因になります · Spills can break the equipment',W/2,1450);
+    return c;
+  }
+  function makePDF(jpg, iw, ih){
+    var enc=new TextEncoder(), parts=[], off=0, xref=[];
+    function add(d){ var b=typeof d==='string'?enc.encode(d):d; parts.push(b); off+=b.length; }
+    function obj(n,body){ xref[n]=off; add(n+' 0 obj\n'); body(); add('\nendobj\n'); }
+    var pw=iw<ih?595:842, ph=iw<ih?842:595, content='q '+pw+' 0 0 '+ph+' 0 0 cm /Im0 Do Q';
+    add('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+    obj(1,function(){ add('<< /Type /Catalog /Pages 2 0 R >>'); });
+    obj(2,function(){ add('<< /Type /Pages /Kids [3 0 R] /Count 1 >>'); });
+    obj(3,function(){ add('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+pw+' '+ph+'] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>'); });
+    obj(4,function(){ add('<< /Type /XObject /Subtype /Image /Width '+iw+' /Height '+ih+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+jpg.length+' >>\nstream\n'); add(jpg); add('\nendstream'); });
+    obj(5,function(){ add('<< /Length '+content.length+' >>\nstream\n'+content+'\nendstream'); });
+    var xo=off, t='xref\n0 6\n0000000000 65535 f \n'; for(var i=1;i<=5;i++) t+=String(xref[i]).padStart(10,'0')+' 00000 n \n';
+    add(t+'trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n'+xo+'\n%%EOF\n');
+    return new Blob(parts,{type:'application/pdf'});
+  }
+  function canvasToPDF(c){
+    return new Promise(function(res){ c.toBlob(res,'image/jpeg',0.92); }).then(function(b){ return b.arrayBuffer(); }).then(function(buf){ return makePDF(new Uint8Array(buf), c.width, c.height); });
+  }
+  // Map PDF: A4 portrait (the plan is taller than wide) at 300 dpi, 12 mm margins, title line, then the plan scaled to fit.
+  window.__mapPDF = function(){
+    return window.__planPNG().then(function(png){
+      return new Promise(function(res,rej){ var u=URL.createObjectURL(png), im=new Image(); im.onload=function(){res(im)}; im.onerror=rej; im.src=u; });
+    }).then(function(im){
+      var W=2480, H=3508, M=Math.round(W/210*12), c=document.createElement('canvas'); c.width=W; c.height=H; var x=c.getContext('2d');
+      x.fillStyle='#fff'; x.fillRect(0,0,W,H);
+      var name=(document.getElementById('layout-name').value||'').trim(), seats=document.getElementById('st-seats').textContent;
+      x.fillStyle='#231815'; x.textBaseline='alphabetic'; x.textAlign='left';
+      x.font='700 84px "Roboto Condensed","Helvetica Neue","Noto Sans JP",sans-serif'; x.fillText(name, M, M+80);
+      x.fillStyle='#595959'; x.font='400 44px Roboto,"Helvetica Neue","Noto Sans JP",sans-serif';
+      x.fillText('FabCafe Tokyo 1F · '+new Date().toISOString().slice(0,10)+' · '+seats+' seats 席', M, M+150);
+      x.fillStyle='#d80c0e'; x.fillRect(M, M+180, W-2*M, 4);
+      var top=M+210, aw=W-2*M, ah=H-top-M, k=Math.min(aw/im.width, ah/im.height), iw=im.width*k, ih=im.height*k;
+      x.drawImage(im, M+(aw-iw)/2, top, iw, ih);
+      return canvasToPDF(c);
+    });
+  };
+  document.getElementById('share-pdf').addEventListener('click',function(){
+    if (window.FC_PRINT){ window.FC_PRINT.open({pages:['map']}); return; }
+    dlP.then(function(dl){
+      if(!dl){ try{ window.print(); }catch(e){} return; }
+      var name=((document.getElementById('layout-name').value||'layout').trim().replace(/[\\/:*?"<>|]+/g,' ').slice(0,60))||'layout';
+      return document.fonts.ready.then(window.__mapPDF).then(function(pdf){ return dl.save({filename:'FabCafe 1F - '+name+'.pdf', data:pdf}); }).catch(function(){});
+    });
+  });
+  window.__signPDF = function(){
+    return (document.fonts && document.fonts.load ? Promise.all([document.fonts.load('700 150px "Noto Sans JP"','機材'), document.fonts.load('400 50px "Noto Sans JP"','故障')]).catch(function(){}) : Promise.resolve()).then(loadLogo).then(function(){
+      var c=drawSign();
+      return new Promise(function(res){ c.toBlob(res,'image/jpeg',0.92); }).then(function(b){ return b.arrayBuffer(); }).then(function(buf){ return makePDF(new Uint8Array(buf), c.width, c.height); });
+    });
+  };
+  document.getElementById('sign-print').addEventListener('click',function(){
+    var lbl=document.getElementById('sign-print-lbl'), orig='PDFで保存 · Save PDF';
+    function say(t){ lbl.textContent=t; setTimeout(function(){lbl.textContent=orig},2500); }
+    dlP.then(function(dl){
+      if(!dl){ try{ window.print(); }catch(e){} return; }
+      return window.__signPDF().then(function(pdf){ return dl.save({filename:'FabCafe_no-drinks-sign.pdf', data:pdf}); })
+        .then(function(){ say('保存しました · Saved'); })
+        .catch(function(e){ if(e && e.code==='declined') return; say('保存できませんでした · Could not save'); });
+    });
+  });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!sign.hidden) showSign(false); });
+})();
+</script>

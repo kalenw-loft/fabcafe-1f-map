@@ -1,0 +1,12 @@
+# internal / not for the public repo
+FC_1F_PLAN_2026.pdf
+baito-notes-sources.md
+baito-notes-ja.md
+_archive/
+.claude/
+rebase.py
+trace-check.html
+review*.png
+fabcafe-1f-map.html
+node_modules/
+.DS_Store

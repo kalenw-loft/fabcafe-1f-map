@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+"""Build the single-file FabCafe 1F Map: editor + floor data + staff sheet + print composer.
+
+    python3 build.py        -> fabcafe-1f-map.html (artifact) + index.html (web)
+"""
+from pathlib import Path
+
+ROOT = Path(__file__).parent
+read = lambda n: (ROOT / n).read_text(encoding='utf-8')
+
+
+def opt(n):
+    p = ROOT / n
+    return p.read_text(encoding='utf-8') if p.exists() else ''
+
+
+def main():
+    s = read('editor.html')
+    tag = '<script src="plan-data.js"></script>'
+    assert s.count(tag) == 1, 'plan-data.js tag not found'
+    s = s.replace(tag, '<script>\n' + read('plan-data.js').replace('</script', '<\\/script') + '\n</script>')
+
+    css = ''.join(f'<style id="{n.replace(".", "-")}">\n{opt(n)}\n</style>\n' for n in ('memo.css', 'print.css') if opt(n))
+    anchor = '<style id="plan-css"></style>\n'
+    assert s.count(anchor) == 1, 'plan-css anchor not found'
+    s = s.replace(anchor, anchor + css)
+
+    # modules load after the editor script, so window.FC_MAP already exists
+    tail = ''
+    for mod in ('memo', 'print'):
+        tail += opt(mod + '.html')
+        if opt(mod + '.js'):
+            tail += f'\n<script>\n{opt(mod + ".js")}\n</script>\n'
+    s = s.rstrip() + '\n' + tail
+
+    (ROOT / 'fabcafe-1f-map.html').write_text(s, encoding='utf-8')
+    print(f'fabcafe-1f-map.html  {len(s.encode()) // 1024} KB')
+
+    # standalone web page (GitHub Pages): the artifact host normally adds this head
+    head = ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+            '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
+            '<meta name="robots" content="noindex">\n</head>\n<body>\n')
+    (ROOT / 'index.html').write_text(head + s + '</body>\n</html>\n', encoding='utf-8')
+    print('index.html (web)')
+
+
+if __name__ == '__main__':
+    main()

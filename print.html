@@ -1,0 +1,27 @@
+
+<!-- ======================= Print composer (print.html) ======================= -->
+<div class="pd" id="pd" hidden>
+  <div class="pd-card" role="dialog" aria-modal="true" aria-labelledby="pd-title" aria-describedby="pd-sub">
+    <header class="pd-head">
+      <div>
+        <h3 id="pd-title">Print</h3>
+        <p class="pd-sub" id="pd-sub"></p>
+      </div>
+      <button class="btn icon" id="pd-x" type="button" aria-label="Close"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </header>
+    <div class="pd-body">
+      <p class="pd-warn" id="pd-warn" hidden><svg class="i" viewBox="0 0 24 24"><path d="M12 3L2 20h20zM12 10v4M12 17v1"/></svg><span></span></p>
+      <div class="pd-pages" id="pd-pages" role="group" aria-labelledby="pd-title"></div>
+      <ul class="pd-notes">
+        <li id="pd-copies"></li>
+        <li id="pd-pdf"></li>
+      </ul>
+    </div>
+    <footer class="pd-actions">
+      <span class="pd-count" id="pd-count" aria-live="polite"></span>
+      <button class="btn" id="pd-cancel" type="button">Cancel</button>
+      <button class="btn primary" id="pd-go" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H4v-8h16v8h-3M7 14h10v7H7z"/></svg><span>Print</span></button>
+    </footer>
+  </div>
+</div>
+<div id="print-root" aria-hidden="true"></div>
