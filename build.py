@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the single-file FabCafe 1F Map: editor + floor data + staff sheet + print composer.
+"""Build the single-file FabCafe Floor Map (1F / 2F / 10F): editor + floor data + staff sheet + print composer.
 
     python3 build.py        -> fabcafe-1f-map.html (artifact) + index.html (web)
 """
@@ -16,9 +16,11 @@ def opt(n):
 
 def main():
     s = read('editor.html')
-    tag = '<script src="plan-data.js"></script>'
-    assert s.count(tag) == 1, 'plan-data.js tag not found'
-    s = s.replace(tag, '<script>\n' + read('plan-data.js').replace('</script', '<\\/script') + '\n</script>')
+    # floor plans (1F, 2F, 10F) + the floor picker, inlined in this order
+    for n in ('plan-data.js', 'plan-2f.js', 'plan-10f.js', 'floors.js'):
+        tag = f'<script src="{n}"></script>'
+        assert s.count(tag) == 1, n + ' tag not found'
+        s = s.replace(tag, '<script>\n' + read(n).replace('</script', '<\\/script') + '\n</script>')
 
     css = ''.join(f'<style id="{n.replace(".", "-")}">\n{opt(n)}\n</style>\n' for n in ('memo.css', 'print.css') if opt(n))
     anchor = '<style id="plan-css"></style>\n'

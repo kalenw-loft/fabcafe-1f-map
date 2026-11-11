@@ -3,7 +3,8 @@
 // interpolation between grid lines X1..X3 / Y4..Y1. Typical error well under 100 mm.
 // Coordinates: mm. Origin = X1 x Y4 (top-left grid corner). x right, y DOWN. rot = degrees clockwise.
 // Chair rot convention: rot 0 = chair faces +y (down), backrest on the -y side.
-window.PLAN = {
+(window.PLANS = window.PLANS || {})['1F'] = {
+  machines: true, // fab machines on this floor: shows the 貼り紙 (no-drinks sign) button
   meta: { name: 'FabCafe Tokyo 1F', source: 'FC_1F_PLAN_2026.pdf (配置図, 2026/02 更新, 1:100 A3)', units: 'mm' },
   grid: { x: [{id:'X1',v:0},{id:'X2',v:5450},{id:'X3',v:13885}], y: [{id:'Y4',v:0},{id:'Y3',v:7530},{id:'Y2',v:10730},{id:'Y1',v:18260}] },
   view: { minX: -1700, minY: -1700, maxX: 15000, maxY: 19150 },

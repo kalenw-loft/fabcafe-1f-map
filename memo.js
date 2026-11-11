@@ -4,8 +4,11 @@
 (() => {
 'use strict';
 const MAP = window.FC_MAP || null;
-const KEY = 'fabcafe-1f-map:memo:v1';
-const TRASH_DEF = 'ピアビル1階ゴミ置き場の奥「階段下」';
+const FLOOR = (MAP && MAP.floor && MAP.floor()) || '1F';
+const KEY = FLOOR === '1F' ? 'fabcafe-1f-map:memo:v1' : 'fabcafe-1f-map:' + FLOOR + ':memo:v1';
+const MAPNAME = FLOOR + 'マップ';
+const NORMAL = (MAP && MAP.normalJp && MAP.normalJp()) || '通常営業';
+const TRASH_DEF = '';
 const DEF = {eventName:'', date:'', staff:'', staffContact:'', tMeet:'', tPrep:'', tOpen:'', tEnd:'21:30', tLeave:'22:30',
   guests:'', drink:'', keep:'', dishes:'', trash:TRASH_DEF, trashWhen:'', lights:'', lock:'', lostFound:'', extra:''};
 const KEYS = Object.keys(DEF);
@@ -78,12 +81,12 @@ function sheetHTML(m){
         <li><b>都度注文</b>：お客さんにレジで注文と支払いをしてもらう</li>
         <li><b>飲み放題</b>：ドリンク担当が自由に出す</li></ul>`;
   const times = [['集合・打刻', m.tMeet], ['準備', m.tPrep], ['開場', m.tOpen], ['終了 → 片付け', m.tEnd], ['退勤・打刻', m.tLeave]];
-  const map = has(layoutName) ? `別紙：1Fマップ「${esc(layoutName)}」` : '別紙：1Fマップ';
+  const map = has(layoutName) ? `別紙：${MAPNAME}「${esc(layoutName)}」` : '別紙：' + MAPNAME;
   const ticket = d === 'one' ? '<li>ドリンクチケットの枚数を担当社員に伝えた</li>'
     : d === '' ? '<li>ドリンクチケットの枚数を伝えた<small>ワンドリンクの日だけ</small></li>' : '';
   return `
 <header class="ms-head">
-  <div class="ms-top"><span class="ms-tag">FabCafe</span><span class="ms-kind">イベント当日シート<small>Tokyo 1F・アルバイト用</small></span><span class="ms-map c2">${map}</span></div>
+  <div class="ms-top"><span class="ms-tag">FabCafe</span><span class="ms-kind">イベント当日シート<small>Tokyo ${FLOOR}・アルバイト用</small></span><span class="ms-map c2">${map}</span></div>
   <h1 class="ms-title">${has(m.eventName) ? `<span class="c2">${esc(m.eventName.trim())}</span>` : ln()}</h1>
   <p class="ms-meta">
     <span><span class="k">日付</span>${has(m.date) ? `<b class="c1">${esc(fmtDate(m.date))}</b>` : ln()}</span>
@@ -106,7 +109,7 @@ function sheetHTML(m){
   <div class="ms-col"><h3><span class="n">1</span>準備${has(m.tPrep) ? `<small class="num">${esc(m.tPrep.trim())}〜</small>` : ''}</h3>
     <ol>
       <li>机や椅子を動かす前に、今の配置を<span class="em">スマホで撮る</span>（片付けで元に戻すときに使う）</li>
-      <li>机と椅子を、別紙の<span class="em">「1Fマップ」</span>のとおりに並べる</li>
+      <li>机と椅子を、別紙の<span class="em">「${MAPNAME}」</span>のとおりに並べる</li>
       <li>他の階から椅子や机を借りたら、<span class="em">マスキングテープで印</span>をつける</li>
       <li>ドリンクとフードの数と種類を、カフェスタッフともう一度確認する</li>
     </ol></div>
@@ -114,14 +117,14 @@ function sheetHTML(m){
     <ol>
       <li>一般のお客さんが来たら、入口で<span class="em">「本日は貸切です」</span>と伝える</li>
       <li>ゴミ箱がいっぱいでないか、ときどき見る。ウォーターサーバーが空になったら補充</li>
-      <li>主催者の方が厨房に入ろうとしたり、許可なく FabCafe の備品を使おうとしたら、ひと声かける</li>
+      <li>厨房と FabCafe の備品は許可制。使いたいと言われたら担当社員へ</li>
     </ol>
     <ul><li>受付・設営の力仕事・マイクやスライドの操作など、<span class="em">カフェ以外の仕事</span>を頼まれたら担当社員に相談</li></ul></div>
   <div class="ms-col"><h3><span class="n">3</span>片付け${has(m.tEnd) ? `<small class="num">${esc(m.tEnd.trim())}〜</small>` : ''}</h3>
     <ol class="order">
       <li><span class="em">ゴミ出し</span>（下の「ゴミ」を見る）</li>
       <li><span class="em">テーブル拭き</span></li>
-      <li><span class="em">レイアウトを元に戻す</span>：1Fマップ<span class="em">「通常営業」</span>のページと、準備で撮った写真を見て</li>
+      <li><span class="em">レイアウトを元に戻す</span>：${MAPNAME}<span class="em">「${NORMAL}」</span>のページと、準備で撮った写真を見て</li>
     </ol>
     <ul>
       <li>借りた椅子と机は、テープの印を見て元の階に返す</li>
@@ -141,7 +144,7 @@ function sheetHTML(m){
   <div class="ms-box ms-check"><h3>帰る前チェック</h3>
     <ul>
       <li>テーブルを拭いた</li>
-      <li>「通常営業」の配置に戻した</li>
+      <li>「${NORMAL}」の配置に戻した</li>
       <li>借りた椅子・机を返した</li>
       <li>ゴミを分けて、決められた場所に出した</li>
       ${ticket}
@@ -185,11 +188,11 @@ function plainText(){
   if (d) L.push(`ドリンク：${DRINK[d].how}${DRINK[d].sub ? '。' + DRINK[d].sub : ''}`);
   else L.push('ドリンクの出し方：ワンドリンク（チケットを保管→枚数を担当社員に。追加はカウンターで有料）／都度注文（レジで注文と支払い）／飲み放題（ドリンク担当が自由に出す）のどれか');
   L.push(`人数：${has(m.guests) ? guestsTxt(m.guests) : '（未定）'}`, `動かさないもの：${o(m.keep)}`);
-  L.push('', '■ 準備', '1. 動かす前に、今の配置をスマホで撮る', '2. 机と椅子は「1Fマップ」のとおりに並べる', '3. 他の階から借りた椅子・机にはマスキングテープで印', '4. ドリンクとフードの数と種類をカフェスタッフと再確認');
-  L.push('', '■ イベント中', '1. 一般のお客さんには入口で「本日は貸切です」', '2. ゴミ箱をときどき確認。ウォーターサーバーが空なら補充', '3. 主催者の方が厨房に入ったり、許可なく備品を使おうとしたら、ひと声かける', '・カフェ以外の仕事（受付・設営の力仕事・マイクやスライド操作）を頼まれたら担当社員に相談');
-  L.push('', `■ 片付け（${o(m.tEnd)}〜）`, '①ゴミ出し ②テーブル拭き ③レイアウトを元に戻す（1Fマップ「通常営業」と準備の写真を見て）', '・借りた椅子と机は、テープの印を見て元の階へ', '・残った飲み物と食べ物は、キッチン・バー側で片付け', `・食器とグラスの洗い物：${o(m.dishes)}`);
+  L.push('', '■ 準備', '1. 動かす前に、今の配置をスマホで撮る', `2. 机と椅子は「${MAPNAME}」のとおりに並べる`, '3. 他の階から借りた椅子・机にはマスキングテープで印', '4. ドリンクとフードの数と種類をカフェスタッフと再確認');
+  L.push('', '■ イベント中', '1. 一般のお客さんには入口で「本日は貸切です」', '2. ゴミ箱をときどき確認。ウォーターサーバーが空なら補充', '3. 厨房と FabCafe の備品は許可制。使いたいと言われたら担当社員へ', '・カフェ以外の仕事（受付・設営の力仕事・マイクやスライド操作）を頼まれたら担当社員に相談');
+  L.push('', `■ 片付け（${o(m.tEnd)}〜）`, `①ゴミ出し ②テーブル拭き ③レイアウトを元に戻す（${MAPNAME}「${NORMAL}」と準備の写真を見て）`, '・借りた椅子と机は、テープの印を見て元の階へ', '・残った飲み物と食べ物は、キッチン・バー側で片付け', `・食器とグラスの洗い物：${o(m.dishes)}`);
   L.push('', '■ ゴミ', '分け方：可燃・生ゴミ／不燃／カン・ビン・PET／段ボール（つぶしてひもで縛る）', `場所：${o(m.trash)}（開け方は担当社員に）`, `いつ出す：${o(m.trashWhen)}`, '×他のテナントのゴミ置き場には絶対に捨てない', '?分け方がわからないもの（傘、電球など）は捨てずに担当社員へ');
-  L.push('', '■ 帰る前チェック', '□テーブルを拭いた', '□「通常営業」の配置に戻した', '□借りた椅子・机を返した', '□ゴミを分けて、決められた場所に出した');
+  L.push('', '■ 帰る前チェック', '□テーブルを拭いた', `□「${NORMAL}」の配置に戻した`, '□借りた椅子・机を返した', '□ゴミを分けて、決められた場所に出した');
   if (d === 'one') L.push('□ドリンクチケットの枚数を担当社員に伝えた'); else if (!d) L.push('□ドリンクチケットの枚数を伝えた（ワンドリンクの日だけ）');
   L.push(`□忘れ物がないか見て回った（見つけたら：${o(m.lostFound)}）`, '□店内に人が残っていないか確認した', `□消灯・空調・機材の電源（担当：${o(m.lights)}）`, `□施錠と鍵の返却（担当：${o(m.lock)}）`, '□ジョブカンで退勤を打刻した');
   if (has(m.extra)) L.push('', '■ メモ', m.extra.trim());
@@ -212,7 +215,7 @@ const FORM = [
     ['tPrep', '準備', 'Set-up', 'w2', {time:1}],
     ['tOpen', '開場', 'Doors', 'w2', {time:1}],
     ['tEnd', '終了・片付け', 'End', 'w3', {time:1}],
-    ['tLeave', '退勤', 'Leave', 'w3', {time:1, hint:'利用ルールでは撤収含め22:00まで — カフェマネージャーに確認'}]
+    ['tLeave', '退勤', 'Leave', 'w3', {time:1, hint:'撤収の終わりの時間は利用ルールに合わせる'}]
   ]],
   ['当日のやり方', 'On the night', [
     ['drink', 'ドリンクの出し方', 'Drinks', '', {seg:1}],
@@ -220,8 +223,8 @@ const FORM = [
   ]],
   ['片付け・戸締り', 'Close-up', [
     ['dishes', '食器とグラスの洗い物', 'Dishes', '', {max:80, hint:'手順が決まっていなければ空欄のまま（手書きの線になります）'}],
-    ['trash', 'ゴミ置き場', 'Trash: where', '', {max:80, hint:'1Fカフェも同じか要確認。暗証番号は書かない'}],
-    ['trashWhen', 'ゴミをいつ出すか', 'Trash: when', '', {max:60, ph:'例：夜のうちに出す／翌朝まで置く', hint:'夜に出してよいか、カフェのゴミと分けるか要確認'}],
+    ['trash', 'ゴミ置き場', 'Trash: where', '', {max:80, hint:'暗証番号は書かない'}],
+    ['trashWhen', 'ゴミをいつ出すか', 'Trash: when', '', {max:60, ph:'例：夜のうちに出す／翌朝まで置く', hint:'夜に出してよいかは担当社員に確認'}],
     ['lights', '消灯・空調・機材の担当', 'Lights / AC', 'w3', {max:30}],
     ['lock', '施錠・鍵の返却の担当', 'Lock-up', 'w3', {max:30, hint:'鍵の返却先を確認'}],
     ['lostFound', '忘れ物を見つけたら', 'Lost & found', '', {max:60, ph:'例：レジ下の箱に入れて担当社員に'}],
@@ -262,7 +265,7 @@ function fillHelp(){
   let st = {}, notes = [];
   try { st = MAP.stats() || {}; notes = (MAP.annotations() || []).map(a => a.label).filter(Boolean); } catch(e){}
   const h1 = $('#memo-form [data-help="mapSeats"]'), h2 = $('#memo-form [data-help="mapNotes"]');
-  if (h1) h1.textContent = st.seats != null ? `1Fマップ：席 ${st.seats}・立ち ${st.standing || 0} 名まで` : '';
+  if (h1) h1.textContent = st.seats != null ? `${MAPNAME}：席 ${st.seats}・立ち ${st.standing || 0} 名まで` : '';
   if (h2) h2.textContent = notes.length ? 'マップのメモ：' + notes.slice(0, 4).join('、') : '';
 }
 

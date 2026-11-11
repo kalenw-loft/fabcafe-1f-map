@@ -6,6 +6,7 @@ if (!MAP) return;
 const $ = s => document.querySelector(s);
 const root = $('#print-root'), dlg = $('#pd');
 if (!root || !dlg) return;
+const FLOOR = (MAP.floor && MAP.floor()) || '1F', NORMAL = (MAP.normalJp && MAP.normalJp()) || '通常営業', SRC = (MAP.sourceNote && MAP.sourceNote()) || '';
 
 const T = {
   en:{title:'Print', sub:'Pick the pages to print. Every page is A4 portrait.', map:'Floor plan', memo:'Staff sheet', restore:'Teardown: normal cafe layout',
@@ -67,7 +68,7 @@ function inlineSVG(str, label){
   svg.setAttribute('class', 'pp-svg');
   svg.setAttribute('width', '100%'); svg.setAttribute('height', '100%');
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-  svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', label || 'FabCafe Tokyo 1F');
+  svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', label || 'FabCafe Tokyo ' + FLOOR);
   return svg;
 }
 
@@ -78,7 +79,7 @@ function frame(kind, kindEn, n, total){
   brand.append(el('span', 'pp-tag', 'FabCafe'), bi('span', 'pp-kind', kind.jp, kindEn));
   head.appendChild(brand); p.appendChild(head);
   const foot = el('footer', 'pp-foot');
-  foot.append(el('span', null, 'FabCafe Tokyo 1F · 配置図 2026/02 ベース · 印刷 ' + today()), el('span', null, total > 1 ? n + ' / ' + total : ''));
+  foot.append(el('span', null, 'FabCafe Tokyo ' + FLOOR + ' · ' + SRC + ' · 印刷 ' + today()), el('span', null, total > 1 ? n + ' / ' + total : ''));
   return {p, head, foot};
 }
 function legend(){
@@ -125,12 +126,12 @@ const PAGES = {
   },
   restore(n, total){
     const {p, head, foot} = frame({key:'restore', jp:'片付け'}, 'Teardown', n, total);
-    head.append(el('h1', 'pp-title', '片付け：通常営業に戻す'), el('p', 'pp-sub', 'Reset to the normal cafe layout'));
+    head.append(el('h1', 'pp-title', '片付け：' + NORMAL + 'に戻す'), el('p', 'pp-sub', FLOOR === '1F' ? 'Reset to the normal cafe layout' : 'Reset to the usual layout'));
     const ol = el('ol', 'pp-steps');
     [['借りた椅子・机はテープの印を見て元の階へ', 'Borrowed chairs/tables go back to their floor — check the tape marks'],
      ['準備のときに撮った写真と見比べる', 'Compare with the photo taken during setup'],
      ['終わったら担当社員に声をかける', 'Tell the staff member in charge when you are done']].forEach(([jp, en]) => ol.appendChild(bi('li', null, jp, en)));
-    const plan = el('div', 'pp-plan'); plan.appendChild(inlineSVG(MAP.svg(MAP.presetItems('cafe'), '通常営業'), '通常営業'));
+    const plan = el('div', 'pp-plan'); plan.appendChild(inlineSVG(MAP.svg(MAP.presetItems('cafe'), NORMAL), NORMAL));
     p.append(ol, plan, foot);
     return p;
   }
@@ -211,7 +212,7 @@ async function savePDF(pages){
     }
     const L = MAP.getLayout(), m = memoData();
     const name = (String(m.eventName || L.name || 'layout').trim().replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 60)) || 'layout';
-    await dl.save({filename:'FabCafe 1F - ' + name + '.pdf', data:pdfFrom(jpgs)});
+    await dl.save({filename:'FabCafe ' + FLOOR + ' - ' + name + '.pdf', data:pdfFrom(jpgs)});
     close(true); MAP.toast(t('saved'));
   } catch(e){
     if (!(e && e.code === 'declined')){ console.error(e); MAP.toast(t('failed')); }

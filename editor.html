@@ -1,4 +1,4 @@
-<title>FabCafe 1F Map</title>
+<title>FabCafe Floor Map</title>
 <style>
 /* ---------- Tokens (FabCafe Design System) ---------- */
 :root{
@@ -61,6 +61,9 @@ svg.i{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke
 .tag{display:inline-flex;align-items:flex-end;height:44px;padding:0 12px 6px;background:var(--red);color:#fff;font:700 22px/1 var(--font-display);letter-spacing:.01em;border-radius:0 0 12px 12px}
 .logo-tag{display:block;width:110px;height:auto;color:#D80C0E;flex:none}
 .brand-sub{align-self:center;font:700 18px/1 var(--font-display);letter-spacing:.04em}
+.floor-seg{margin-left:2px}
+.floor-seg button{font:700 15px/1 var(--font-display);letter-spacing:.03em;padding:12px 9px 0;color:var(--fg)}
+.floor-seg button[aria-pressed="true"]{color:#fff}
 .name-input{flex:1 1 auto;min-width:0;max-width:420px;height:34px;padding:0 10px;border:1px solid transparent;border-radius:var(--r-sm);background:transparent;font:700 18px/1 var(--font-display);letter-spacing:.01em}
 .name-input:hover{border-color:var(--line)}
 .name-input:focus{border-color:var(--fg);outline:none}
@@ -149,6 +152,13 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
 .sheet-tabs{display:none}
 
 /* ---------- Modal / toast ---------- */
+.menu-hr{border:0;border-top:1px solid var(--line);margin:4px 6px}
+.pe-list{display:flex;flex-direction:column;gap:8px;margin-bottom:4px}
+.pe-row{display:grid;grid-template-columns:1fr auto;gap:4px 8px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:var(--r-sm)}
+.pe-row.off{opacity:.55}
+.pe-row small{color:var(--fg-muted);font-size:11px}
+.pe-acts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+.pe-acts .btn{height:32px;font-size:12px}
 .modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
 .modal-card{width:min(560px,100%);max-height:calc(100% - 32px);overflow:auto;background:var(--bg);border:1px solid var(--fg);border-radius:var(--r-md);padding:20px}
 .modal-card h3{margin:0 0 6px;font:700 22px/1.1 var(--font-display)}
@@ -238,7 +248,7 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
 <div class="app" id="app" data-sheet="add">
   <!-- Top bar -->
   <header class="topbar">
-    <div class="brand"><svg class="logo-tag" viewBox="0 0 283.47 113.40" role="img" aria-label="FabCafe"><path fill="currentColor" d="M117.00 56.59C120.68 56.59 121.41 52.90 121.41 45.73C121.41 38.54 120.68 34.87 117.00 34.87C113.25 34.87 112.52 38.54 112.52 45.73C112.52 52.90 113.25 56.59 117.00 56.59ZM225.64 34.13C222.27 34.13 221.29 37.63 221.29 40.69L221.29 41.98L229.94 41.98C229.76 36.95 229.14 34.13 225.64 34.13ZM117.74 81.41C116.09 81.41 115.76 83.06 115.76 86.27C115.76 89.48 116.09 91.13 117.74 91.13C119.41 91.13 119.74 89.48 119.74 86.27C119.74 83.06 119.41 81.41 117.74 81.41ZM238.04 47.01L221.29 47.01L221.29 49.65C221.29 53.52 222.33 57.32 225.46 57.32C228.28 57.32 229.45 55.17 229.94 51.12L237.54 51.12C237.24 58.80 233.56 63.08 225.58 63.08C213.31 63.08 212.82 53.64 212.82 45.42C212.82 36.58 214.54 28.36 225.95 28.36C235.83 28.36 238.04 34.99 238.04 45.11L238.04 47.01ZM234.11 83.41L233.02 84.65C232.06 85.72 231.67 86.41 231.67 87.81L231.67 88.22L228.27 88.22L228.27 87.15C228.27 85.31 228.73 84.24 229.97 82.84L231.01 81.66C231.78 80.81 232.06 79.85 232.06 78.75C232.06 77.35 231.42 76.42 230.19 76.42C228.79 76.42 228.24 77.65 228.24 79.44L228.24 80.12L224.61 80.12L224.61 79.49C224.61 76.20 226.43 73.84 230.05 73.84C233.89 73.84 235.84 75.92 235.84 79.13C235.84 80.61 235.43 81.93 234.11 83.41M228.07 90.03H231.86V93.65H228.07ZZM217.12 94.04C215.63 94.04 214.60 93.46 213.77 92.09L213.71 92.09L213.71 93.65L210.09 93.65L210.09 74.06L213.88 74.06L213.88 80.26L213.94 80.26C214.73 79.08 215.69 78.50 217.12 78.50C220.22 78.50 221.65 80.78 221.65 86.27C221.65 91.76 220.22 94.04 217.12 94.04ZM204.49 93.65C204.24 93.19 204.14 92.61 204.02 92.12L203.97 92.12C203.09 93.65 202.02 94.04 200.21 94.04C197.57 94.04 196.64 91.79 196.64 89.81C196.64 87.04 197.77 85.91 200.37 85.20L202.51 84.62C203.64 84.32 204.02 83.88 204.02 82.90C204.02 81.77 203.53 81.08 202.27 81.08C201.11 81.08 200.51 81.85 200.51 83.00L200.51 83.41L197.11 83.41L197.11 83.06C197.11 79.65 199.44 78.50 202.29 78.50C206.79 78.50 207.65 80.37 207.65 83.03L207.65 90.80C207.65 92.17 207.73 92.80 208.11 93.65L204.49 93.65ZM195.86 76.44C195.61 76.42 195.37 76.42 195.12 76.42C194.05 76.42 193.66 76.75 193.66 77.60L193.66 78.89L195.86 78.89L195.86 81.47L193.66 81.47L193.66 93.65L189.87 93.65L189.87 81.47L187.95 81.47L187.95 78.89L189.87 78.89L189.87 77.21C189.87 74.55 191.38 73.67 193.83 73.67C194.52 73.67 195.17 73.70 195.86 73.75L195.86 76.44ZM183.05 58.80L182.92 58.80C180.96 62.23 178.57 63.08 174.52 63.08C168.63 63.08 166.55 58.06 166.55 53.64C166.55 47.44 169.06 44.93 174.89 43.34L179.68 42.04C182.19 41.37 183.05 40.39 183.05 38.18C183.05 35.66 181.94 34.13 179.12 34.13C176.54 34.13 175.20 35.85 175.20 38.42L175.20 39.35L167.59 39.35L167.59 38.54C167.59 30.94 172.81 28.36 179.19 28.36C189.25 28.36 191.15 32.53 191.15 38.48L191.15 55.85C191.15 58.92 191.34 60.33 192.19 62.23L184.09 62.23C183.54 61.19 183.29 59.90 183.05 58.80ZM180.49 93.65L176.86 93.65L176.86 91.92L176.80 91.92C176.01 93.38 174.64 94.04 173.04 94.04C170.69 94.04 169.28 92.75 169.28 89.84L169.28 78.89L173.07 78.89L173.07 89.07C173.07 90.55 173.57 91.13 174.69 91.13C175.98 91.13 176.70 90.33 176.70 88.69L176.70 78.89L180.49 78.89L180.49 93.65ZM161.70 94.04C157.15 94.12 155.89 91.40 155.89 86.27C155.89 81.22 157.37 78.50 161.70 78.50C166.26 78.42 167.52 81.14 167.52 86.27C167.52 91.32 166.04 94.04 161.70 94.04ZM151.82 92.66C150.50 97.77 149.65 98.49 146.15 98.49L144.61 98.49L144.61 95.66C144.94 95.71 145.27 95.74 145.60 95.74C147.00 95.74 147.52 94.97 147.63 93.65L143.48 78.89L147.44 78.89L149.62 89.10L149.68 89.10L151.60 78.89L155.39 78.89L151.82 92.66ZM134.37 40.33C134.37 27.02 136.02 17.57 149.27 17.57C161.91 17.57 162.83 26.83 162.83 33.21L153.99 33.21C153.99 26.83 152.70 24.07 148.72 24.07C144.25 24.07 143.20 28.55 143.20 40.94C143.20 54.19 145.04 56.59 148.84 56.59C152.03 56.59 154.36 54.93 154.36 45.48L163.20 45.48C163.20 54.93 160.86 63.08 149.27 63.08C136.02 63.08 134.37 53.64 134.37 40.33ZM131.27 94.04C126.71 94.12 125.44 91.40 125.44 86.27C125.44 81.22 126.93 78.50 131.27 78.50C135.82 78.42 137.09 81.14 137.09 86.27C137.09 91.32 135.60 94.04 131.27 94.04ZM123.53 93.65L119.90 93.65L119.90 92.09L119.85 92.09C119.02 93.46 117.98 94.04 116.50 94.04C113.40 94.04 111.97 91.76 111.97 86.27C111.97 80.78 113.40 78.50 116.50 78.50C117.93 78.50 118.89 79.08 119.68 80.26L119.74 80.26L119.74 74.06L123.53 74.06L123.53 93.65ZM104.42 81.47L102.22 81.47L102.22 89.46C102.22 90.61 102.47 91.07 103.57 91.07C103.87 91.07 104.17 91.05 104.42 91.02L104.42 93.65C103.60 93.74 102.83 93.82 101.95 93.82C98.98 93.82 98.44 92.91 98.44 89.92L98.44 81.47L96.51 81.47L96.51 78.89L98.44 78.89L98.44 74.66L102.22 74.66L102.22 78.89L104.42 78.89L104.42 81.47ZM92.17 93.65C91.93 93.19 91.82 92.61 91.71 92.12L91.65 92.12C90.78 93.65 89.71 94.04 87.89 94.04C85.26 94.04 84.32 91.79 84.32 89.81C84.32 87.04 85.45 85.91 88.06 85.20L90.20 84.62C91.32 84.32 91.71 83.88 91.71 82.90C91.71 81.77 91.22 81.08 89.95 81.08C88.80 81.08 88.19 81.85 88.19 83.00L88.19 83.41L84.79 83.41L84.79 83.06C84.79 79.65 87.12 78.50 89.98 78.50C94.48 78.50 95.33 80.37 95.33 83.03L95.33 90.80C95.33 92.17 95.41 92.80 95.80 93.65L92.17 93.65ZM82.52 93.65L78.73 93.65L78.73 83.47C78.73 81.99 78.24 81.41 77.11 81.41C75.82 81.41 75.11 82.21 75.11 83.86L75.11 93.65L71.32 93.65L71.32 74.06L75.11 74.06L75.11 80.40L75.16 80.40C75.87 79.13 77.16 78.50 78.76 78.50C81.12 78.50 82.52 79.79 82.52 82.70L82.52 93.65ZM66.73 93.65L62.42 93.65L60.48 83.16L60.42 83.16L58.58 93.65L54.19 93.65L50.98 78.89L54.77 78.89L56.50 89.37L56.55 89.37L58.39 78.89L62.51 78.89L64.46 89.37L64.51 89.37L66.30 78.89L69.92 78.89L66.73 93.65ZM50.81 18.43L75.29 18.43L75.29 25.66L59.64 25.66L59.64 35.97L71.64 35.97L71.64 43.21L59.64 43.21L59.64 62.23L50.81 62.23L50.81 18.43ZM86.58 28.36C96.65 28.36 98.55 32.53 98.55 38.48L98.55 55.85C98.55 58.92 98.73 60.33 99.59 62.23L91.49 62.23C90.94 61.19 90.70 59.90 90.45 58.80L90.32 58.80C88.36 62.23 85.97 63.08 81.92 63.08C76.03 63.08 73.94 58.06 73.94 53.64C73.94 47.44 76.46 44.93 82.29 43.34L87.08 42.04C89.59 41.37 90.45 40.39 90.45 38.18C90.45 35.66 89.34 34.13 86.52 34.13C83.94 34.13 82.60 35.85 82.60 38.42L82.60 39.35L74.99 39.35L74.99 38.54C74.99 30.94 80.21 28.36 86.58 28.36ZM104.05 18.43L112.52 18.43L112.52 32.29L112.64 32.29C114.42 29.65 116.57 28.36 119.76 28.36C126.69 28.36 129.88 33.46 129.88 45.73C129.88 58.00 126.69 63.08 119.76 63.08C116.44 63.08 114.12 61.80 112.27 58.73L112.15 58.73L112.15 62.23L104.05 62.23L104.05 18.43ZM193.94 29.22L198.23 29.22L198.23 25.48C198.23 19.53 201.60 17.57 207.07 17.57C208.60 17.57 210.07 17.63 211.60 17.75L211.60 23.76C211.05 23.70 210.50 23.70 209.95 23.70C207.55 23.70 206.70 24.44 206.70 26.34L206.70 29.22L211.60 29.22L211.60 34.99L206.70 34.99L206.70 62.23L198.23 62.23L198.23 34.99L193.94 34.99L193.94 29.22ZM0.00 0.00L0.00 82.43C0.00 99.46 13.93 113.39 30.96 113.39L252.50 113.39C269.53 113.39 283.47 99.46 283.47 82.43L283.47 0.00L0.00 0.00ZM131.27 81.08C129.40 81.08 129.23 83.25 129.23 86.27C129.23 89.29 129.40 91.46 131.27 91.46C132.80 91.46 133.29 89.95 133.29 86.27C133.29 82.59 132.80 81.08 131.27 81.08ZM82.05 52.72C82.05 55.24 82.97 57.32 85.23 57.32C87.50 57.32 90.45 55.85 90.45 52.23L90.45 45.73C89.28 46.59 87.87 47.14 86.83 47.38C83.40 48.12 82.05 49.77 82.05 52.72ZM87.95 89.40C87.95 90.53 88.36 91.46 89.37 91.46C90.39 91.46 91.71 90.80 91.71 89.18L91.71 86.27C91.19 86.65 90.56 86.90 90.09 87.01C88.55 87.34 87.95 88.08 87.95 89.40ZM174.65 52.72C174.65 55.24 175.57 57.32 177.84 57.32C180.10 57.32 183.05 55.85 183.05 52.23L183.05 45.73C181.88 46.59 180.47 47.14 179.43 47.38C175.99 48.12 174.65 49.77 174.65 52.72ZM200.26 89.40C200.26 90.53 200.68 91.46 201.69 91.46C202.70 91.46 204.02 90.80 204.02 89.18L204.02 86.27C203.50 86.65 202.87 86.90 202.41 87.01C200.87 87.34 200.26 88.08 200.26 89.40ZM215.89 81.41C214.21 81.41 213.88 83.06 213.88 86.27C213.88 89.48 214.21 91.13 215.89 91.13C217.53 91.13 217.86 89.48 217.86 86.27C217.86 83.06 217.53 81.41 215.89 81.41ZM161.70 81.08C159.84 81.08 159.68 83.25 159.68 86.27C159.68 89.29 159.84 91.46 161.70 91.46C163.25 91.46 163.74 89.95 163.74 86.27C163.74 82.59 163.25 81.08 161.70 81.08Z"/></svg><span class="brand-sub">1F MAP</span></div>
+    <div class="brand"><svg class="logo-tag" viewBox="0 0 283.47 113.40" role="img" aria-label="FabCafe"><path fill="currentColor" d="M117.00 56.59C120.68 56.59 121.41 52.90 121.41 45.73C121.41 38.54 120.68 34.87 117.00 34.87C113.25 34.87 112.52 38.54 112.52 45.73C112.52 52.90 113.25 56.59 117.00 56.59ZM225.64 34.13C222.27 34.13 221.29 37.63 221.29 40.69L221.29 41.98L229.94 41.98C229.76 36.95 229.14 34.13 225.64 34.13ZM117.74 81.41C116.09 81.41 115.76 83.06 115.76 86.27C115.76 89.48 116.09 91.13 117.74 91.13C119.41 91.13 119.74 89.48 119.74 86.27C119.74 83.06 119.41 81.41 117.74 81.41ZM238.04 47.01L221.29 47.01L221.29 49.65C221.29 53.52 222.33 57.32 225.46 57.32C228.28 57.32 229.45 55.17 229.94 51.12L237.54 51.12C237.24 58.80 233.56 63.08 225.58 63.08C213.31 63.08 212.82 53.64 212.82 45.42C212.82 36.58 214.54 28.36 225.95 28.36C235.83 28.36 238.04 34.99 238.04 45.11L238.04 47.01ZM234.11 83.41L233.02 84.65C232.06 85.72 231.67 86.41 231.67 87.81L231.67 88.22L228.27 88.22L228.27 87.15C228.27 85.31 228.73 84.24 229.97 82.84L231.01 81.66C231.78 80.81 232.06 79.85 232.06 78.75C232.06 77.35 231.42 76.42 230.19 76.42C228.79 76.42 228.24 77.65 228.24 79.44L228.24 80.12L224.61 80.12L224.61 79.49C224.61 76.20 226.43 73.84 230.05 73.84C233.89 73.84 235.84 75.92 235.84 79.13C235.84 80.61 235.43 81.93 234.11 83.41M228.07 90.03H231.86V93.65H228.07ZZM217.12 94.04C215.63 94.04 214.60 93.46 213.77 92.09L213.71 92.09L213.71 93.65L210.09 93.65L210.09 74.06L213.88 74.06L213.88 80.26L213.94 80.26C214.73 79.08 215.69 78.50 217.12 78.50C220.22 78.50 221.65 80.78 221.65 86.27C221.65 91.76 220.22 94.04 217.12 94.04ZM204.49 93.65C204.24 93.19 204.14 92.61 204.02 92.12L203.97 92.12C203.09 93.65 202.02 94.04 200.21 94.04C197.57 94.04 196.64 91.79 196.64 89.81C196.64 87.04 197.77 85.91 200.37 85.20L202.51 84.62C203.64 84.32 204.02 83.88 204.02 82.90C204.02 81.77 203.53 81.08 202.27 81.08C201.11 81.08 200.51 81.85 200.51 83.00L200.51 83.41L197.11 83.41L197.11 83.06C197.11 79.65 199.44 78.50 202.29 78.50C206.79 78.50 207.65 80.37 207.65 83.03L207.65 90.80C207.65 92.17 207.73 92.80 208.11 93.65L204.49 93.65ZM195.86 76.44C195.61 76.42 195.37 76.42 195.12 76.42C194.05 76.42 193.66 76.75 193.66 77.60L193.66 78.89L195.86 78.89L195.86 81.47L193.66 81.47L193.66 93.65L189.87 93.65L189.87 81.47L187.95 81.47L187.95 78.89L189.87 78.89L189.87 77.21C189.87 74.55 191.38 73.67 193.83 73.67C194.52 73.67 195.17 73.70 195.86 73.75L195.86 76.44ZM183.05 58.80L182.92 58.80C180.96 62.23 178.57 63.08 174.52 63.08C168.63 63.08 166.55 58.06 166.55 53.64C166.55 47.44 169.06 44.93 174.89 43.34L179.68 42.04C182.19 41.37 183.05 40.39 183.05 38.18C183.05 35.66 181.94 34.13 179.12 34.13C176.54 34.13 175.20 35.85 175.20 38.42L175.20 39.35L167.59 39.35L167.59 38.54C167.59 30.94 172.81 28.36 179.19 28.36C189.25 28.36 191.15 32.53 191.15 38.48L191.15 55.85C191.15 58.92 191.34 60.33 192.19 62.23L184.09 62.23C183.54 61.19 183.29 59.90 183.05 58.80ZM180.49 93.65L176.86 93.65L176.86 91.92L176.80 91.92C176.01 93.38 174.64 94.04 173.04 94.04C170.69 94.04 169.28 92.75 169.28 89.84L169.28 78.89L173.07 78.89L173.07 89.07C173.07 90.55 173.57 91.13 174.69 91.13C175.98 91.13 176.70 90.33 176.70 88.69L176.70 78.89L180.49 78.89L180.49 93.65ZM161.70 94.04C157.15 94.12 155.89 91.40 155.89 86.27C155.89 81.22 157.37 78.50 161.70 78.50C166.26 78.42 167.52 81.14 167.52 86.27C167.52 91.32 166.04 94.04 161.70 94.04ZM151.82 92.66C150.50 97.77 149.65 98.49 146.15 98.49L144.61 98.49L144.61 95.66C144.94 95.71 145.27 95.74 145.60 95.74C147.00 95.74 147.52 94.97 147.63 93.65L143.48 78.89L147.44 78.89L149.62 89.10L149.68 89.10L151.60 78.89L155.39 78.89L151.82 92.66ZM134.37 40.33C134.37 27.02 136.02 17.57 149.27 17.57C161.91 17.57 162.83 26.83 162.83 33.21L153.99 33.21C153.99 26.83 152.70 24.07 148.72 24.07C144.25 24.07 143.20 28.55 143.20 40.94C143.20 54.19 145.04 56.59 148.84 56.59C152.03 56.59 154.36 54.93 154.36 45.48L163.20 45.48C163.20 54.93 160.86 63.08 149.27 63.08C136.02 63.08 134.37 53.64 134.37 40.33ZM131.27 94.04C126.71 94.12 125.44 91.40 125.44 86.27C125.44 81.22 126.93 78.50 131.27 78.50C135.82 78.42 137.09 81.14 137.09 86.27C137.09 91.32 135.60 94.04 131.27 94.04ZM123.53 93.65L119.90 93.65L119.90 92.09L119.85 92.09C119.02 93.46 117.98 94.04 116.50 94.04C113.40 94.04 111.97 91.76 111.97 86.27C111.97 80.78 113.40 78.50 116.50 78.50C117.93 78.50 118.89 79.08 119.68 80.26L119.74 80.26L119.74 74.06L123.53 74.06L123.53 93.65ZM104.42 81.47L102.22 81.47L102.22 89.46C102.22 90.61 102.47 91.07 103.57 91.07C103.87 91.07 104.17 91.05 104.42 91.02L104.42 93.65C103.60 93.74 102.83 93.82 101.95 93.82C98.98 93.82 98.44 92.91 98.44 89.92L98.44 81.47L96.51 81.47L96.51 78.89L98.44 78.89L98.44 74.66L102.22 74.66L102.22 78.89L104.42 78.89L104.42 81.47ZM92.17 93.65C91.93 93.19 91.82 92.61 91.71 92.12L91.65 92.12C90.78 93.65 89.71 94.04 87.89 94.04C85.26 94.04 84.32 91.79 84.32 89.81C84.32 87.04 85.45 85.91 88.06 85.20L90.20 84.62C91.32 84.32 91.71 83.88 91.71 82.90C91.71 81.77 91.22 81.08 89.95 81.08C88.80 81.08 88.19 81.85 88.19 83.00L88.19 83.41L84.79 83.41L84.79 83.06C84.79 79.65 87.12 78.50 89.98 78.50C94.48 78.50 95.33 80.37 95.33 83.03L95.33 90.80C95.33 92.17 95.41 92.80 95.80 93.65L92.17 93.65ZM82.52 93.65L78.73 93.65L78.73 83.47C78.73 81.99 78.24 81.41 77.11 81.41C75.82 81.41 75.11 82.21 75.11 83.86L75.11 93.65L71.32 93.65L71.32 74.06L75.11 74.06L75.11 80.40L75.16 80.40C75.87 79.13 77.16 78.50 78.76 78.50C81.12 78.50 82.52 79.79 82.52 82.70L82.52 93.65ZM66.73 93.65L62.42 93.65L60.48 83.16L60.42 83.16L58.58 93.65L54.19 93.65L50.98 78.89L54.77 78.89L56.50 89.37L56.55 89.37L58.39 78.89L62.51 78.89L64.46 89.37L64.51 89.37L66.30 78.89L69.92 78.89L66.73 93.65ZM50.81 18.43L75.29 18.43L75.29 25.66L59.64 25.66L59.64 35.97L71.64 35.97L71.64 43.21L59.64 43.21L59.64 62.23L50.81 62.23L50.81 18.43ZM86.58 28.36C96.65 28.36 98.55 32.53 98.55 38.48L98.55 55.85C98.55 58.92 98.73 60.33 99.59 62.23L91.49 62.23C90.94 61.19 90.70 59.90 90.45 58.80L90.32 58.80C88.36 62.23 85.97 63.08 81.92 63.08C76.03 63.08 73.94 58.06 73.94 53.64C73.94 47.44 76.46 44.93 82.29 43.34L87.08 42.04C89.59 41.37 90.45 40.39 90.45 38.18C90.45 35.66 89.34 34.13 86.52 34.13C83.94 34.13 82.60 35.85 82.60 38.42L82.60 39.35L74.99 39.35L74.99 38.54C74.99 30.94 80.21 28.36 86.58 28.36ZM104.05 18.43L112.52 18.43L112.52 32.29L112.64 32.29C114.42 29.65 116.57 28.36 119.76 28.36C126.69 28.36 129.88 33.46 129.88 45.73C129.88 58.00 126.69 63.08 119.76 63.08C116.44 63.08 114.12 61.80 112.27 58.73L112.15 58.73L112.15 62.23L104.05 62.23L104.05 18.43ZM193.94 29.22L198.23 29.22L198.23 25.48C198.23 19.53 201.60 17.57 207.07 17.57C208.60 17.57 210.07 17.63 211.60 17.75L211.60 23.76C211.05 23.70 210.50 23.70 209.95 23.70C207.55 23.70 206.70 24.44 206.70 26.34L206.70 29.22L211.60 29.22L211.60 34.99L206.70 34.99L206.70 62.23L198.23 62.23L198.23 34.99L193.94 34.99L193.94 29.22ZM0.00 0.00L0.00 82.43C0.00 99.46 13.93 113.39 30.96 113.39L252.50 113.39C269.53 113.39 283.47 99.46 283.47 82.43L283.47 0.00L0.00 0.00ZM131.27 81.08C129.40 81.08 129.23 83.25 129.23 86.27C129.23 89.29 129.40 91.46 131.27 91.46C132.80 91.46 133.29 89.95 133.29 86.27C133.29 82.59 132.80 81.08 131.27 81.08ZM82.05 52.72C82.05 55.24 82.97 57.32 85.23 57.32C87.50 57.32 90.45 55.85 90.45 52.23L90.45 45.73C89.28 46.59 87.87 47.14 86.83 47.38C83.40 48.12 82.05 49.77 82.05 52.72ZM87.95 89.40C87.95 90.53 88.36 91.46 89.37 91.46C90.39 91.46 91.71 90.80 91.71 89.18L91.71 86.27C91.19 86.65 90.56 86.90 90.09 87.01C88.55 87.34 87.95 88.08 87.95 89.40ZM174.65 52.72C174.65 55.24 175.57 57.32 177.84 57.32C180.10 57.32 183.05 55.85 183.05 52.23L183.05 45.73C181.88 46.59 180.47 47.14 179.43 47.38C175.99 48.12 174.65 49.77 174.65 52.72ZM200.26 89.40C200.26 90.53 200.68 91.46 201.69 91.46C202.70 91.46 204.02 90.80 204.02 89.18L204.02 86.27C203.50 86.65 202.87 86.90 202.41 87.01C200.87 87.34 200.26 88.08 200.26 89.40ZM215.89 81.41C214.21 81.41 213.88 83.06 213.88 86.27C213.88 89.48 214.21 91.13 215.89 91.13C217.53 91.13 217.86 89.48 217.86 86.27C217.86 83.06 217.53 81.41 215.89 81.41ZM161.70 81.08C159.84 81.08 159.68 83.25 159.68 86.27C159.68 89.29 159.84 91.46 161.70 91.46C163.25 91.46 163.74 89.95 163.74 86.27C163.74 82.59 163.25 81.08 161.70 81.08Z"/></svg><span class="brand-sub">MAP</span><div class="seg floor-seg" id="floor-seg" role="group" aria-label="Floor 階"></div></div>
     <label class="sr" for="layout-name" data-i18n="layoutName">Layout name</label>
     <input id="layout-name" class="name-input" type="text" autocomplete="off" spellcheck="false">
     <div class="tb-actions">
@@ -246,12 +256,6 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
         <button class="btn" id="btn-presets" aria-haspopup="true" aria-expanded="false" aria-controls="menu-presets">
           <svg class="i" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg><span class="lbl" data-i18n="presets">Presets</span></button>
         <div class="menu" id="menu-presets" hidden>
-          <button data-preset="cafe" id="preset-cafe"><span data-i18n="pCafe"></span><span class="sub" data-i18n="pCafeSub"></span></button>
-          <button data-preset="talkback" id="preset-talkback"><span data-i18n="pTalkBack"></span><span class="sub" data-i18n="pTalkBackSub"></span></button>
-          <button data-preset="talk" id="preset-talk"><span data-i18n="pTalk"></span><span class="sub" data-i18n="pTalkSub"></span></button>
-          <button data-preset="workshop" id="preset-workshop"><span data-i18n="pWork"></span><span class="sub" data-i18n="pWorkSub"></span></button>
-          <button data-preset="breakfast" id="preset-breakfast"><span data-i18n="pBreak"></span><span class="sub" data-i18n="pBreakSub"></span></button>
-          <button data-preset="empty" id="preset-empty"><span data-i18n="pEmpty"></span><span class="sub" data-i18n="pEmptySub"></span></button>
         </div>
       </div>
       <div class="menu-wrap">
@@ -303,7 +307,7 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
 
   <!-- Canvas -->
   <main class="canvas-wrap" id="canvas-wrap">
-    <svg id="plan" xmlns="http://www.w3.org/2000/svg" aria-label="FabCafe Tokyo 1F plan" role="img">
+    <svg id="plan" xmlns="http://www.w3.org/2000/svg" aria-label="FabCafe Tokyo floor plan" role="img">
       <defs>
         <pattern id="hatch" patternUnits="userSpaceOnUse" width="220" height="220" patternTransform="rotate(45)">
           <line class="hatch-line" x1="0" y1="0" x2="0" y2="220"/>
@@ -390,8 +394,10 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
     <label class="sr" for="modal-text" data-i18n="layoutCode">Layout code</label>
     <textarea id="modal-text" spellcheck="false" hidden></textarea>
     <div id="modal-file-row" hidden><label class="cap" for="modal-file" data-i18n="fileLbl">or choose a .json file</label><br><input id="modal-file" type="file" accept=".json,application/json"></div>
+    <div class="pe-list" id="modal-list" hidden></div>
     <div class="err" id="modal-err"></div>
     <div class="actions">
+      <button class="btn" id="modal-copy-presets" data-i18n="pCopyCode" hidden>Copy presets code</button>
       <button class="btn" id="modal-close" data-i18n="close">Close</button>
       <button class="btn primary" id="modal-go" hidden></button>
     </div>
@@ -400,6 +406,9 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="plan-data.js"></script>
+<script src="plan-2f.js"></script>
+<script src="plan-10f.js"></script>
+<script src="floors.js"></script>
 <script>
 (function(){
 'use strict';
@@ -433,6 +442,8 @@ const CAT = {
   'projector-screen': {w:2000, h:200, round:false, en:'Screen',       jp:'スクリーン'},
   'tv':               {w:1400, h:300, round:false, en:'TV monitor',   jp:'モニター'},
   'plant':            {w:500,  h:500, round:true,  en:'Plant',        jp:'植栽'},
+  'trash':            {w:350,  h:350, round:false, en:'Trash can',    jp:'ゴミ箱'},
+  'trash-sort':       {w:1100, h:400, round:false, en:'Trash station', jp:'分別ゴミ箱'},
   'zone':             {w:3000, h:2000, round:false, size:true, annot:true, en:'Zone', jp:'ゾーン'},
   'note':             {w:1200, h:400, round:false, annot:true, en:'Note', jp:'メモ'}
 };
@@ -441,7 +452,7 @@ const COLORS = {sky:'#a8dcf7', leaf:'#82c481', yellow:'#fcca00', lavender:'#c6ad
 const ZONE_PRESETS = [
   {label:'Stage ステージ', color:'yellow', w:4000, h:2000},
   {label:'Reception 受付', color:'sky', w:2400, h:1500},
-  {label:'Ai展示', color:'lavender', w:3000, h:2000},
+  {label:'Exhibit 展示', color:'lavender', w:3000, h:2000},
   {label:'Food フード', color:'orange', w:3600, h:1500},
   {label:'Standing 立ち', color:'leaf', w:4000, h:3000}
 ];
@@ -452,6 +463,7 @@ const T = {
     layoutName:'Layout name', presets:'Presets', share:'Share',
     pCafe:'Cafe (current)', pCafeSub:'通常営業 · as drawn on the 2026/02 plan',
     pTalkBack:'Talk – back half (奥半面)', pTalkBackSub:'Back-half chairs in rows · front desk · food · machine signs',
+    pTalkStage:'Talk', pTalkStageSub:'トーク · staggered rows facing the stage wall, podium, trash station',
     pTalk:'Talk ~50', pTalkSub:'トーク · staggered rows, speaker chairs, standing at the back',
     pWork:'Workshop', pWorkSub:'ワークショップ · long-table islands, 6 seats each',
     pBreak:'Breakfast 朝会', pBreakSub:'Long-table rows, food line, standing zone',
@@ -463,6 +475,13 @@ const T = {
     seats:'Seats', tables:'Tables', standing:'Standing', standingSub:'ppl at 0.5 m² each', freeFloor:'Free floor',
     conflicts:'{n} items clash', conflict1:'1 item clashes', noConflicts:'No clashes',
     furniture:'Furniture', annotate:'Zones & notes', zone:'Zone', note:'Note', saved:'Saved layouts', save:'Save', saveAs:'Save as', rename:'Rename', del:'Delete', cancel:'Cancel', load:'Load',
+    pSaveNew:'+ Save current layout as a preset', pSaveNewSub:'Adds it to this list (this browser, this floor)',
+    pEdit:'Edit presets…', pEditSub:'Rename, re-lay, hide or delete presets',
+    pEditTitle:'Edit presets', pEditHint:'“Use current layout” replaces a preset with what is on the plan now. Changes stay in this browser — Copy presets code to give them to a teammate (they paste it in Share → Paste / import).',
+    pUseCurrent:'Use current layout', pReset:'Reset', pHide:'Hide', pShow:'Show', pSure:'Sure? Click again',
+    pBuiltin:'built-in', pChanged:'built-in · changed', pMine:'mine', pChangedSub:'Changed in this browser', pMineSub:'My preset · {n} items',
+    pSaved:'Saved preset “{n}”', pUpdated:'Updated “{n}”', pImported:'Presets imported', pCopyCode:'Copy presets code',
+    pCodeHint:'Copy all of this text and send it. The other person opens the same floor → Share → Paste / import.',
     noSaved:'Nothing saved yet. Save keeps the layout in this browser; use Share to send it to someone.',
     confirmDel:'Delete “{n}”? This can’t be undone.',
     selection:'Selection', nothing:'Nothing selected', nothingHint:'Click an item to edit it. Drag on empty floor to select several, or add furniture from the left.',
@@ -471,8 +490,8 @@ const T = {
     zoomIn:'Zoom in', zoomOut:'Zoom out', fit:'Fit to plan', undo:'Undo', redo:'Redo', rotL:'Rotate −15°', rotR:'Rotate +15°', dup:'Duplicate', remove:'Delete', snap:'Snap 50',
     add:'Add', layouts:'Layouts', inspect:'Inspect',
     layoutCode:'Layout code', fileLbl:'or choose a .json file', close:'Close',
-    codeTitle:'Layout code', codeHint:'Copy all of this text and send it. The other person opens 1F Map → Share → Paste / import.',
-    importTitle:'Paste or import a layout', importHint:'Paste a layout code, or pick a .json file. It replaces the current layout (Undo brings it back).', importGo:'Import', importErr:'That doesn’t look like a 1F Map layout code.',
+    codeTitle:'Layout code', codeHint:'Copy all of this text and send it. The other person opens the Floor Map → Share → Paste / import.',
+    importTitle:'Paste or import a layout', importHint:'Paste a layout code, or pick a .json file. It replaces the current layout (Undo brings it back).', importGo:'Import', importErr:'That doesn’t look like a 1F Map layout code.', importFloor:'This code is a {f} layout. Switch to {f} at the top, then import it.',
     imgTitle:'Layout image', imgHint:'Your browser didn’t allow copying. Right-click or long-press the image to save or copy it.',
     copied:'Layout code copied', imgCopied:'Image copied', savedT:'Saved', deleted:'Deleted', imported:'Layout imported', loaded:'Loaded',
     untitled:'Untitled layout', copySuffix:' copy', dblHint:'Double-click to rename',
@@ -483,6 +502,7 @@ const T = {
     layoutName:'レイアウト名', presets:'プリセット', share:'共有',
     pCafe:'通常営業', pCafeSub:'Cafe (current) · 2026/02 配置図のまま',
     pTalkBack:'奥半面トーク', pTalkBackSub:'奥半面の椅子を並べ替え・受付・フード・機材の貼り紙',
+    pTalkStage:'トーク', pTalkStageSub:'ステージ壁に向けた互い違いの列・演台・分別ゴミ箱',
     pTalk:'トーク 約50名', pTalkSub:'Talk · 千鳥配置の客席・登壇者席・後方は立ち見',
     pWork:'ワークショップ', pWorkSub:'Workshop · 長テーブルの島、各6席',
     pBreak:'朝会ブレックファスト', pBreakSub:'Breakfast · 長テーブル、フード、立ちエリア',
@@ -494,6 +514,13 @@ const T = {
     seats:'席数', tables:'テーブル', standing:'立席', standingSub:'名（1人 0.5㎡）', freeFloor:'空き床',
     conflicts:'{n} 件が干渉', conflict1:'1 件が干渉', noConflicts:'干渉なし',
     furniture:'家具', annotate:'ゾーン・メモ', zone:'ゾーン', note:'メモ', saved:'保存したレイアウト', save:'保存', saveAs:'別名で保存', rename:'名前を変更', del:'削除', cancel:'キャンセル', load:'開く',
+    pSaveNew:'＋ 今のレイアウトをプリセットに保存', pSaveNewSub:'この一覧に追加（このブラウザ・この階のみ）',
+    pEdit:'プリセットを編集…', pEditSub:'名前の変更・置き換え・非表示・削除',
+    pEditTitle:'プリセットを編集', pEditHint:'「今のレイアウトにする」で、いま図面にある配置をそのプリセットにします。変更はこのブラウザ内のみ。人に渡すときは「プリセットのコードをコピー」→ 相手は「共有」→「貼り付け・読み込み」。',
+    pUseCurrent:'今のレイアウトにする', pReset:'元に戻す', pHide:'隠す', pShow:'表示', pSure:'本当に？もう一度クリック',
+    pBuiltin:'標準', pChanged:'標準・変更あり', pMine:'自分用', pChangedSub:'このブラウザで変更済み', pMineSub:'自分のプリセット · {n} 点',
+    pSaved:'プリセット「{n}」を保存しました', pUpdated:'「{n}」を更新しました', pImported:'プリセットを読み込みました', pCopyCode:'プリセットのコードをコピー',
+    pCodeHint:'このテキストをすべてコピーして送ってください。受け取った人は同じ階を開いて「共有」→「貼り付け・読み込み」。',
     noSaved:'まだ保存はありません。保存はこのブラウザ内のみ。人に送るときは「共有」を使ってください。',
     confirmDel:'「{n}」を削除しますか？元に戻せません。',
     selection:'選択中', nothing:'未選択', nothingHint:'アイテムをクリックで編集。空いた床をドラッグで複数選択。左から家具を追加できます。',
@@ -502,8 +529,8 @@ const T = {
     zoomIn:'拡大', zoomOut:'縮小', fit:'全体表示', undo:'元に戻す', redo:'やり直す', rotL:'−15° 回転', rotR:'+15° 回転', dup:'複製', remove:'削除', snap:'50mm スナップ',
     add:'追加', layouts:'レイアウト', inspect:'詳細',
     layoutCode:'レイアウトコード', fileLbl:'または .json ファイルを選択', close:'閉じる',
-    codeTitle:'レイアウトコード', codeHint:'このテキストをすべてコピーして送ってください。受け取った人は 1F Map →「共有」→「貼り付け・読み込み」。',
-    importTitle:'レイアウトを読み込む', importHint:'コードを貼り付けるか .json を選択。今のレイアウトと置き換わります（元に戻すで復元可）。', importGo:'読み込む', importErr:'1F Map のレイアウトコードではないようです。',
+    codeTitle:'レイアウトコード', codeHint:'このテキストをすべてコピーして送ってください。受け取った人はフロアマップ →「共有」→「貼り付け・読み込み」。',
+    importTitle:'レイアウトを読み込む', importHint:'コードを貼り付けるか .json を選択。今のレイアウトと置き換わります（元に戻すで復元可）。', importGo:'読み込む', importErr:'フロアマップのレイアウトコードではないようです。', importFloor:'このコードは {f} のレイアウトです。上の {f} に切り替えてから読み込んでください。',
     imgTitle:'レイアウト画像', imgHint:'ブラウザがコピーを許可しませんでした。画像を右クリック／長押しで保存・コピーしてください。',
     copied:'コードをコピーしました', imgCopied:'画像をコピーしました', savedT:'保存しました', deleted:'削除しました', imported:'読み込みました', loaded:'開きました',
     untitled:'無題のレイアウト', copySuffix:' のコピー', dblHint:'ダブルクリックで名前変更',
@@ -517,7 +544,10 @@ const catName = type => CAT[type] ? (lang === 'jp' ? CAT[type].jp : CAT[type].en
 const catSub = type => CAT[type] ? (lang === 'jp' ? CAT[type].en : CAT[type].jp) : '';
 
 /* ======================= Storage ======================= */
-const KEY = 'fabcafe-1f-map:v1';
+const FID = window.FLOOR_ID || '1F';
+// 1F keeps its original key so layouts saved before floors existed are still there
+const FLOOR_PREF = 'fabcafe-map:';
+const KEY = FID === '1F' ? 'fabcafe-1f-map:v1' : 'fabcafe-1f-map:' + FID + ':v1';
 function readStore(){ try { const s = JSON.parse(localStorage.getItem(KEY)); return (s && typeof s === 'object') ? s : {}; } catch(e){ return {}; } }
 function writeStore(s){ try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e){} }
 let store = readStore();
@@ -720,6 +750,7 @@ function planCSS(c){
   .it-table{fill:${c.table};stroke:${c.fg};stroke-width:1.2px;vector-effect:non-scaling-stroke}
   .it-dark{fill:${c.fg};stroke:none}
   .it-line{fill:none;stroke:${c.fg};stroke-width:1px;vector-effect:non-scaling-stroke}
+  .it-trash{fill:${c.trash};stroke:${c.fg};stroke-width:1.2px;vector-effect:non-scaling-stroke}
   .it-plant{fill:${c.leaf};fill-opacity:.55;stroke:${c.fg};stroke-width:1px;vector-effect:non-scaling-stroke}
   .hit{fill:transparent;stroke:none}
   .zone-body{stroke-width:1.5px;vector-effect:non-scaling-stroke}
@@ -733,8 +764,8 @@ function planCSS(c){
 }
 const FONT_D = '"Helvetica Neue Condensed Bold","HelveticaNeue-CondensedBold","Roboto Condensed","Arial Narrow",sans-serif';
 const FONT_T = '"Helvetica Neue",Helvetica,Roboto,Arial,"Hiragino Sans","Noto Sans JP",sans-serif';
-const CSS_VARS = {bg:'var(--plan-bg)', floor:'var(--plan-floor)', fg:'var(--fg)', muted:'var(--fg-muted)', hatch:'var(--hatch)', grid:'var(--grid)', furn:'var(--furn-fill)', table:'var(--furn-table)', red:'var(--red)', leaf:'var(--leaf)', col:'var(--col)', fontText:FONT_T, fontDisplay:FONT_D};
-const CSS_LIGHT = {bg:'#ffffff', floor:'#ffffff', fg:'#231815', muted:'#595959', hatch:'#9a9a9a', grid:'#e06666', furn:'#ffffff', table:'#ececec', red:'#d80c0e', leaf:'#82c481', col:'#cfcfcf', fontText:FONT_T, fontDisplay:FONT_D};
+const CSS_VARS = {bg:'var(--plan-bg)', floor:'var(--plan-floor)', fg:'var(--fg)', muted:'var(--fg-muted)', hatch:'var(--hatch)', grid:'var(--grid)', furn:'var(--furn-fill)', table:'var(--furn-table)', red:'var(--red)', leaf:'var(--leaf)', trash:'var(--sky)', col:'var(--col)', fontText:FONT_T, fontDisplay:FONT_D};
+const CSS_LIGHT = {bg:'#ffffff', floor:'#ffffff', fg:'#231815', muted:'#595959', hatch:'#9a9a9a', grid:'#e06666', furn:'#ffffff', table:'#ececec', red:'#d80c0e', leaf:'#82c481', trash:'#a8dcf7', col:'#cfcfcf', fontText:FONT_T, fontDisplay:FONT_D};
 $('#plan-css').textContent = planCSS(CSS_VARS);
 
 /* ======================= Base plan (not editable) ======================= */
@@ -796,7 +827,7 @@ function drawBase(){
   // title block
   const tx = V.maxX - 200, ty = V.maxY + 750, gT = el('g', {id:'g-title'}, gBase);
   el('line', {class:'tb-rule', x1:tx - 5200, y1:ty - 480, x2:tx, y2:ty - 480}, gT);
-  txt(gT, tx, ty, 'FabCafe Tokyo 1F · 1:100 · source 2026/02', {class:'tb-1'});
+  txt(gT, tx, ty, 'FabCafe Tokyo ' + FID + ' · 1:100 · ' + ((PLAN.meta && PLAN.meta.titleNote) || 'source 2026/02'), {class:'tb-1'});
   txt(gT, tx, ty + 330, '', {class:'tb-2', id:'tb-layout'});
 }
 let BASE_LABELS = [];
@@ -853,6 +884,20 @@ function drawShape(g, type, w, h, it){
       el('circle', {class:'it-plant', r:hw}, g);
       for (let i = 0; i < 4; i++){ const a = rad(i * 45 + 22); el('line', {class:'it-line', x1:-Math.cos(a) * hw * .75, y1:-Math.sin(a) * hw * .75, x2:Math.cos(a) * hw * .75, y2:Math.sin(a) * hw * .75}, g); }
       break;
+    case 'trash':
+      el('rect', {class:'it-trash', x:-hw, y:-hh, width:w, height:h, rx:40}, g);
+      el('rect', {class:'it-dark', x:-hw, y:-hh, width:w, height:70, rx:20}, g);
+      [-0.25, 0, 0.25].forEach(f => el('line', {class:'it-line', x1:w * f, y1:-hh + 130, x2:w * f, y2:hh - 70}, g)); break;
+    case 'trash-sort': {
+      // three bins side by side: burnable / non-burnable / cans·bottles·PET
+      const bw = w / 3;
+      for (let i = 0; i < 3; i++){
+        const x0 = -hw + i * bw;
+        el('rect', {class:'it-trash', x:x0, y:-hh, width:bw, height:h, rx:30}, g);
+        el('rect', {class:'it-dark', x:x0, y:-hh, width:bw, height:70, rx:15}, g);
+        el('circle', {class:'it-line', cx:x0 + bw / 2, cy:70 / 2, r:Math.min(bw, h) * 0.22}, g);
+      }
+      break; }
     case 'zone': {
       const col = COLORS[(it && it.color) || 'sky'];
       el('rect', {class:'zone-body', x:-hw, y:-hh, width:w, height:h, fill:col, 'fill-opacity':.35, stroke:col}, g);
@@ -1071,9 +1116,15 @@ function islands(max, avoid){
 }
 function presetWorkshop(){
   const avoid = [], out = [];
-  const S = pickDisplay();
-  out.push({type:'zone', x:S.x, y:S.y + 1000, rot:0, w:Math.max(3000, S.len + 600), h:1200, label:'Stage ステージ', color:'yellow'});
-  avoid.push(rectPoly(S.x, S.y + 1000, Math.max(3000, S.len + 600) + 600, 1800, 0));
+  if (PLAN.stage){
+    const S = PLAN.stage;
+    out.push({type:'zone', x:S.x, y:S.y, rot:0, w:S.w, h:S.h, label:'Stage ステージ', color:'yellow'});
+    avoid.push(rectPoly(S.x, S.y, S.w + 1200, S.h + 1200, 0));
+  } else {
+    const S = pickDisplay();
+    out.push({type:'zone', x:S.x, y:S.y + 1000, rot:0, w:Math.max(3000, S.len + 600), h:1200, label:'Stage ステージ', color:'yellow'});
+    avoid.push(rectPoly(S.x, S.y + 1000, Math.max(3000, S.len + 600) + 600, 1800, 0));
+  }
   out.push(...islands(8, avoid));
   return sanitize(out);
 }
@@ -1121,18 +1172,162 @@ function presetTalkBack(){
   out.push({type:'note', x:9300, y:9550, rot:0, label:'機材に飲み物NG', fs:170}, {type:'note', x:9300, y:9850, rot:0, label:'No drinks on machines', fs:170});
   return sanitize(out);
 }
-const PRESETS = {
-  cafe:{fn:presetCafe, name:() => lang === 'jp' ? '通常営業 Cafe' : 'Cafe (current) 通常営業'},
-  talkback:{fn:presetTalkBack, name:() => lang === 'jp' ? '奥半面トーク Talk' : 'Talk – back half 奥半面トーク'},
-  talk:{fn:presetTalk, name:() => lang === 'jp' ? 'トーク 約50名' : 'Talk ~50 トーク'},
-  workshop:{fn:presetWorkshop, name:() => lang === 'jp' ? 'ワークショップ' : 'Workshop ワークショップ'},
-  breakfast:{fn:presetBreakfast, name:() => lang === 'jp' ? '朝会 Breakfast' : 'Breakfast 朝会'},
-  empty:{fn:() => [], name:() => lang === 'jp' ? '空' : 'Empty 空'}
+// a sorting station (burnable / non-burnable / PET) on free floor, as close as possible to the food zone,
+// else to the floor's trash spot (PLAN.trashSpot, e.g. by the entrance), else to the middle of the layout
+function withTrash(out){
+  const W = 1100, H = 400;
+  const avoid = out.filter(it => it.type !== 'zone').map(it => { const s = it.type === 'note' ? noteBox(it) : size(it); return rectPoly(it.x, it.y, s.w + 600, s.h + 600, it.rot); });
+  const food = out.find(it => it.type === 'zone' && /food|フード/i.test(it.label || ''));
+  const furn = out.filter(it => !CAT[it.type].annot);
+  const goal = food ? [food.x, food.y] : PLAN.trashSpot ? PLAN.trashSpot
+    : furn.length ? [furn.reduce((a, it) => a + it.x, 0) / furn.length, furn.reduce((a, it) => a + it.y, 0) / furn.length] : centroid(FLOOR);
+  const b = bbox(FLOOR); let best = null, bd = Infinity;
+  for (let y = b.minY + H; y <= b.maxY - H; y += 250)
+    for (let x = b.minX + W; x <= b.maxX - W; x += 250){
+      const d = Math.hypot(x - goal[0], y - goal[1]); if (d >= bd) continue;
+      if (clash(rectPoly(x, y, W + 400, H + 400, 0), {doors:true, extra:avoid})) continue;
+      best = [x, y]; bd = d;
+    }
+  if (best) out.push({type:'trash-sort', x:best[0], y:best[1], rot:0});
+  return out;
+}
+// Talk on floors that mark a stage (PLAN.stage = rect + face, the direction the audience sits in):
+// staggered rows parallel to the stage, kept clear of fixtures and door swings, up to ~60 seats.
+function presetTalkStage(){
+  const S = PLAN.stage, out = [], TARGET = 60, CH = 420;
+  const [fx, fy] = S.face, px = -fy, py = fx;
+  const depth = Math.abs(fx) > Math.abs(fy) ? S.w : S.h;
+  const rot = norm360(Math.atan2(fx, -fy) * 180 / Math.PI);   // chairs face the stage
+  out.push({type:'zone', x:S.x, y:S.y, rot:0, w:S.w, h:S.h, label:'Stage ステージ', color:'yellow'});
+  out.push({type:'podium', x:S.x + fx * (depth / 2 - 450) + px * (Math.max(S.w, S.h) / 2 - 600), y:S.y + fy * (depth / 2 - 450) + py * (Math.max(S.w, S.h) / 2 - 600), rot});
+  let seated = 0;
+  for (let r = 0; r < 14 && seated < TARGET; r++){
+    const d = depth / 2 + 1000 + r * 900, off = r % 2 ? 260 : 0;
+    for (let c = -7; c <= 7 && seated < TARGET; c++){
+      const x = S.x + fx * d + px * (c * 520 + off), y = S.y + fy * d + py * (c * 520 + off);
+      if (clash(rectPoly(x, y, CH + 60, CH + 60, rot), {doors:true})) continue;
+      out.push({type:'chair', x, y, rot}); seated++;
+    }
+  }
+  out.push({type:'note', x:S.x + fx * (depth / 2 + 400), y:S.y + fy * (depth / 2 + 400) - 2600, rot:0, label:'Seated 着席 ' + seated, fs:200});
+  return sanitize(out);
+}
+const BUILTIN = {
+  cafe:{fn:presetCafe, en:() => lang === 'jp' ? (PLAN.normal_jp || t('pCafe')) : (PLAN.normal_en || t('pCafe')),
+    sub:() => PLAN.normal_sub ? PLAN.normal_sub[lang] || PLAN.normal_sub.en : t('pCafeSub'),
+    name:() => lang === 'jp' ? (PLAN.normal_jp || '通常営業') + ' ' + (PLAN.normal_en || 'Cafe') : (PLAN.normal_en || 'Cafe (current)') + ' ' + (PLAN.normal_jp || '通常営業')},
+  talkback:{only:'1F', fn:() => withTrash(presetTalkBack()), en:() => t('pTalkBack'), sub:() => t('pTalkBackSub'), name:() => lang === 'jp' ? '奥半面トーク Talk' : 'Talk – back half 奥半面トーク'},
+  talkstage:{when:() => !!PLAN.stage, fn:() => withTrash(presetTalkStage()), en:() => t('pTalkStage'), sub:() => t('pTalkStageSub'), name:() => lang === 'jp' ? 'トーク' : 'Talk トーク'},
+  talk:{only:'1F', fn:() => withTrash(presetTalk()), en:() => t('pTalk'), sub:() => t('pTalkSub'), name:() => lang === 'jp' ? 'トーク 約50名' : 'Talk ~50 トーク'},
+  workshop:{fn:() => withTrash(presetWorkshop()), en:() => t('pWork'), sub:() => t('pWorkSub'), name:() => lang === 'jp' ? 'ワークショップ' : 'Workshop ワークショップ'},
+  breakfast:{fn:() => withTrash(presetBreakfast()), en:() => t('pBreak'), sub:() => t('pBreakSub'), name:() => lang === 'jp' ? '朝会 Breakfast' : 'Breakfast 朝会'},
+  empty:{fn:() => [], en:() => t('pEmpty'), sub:() => t('pEmptySub'), name:() => lang === 'jp' ? '空' : 'Empty 空'}
 };
+(PLAN.presets || []).forEach(d => {
+  BUILTIN[d.id] = {fn:() => sanitize(d.items), en:() => lang === 'jp' ? d.jp || d.en : d.en, sub:() => (lang === 'jp' ? d.sub_jp : d.sub_en) || '',
+    name:() => lang === 'jp' ? (d.jp || d.en) + ' ' + d.en : d.en + ' ' + (d.jp || '')};
+});
+// what people changed, per floor: own presets, renamed / re-laid built-ins, hidden built-ins
+function presetStore(){
+  const p = store.presets && typeof store.presets === 'object' ? store.presets : {};
+  if (!Array.isArray(p.custom)) p.custom = [];
+  if (!p.over || typeof p.over !== 'object') p.over = {};
+  if (!Array.isArray(p.hidden)) p.hidden = [];
+  store.presets = p; return p;
+}
+function presetList(all){
+  const ps = presetStore(), out = [];
+  Object.keys(BUILTIN).forEach(k => {
+    const b = BUILTIN[k]; if ((b.only && b.only !== FID) || (b.when && !b.when())) return;
+    const o = ps.over[k] || {}, hidden = ps.hidden.includes(k);
+    if (hidden && !all) return;
+    out.push({key:k, builtin:true, hidden, changed:!!(o.name || o.items),
+      label:() => o.name || b.en(), sub:() => o.items ? t('pChangedSub') : b.sub(), name:() => o.name || b.name(),
+      fn:() => o.items ? sanitize(o.items) : b.fn()});
+  });
+  ps.custom.forEach(c => out.push({key:'u:' + c.id, custom:true, label:() => c.name, sub:() => t('pMineSub', c.items.length), name:() => c.name, fn:() => sanitize(c.items), ref:c}));
+  return out;
+}
+const presetByKey = k => presetList(true).find(p => p.key === k);
+function renderPresetMenu(){
+  const m = $('#menu-presets'); m.innerHTML = '';
+  presetList().forEach(p => {
+    const b = document.createElement('button'); b.type = 'button'; b.id = 'preset-' + p.key.replace(':', '-'); b.dataset.preset = p.key;
+    const a = document.createElement('span'); a.textContent = p.label() + (p.custom ? ' ★' : '');
+    const z = document.createElement('span'); z.className = 'sub'; z.textContent = p.sub();
+    b.append(a, z); m.appendChild(b);
+  });
+  const hr = document.createElement('hr'); hr.className = 'menu-hr'; m.appendChild(hr);
+  [['preset-save-new', 'pSaveNew', 'pSaveNewSub'], ['preset-edit', 'pEdit', 'pEditSub']].forEach(([id, k, ks]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.id = id;
+    const a = document.createElement('span'); a.textContent = t(k);
+    const z = document.createElement('span'); z.className = 'sub'; z.textContent = t(ks);
+    b.append(a, z); m.appendChild(b);
+  });
+}
+const PRESETS = new Proxy({}, {get:(_, k) => typeof k === 'string' ? presetByKey(k) : undefined});
 function applyPreset(k){
-  const p = PRESETS[k]; if (!p) return;
+  const p = presetByKey(k); if (!p) return;
   L.items = p.fn(); L.name = p.name(); currentId = null; sel.clear();
   $('#layout-name').value = L.name; commit();
+}
+function savePresetNew(){
+  const ps = presetStore(), name = (L.name || t('untitled')).trim().slice(0, 80);
+  ps.custom.push({id:Date.now().toString(36), name, items:L.items.map(({id, ...r}) => r)});
+  writeStore(store); renderPresetMenu(); toast(t('pSaved', name));
+}
+
+/* ======================= Preset editor ======================= */
+let armed = null;   // 'key|action' waiting for a second click
+function renderPresetEditor(){
+  const box = $('#modal-list'); box.innerHTML = '';
+  const ps = presetStore();
+  presetList(true).forEach(p => {
+    const row = document.createElement('div'); row.className = 'pe-row' + (p.hidden ? ' off' : '');
+    const nm = document.createElement('input'); nm.className = 'row-input'; nm.value = p.label(); nm.maxLength = 80; nm.id = 'pe-name-' + p.key.replace(':', '-');
+    nm.setAttribute('aria-label', t('rename'));
+    nm.addEventListener('change', () => {
+      const v = nm.value.trim(); if (p.custom){ if (v) p.ref.name = v; }
+      else { const o = ps.over[p.key] || (ps.over[p.key] = {}); if (v && v !== BUILTIN[p.key].en()) o.name = v; else delete o.name; if (!o.name && !o.items) delete ps.over[p.key]; }
+      writeStore(store); renderPresetMenu(); renderPresetEditor();
+    });
+    const tag = document.createElement('small'); tag.textContent = p.custom ? t('pMine') : p.changed ? t('pChanged') : t('pBuiltin');
+    const acts = document.createElement('div'); acts.className = 'pe-acts';
+    const act = (id, label, fn, confirmIt) => {
+      const key = p.key + '|' + id, on = armed === key;
+      const b = mkBtn(on ? t('pSure') : label, 'btn' + (on ? ' primary' : ''), () => {
+        if (confirmIt && !on){ armed = key; renderPresetEditor(); return; }
+        armed = null; fn(); writeStore(store); renderPresetMenu(); renderPresetEditor();
+      });
+      b.id = 'pe-' + id + '-' + p.key.replace(':', '-'); acts.appendChild(b);
+    };
+    act('set', t('pUseCurrent'), () => {
+      const items = L.items.map(({id, ...r}) => r);
+      if (p.custom) p.ref.items = items; else (ps.over[p.key] || (ps.over[p.key] = {})).items = items;
+      toast(t('pUpdated', p.label()));
+    }, true);
+    if (p.custom) act('del', t('del'), () => { ps.custom = ps.custom.filter(c => c !== p.ref); toast(t('deleted')); }, true);
+    else {
+      if (p.changed) act('reset', t('pReset'), () => { delete ps.over[p.key]; }, true);
+      act('hide', p.hidden ? t('pShow') : t('pHide'), () => { ps.hidden = p.hidden ? ps.hidden.filter(k => k !== p.key) : ps.hidden.concat(p.key); });
+    }
+    row.append(nm, tag, acts); box.appendChild(row);
+  });
+}
+function presetsCode(){ const ps = presetStore(); return JSON.stringify({app:'fabcafe-1f-map', v:1, kind:'presets', floor:FID, presets:{custom:ps.custom, over:ps.over, hidden:ps.hidden}}); }
+function importPresets(o){
+  const ps = presetStore(), src = o.presets || {};
+  (Array.isArray(src.custom) ? src.custom : []).forEach(c => {
+    if (!c || !Array.isArray(c.items)) return;
+    const name = String(c.name || t('untitled')).slice(0, 80), items = sanitize(c.items).map(({id, ...r}) => r);
+    const same = ps.custom.find(x => x.name === name);
+    if (same) same.items = items; else ps.custom.push({id:Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name, items});
+  });
+  Object.keys(src.over || {}).forEach(k => { if (!BUILTIN[k]) return; const o = src.over[k] || {}, d = {};
+    if (o.name) d.name = String(o.name).slice(0, 80); if (Array.isArray(o.items)) d.items = sanitize(o.items).map(({id, ...r}) => r);
+    if (d.name || d.items) ps.over[k] = d; });
+  if (Array.isArray(src.hidden)) ps.hidden = src.hidden.filter(k => BUILTIN[k]);
+  writeStore(store); renderPresetMenu();
 }
 
 /* ======================= Saved layouts ======================= */
@@ -1185,11 +1380,13 @@ function saveLayout(asNew){
 }
 
 /* ======================= Share ======================= */
-function layoutCode(){ const o = {app:'fabcafe-1f-map', v:1, name:L.name, items:L.items.map(({id, ...r}) => r)}; if (window.FC_MEMO) o.memo = window.FC_MEMO.get(); return JSON.stringify(o); }
+function layoutCode(){ const o = {app:'fabcafe-1f-map', v:1, floor:FID, name:L.name, items:L.items.map(({id, ...r}) => r)}; if (window.FC_MEMO) o.memo = window.FC_MEMO.get(); return JSON.stringify(o); }
 function openModal(kind, extra){
   const m = $('#modal'); m.hidden = false; m.dataset.kind = kind;
   const ta = $('#modal-text'), img = $('#modal-img'), go = $('#modal-go');
   $('#modal-err').textContent = ''; img.hidden = true; ta.hidden = true; go.hidden = true; $('#modal-file-row').hidden = true;
+  $('#modal-list').hidden = kind !== 'presets'; $('#modal-copy-presets').hidden = kind !== 'presets';
+  if (kind === 'presets'){ armed = null; $('#modal-title').textContent = t('pEditTitle'); $('#modal-hint').textContent = t('pEditHint'); renderPresetEditor(); setTimeout(() => $('#modal-close').focus(), 0); }
   if (kind === 'code'){ $('#modal-title').textContent = t('codeTitle'); $('#modal-hint').textContent = t('codeHint'); ta.hidden = false; ta.readOnly = true; ta.value = layoutCode(); setTimeout(() => { ta.focus(); ta.select(); }, 0); }
   if (kind === 'import'){ $('#modal-title').textContent = t('importTitle'); $('#modal-hint').textContent = t('importHint'); ta.hidden = false; ta.readOnly = false; ta.value = ''; $('#modal-file-row').hidden = false; $('#modal-file').value = ''; go.hidden = false; go.textContent = t('importGo'); setTimeout(() => ta.focus(), 0); }
   if (kind === 'image'){ $('#modal-title').textContent = t('imgTitle'); $('#modal-hint').textContent = t('imgHint'); img.hidden = false; img.src = extra; img.alt = L.name; setTimeout(() => $('#modal-close').focus(), 0); }
@@ -1198,7 +1395,14 @@ function closeModal(){ $('#modal').hidden = true; }
 function doImport(text){
   let o; try { o = JSON.parse(text); } catch(e){ o = null; }
   const items = o && (Array.isArray(o) ? o : o.items);
+  if (o && o.kind === 'presets'){
+    if ((o.floor || '1F') !== FID){ $('#modal-err').textContent = t('importFloor').replace(/\{f\}/g, o.floor); return; }
+    importPresets(o); closeModal(); toast(t('pImported')); return;
+  }
   if (!Array.isArray(items)){ $('#modal-err').textContent = t('importErr'); return; }
+  // codes from before floors existed have no floor tag: they are 1F layouts
+  const of = o && !Array.isArray(o) ? (o.floor || '1F') : FID;
+  if (of !== FID && window.PLANS && window.PLANS[of]){ $('#modal-err').textContent = t('importFloor').replace(/\{f\}/g, of); return; }
   L = {name:(o && o.name) ? String(o.name).slice(0, 80) : t('untitled'), items:sanitize(items)};
   currentId = null; sel.clear(); $('#layout-name').value = L.name; commit();
   if (o && o.memo && typeof o.memo === 'object' && window.FC_MEMO) window.FC_MEMO.set(o.memo);
@@ -1266,9 +1470,24 @@ function applyLang(){
   $('#lang-jp').setAttribute('aria-pressed', String(lang === 'jp'));
   const keys = $('#keys'); keys.innerHTML = '';
   t('keys').forEach(([k, v]) => { const a = document.createElement('kbd'); a.textContent = k; const b = document.createElement('span'); b.textContent = v; keys.append(a, b); });
-  buildPalette(); drawBaseLabels(); render();
+  buildPalette(); drawBaseLabels(); render(); renderPresetMenu();
+  if (!$('#modal').hidden && $('#modal').dataset.kind === 'presets') openModal('presets');
 }
-function setLang(l){ lang = l; store.lang = l; writeStore(store); applyLang(); emit(); }
+function setLang(l){ lang = l; store.lang = l; writeStore(store); try { localStorage.setItem(FLOOR_PREF + 'lang', l); } catch(e){} applyLang(); emit(); }
+
+/* ======================= Floors ======================= */
+// switching floors reloads the page into the other plan: every floor keeps its own saved layouts and presets
+function renderFloorSeg(){
+  const box = $('#floor-seg'), ids = Object.keys(window.PLANS || {});
+  box.hidden = ids.length < 2; box.innerHTML = '';
+  ids.forEach(f => {
+    const b = mkBtn(f, '', () => { if (f === FID) return; try { localStorage.setItem(FLOOR_PREF + 'floor', f); } catch(e){}
+      try { history.replaceState(null, '', '#floor=' + f); } catch(e){} location.reload(); });
+    b.id = 'floor-' + f; b.setAttribute('aria-pressed', String(f === FID)); box.appendChild(b);
+  });
+  document.title = 'FabCafe ' + FID + ' Map';
+  const sign = $('#btn-sign'); if (sign) sign.hidden = !PLAN.machines;
+}
 
 /* ======================= Palette ======================= */
 function buildPalette(){
@@ -1450,7 +1669,14 @@ function wire(){
   $('#layout-name').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
   $('#btn-presets').addEventListener('click', e => { e.stopPropagation(); toggleMenu('presets'); });
   $('#btn-share').addEventListener('click', e => { e.stopPropagation(); toggleMenu('share'); });
-  $$('#menu-presets [data-preset]').forEach(b => b.addEventListener('click', () => { closeMenus(); applyPreset(b.dataset.preset); }));
+  $('#menu-presets').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return; closeMenus();
+    if (b.dataset.preset) applyPreset(b.dataset.preset);
+    else if (b.id === 'preset-save-new') savePresetNew();
+    else if (b.id === 'preset-edit') openModal('presets');
+  });
+  $('#modal-copy-presets').addEventListener('click', () => { const ta = $('#modal-text'); ta.hidden = false; ta.readOnly = true; ta.value = presetsCode(); ta.focus(); ta.select(); $('#modal-hint').textContent = t('pCodeHint'); });
+  renderFloorSeg();
   $('#share-code').addEventListener('click', () => { closeMenus(); copyCode(); });
   $('#share-import').addEventListener('click', () => { closeMenus(); openModal('import'); });
   $('#share-image').addEventListener('click', () => { closeMenus(); copyImage(); });
@@ -1501,6 +1727,10 @@ window.FC_MAP = {
   stats: () => Object.assign({}, lastStats),
   svg: svgFor,
   presetItems: k => PRESETS[k] ? PRESETS[k].fn().map(({id, ...r}) => r) : null,
+  presetName: k => PRESETS[k] ? PRESETS[k].name() : '',
+  floor: () => FID,
+  normalJp: () => { const o = presetStore().over.cafe; return (o && o.name) || PLAN.normal_jp || '通常営業'; },
+  sourceNote: () => FID === '1F' ? '配置図 2026/02 ベース' : ((PLAN.meta && PLAN.meta.titleNote) || ''),
   annotations: () => L.items.filter(it => CAT[it.type].annot && it.label).map(it => ({type:it.type, label:it.label, color:it.type === 'zone' ? (COLORS[it.color] || it.color || null) : null})),
   lang: () => lang,
   onChange: fn => { listeners.push(fn); },
@@ -1512,7 +1742,8 @@ function init(){
   if (!PLAN || !PLAN.view){
     const d = document.createElement('div'); d.className = 'no-plan'; d.textContent = T.en.noPlan + ' / ' + T.jp.noPlan; wrap.appendChild(d); return;
   }
-  lang = store.lang === 'jp' ? 'jp' : 'en';
+  let pl = null; try { pl = localStorage.getItem(FLOOR_PREF + 'lang'); } catch(e){}
+  lang = (pl || store.lang) === 'jp' ? 'jp' : 'en';
   snapOn = store.snap !== false; $('#tool-snap').setAttribute('aria-pressed', String(snapOn));
   prepGeometry(); drawBase(); wire();
   const dr = store.draft;
@@ -1530,7 +1761,7 @@ init();
 
 <section class="notes" id="sign" hidden aria-label="機材の貼り紙">
   <div class="notes-bar">
-    <button class="btn" id="sign-back"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span class="lbl">1Fマップ</span></button>
+    <button class="btn" id="sign-back"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span class="lbl">マップ</span></button>
     <span class="grow"></span>
     <button class="btn primary" id="sign-print"><svg class="i" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H4v-8h16v8h-3M7 14h10v7H7z"/></svg><span class="lbl" id="sign-print-lbl">PDFで保存 · Save PDF</span></button>
   </div>
@@ -1615,7 +1846,7 @@ init();
       x.fillStyle='#231815'; x.textBaseline='alphabetic'; x.textAlign='left';
       x.font='700 84px "Roboto Condensed","Helvetica Neue","Noto Sans JP",sans-serif'; x.fillText(name, M, M+80);
       x.fillStyle='#595959'; x.font='400 44px Roboto,"Helvetica Neue","Noto Sans JP",sans-serif';
-      x.fillText('FabCafe Tokyo 1F · '+new Date().toISOString().slice(0,10)+' · '+seats+' seats 席', M, M+150);
+      x.fillText('FabCafe Tokyo '+(window.FLOOR_ID||'1F')+' · '+new Date().toISOString().slice(0,10)+' · '+seats+' seats 席', M, M+150);
       x.fillStyle='#d80c0e'; x.fillRect(M, M+180, W-2*M, 4);
       var top=M+210, aw=W-2*M, ah=H-top-M, k=Math.min(aw/im.width, ah/im.height), iw=im.width*k, ih=im.height*k;
       x.drawImage(im, M+(aw-iw)/2, top, iw, ih);
@@ -1627,7 +1858,7 @@ init();
     dlP.then(function(dl){
       if(!dl){ try{ window.print(); }catch(e){} return; }
       var name=((document.getElementById('layout-name').value||'layout').trim().replace(/[\\/:*?"<>|]+/g,' ').slice(0,60))||'layout';
-      return document.fonts.ready.then(window.__mapPDF).then(function(pdf){ return dl.save({filename:'FabCafe 1F - '+name+'.pdf', data:pdf}); }).catch(function(){});
+      return document.fonts.ready.then(window.__mapPDF).then(function(pdf){ return dl.save({filename:'FabCafe '+(window.FLOOR_ID||'1F')+' - '+name+'.pdf', data:pdf}); }).catch(function(){});
     });
   });
   window.__signPDF = function(){
