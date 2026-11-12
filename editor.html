@@ -62,8 +62,12 @@ svg.i{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke
 .logo-tag{display:block;width:110px;height:auto;color:#D80C0E;flex:none}
 .brand-sub{align-self:center;font:700 18px/1 var(--font-display);letter-spacing:.04em}
 .floor-seg{margin-left:2px}
-.floor-seg button{font:700 15px/1 var(--font-display);letter-spacing:.03em;padding:12px 9px 0;color:var(--fg)}
+.floor-seg button{display:flex;flex-direction:column;align-items:center;gap:0;font:700 15px/1.05 var(--font-display);letter-spacing:.03em;padding:8px 9px 0;color:var(--fg);position:relative}
 .floor-seg button[aria-pressed="true"]{color:#fff}
+.floor-tenant{display:block;font:500 9px/1.3 var(--font-text);letter-spacing:0;text-transform:none;opacity:.8;max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.floor-split{position:absolute;top:2px;right:1px;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,var(--red) 50%,var(--fg) 50%)}
+.floor-seg button[aria-pressed="true"] .floor-split{background:linear-gradient(135deg,#fff 50%,rgba(255,255,255,.55) 50%)}
+@media (max-width: 760px){ .floor-tenant{display:none} }
 .name-input{flex:1 1 auto;min-width:0;max-width:420px;height:34px;padding:0 10px;border:1px solid transparent;border-radius:var(--r-sm);background:transparent;font:700 18px/1 var(--font-display);letter-spacing:.01em}
 .name-input:hover{border-color:var(--line)}
 .name-input:focus{border-color:var(--fg);outline:none}
@@ -90,6 +94,9 @@ svg.i{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke
 .chip{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:var(--r-sm);border:1px solid var(--line);background:transparent;font-size:12px;font-weight:500;color:var(--fg-muted);cursor:default}
 .chip.warn{border-color:var(--accent-text);background:var(--red-tint);color:var(--accent-text);cursor:pointer}
 .short-jp{display:none}
+.stat-legend{display:flex;gap:6px;flex:none}
+.legend-chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border:1px solid var(--line);border-radius:var(--r-sm);background:transparent;font-size:12px;font-weight:500;color:var(--fg);cursor:pointer}
+.legend-chip:hover{border-color:var(--fg)}
 
 /* ---------- Side panes ---------- */
 .left{grid-area:left;border-right:1px solid var(--line);overflow-y:auto;min-height:0}
@@ -146,8 +153,8 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
 .tool-group button + button{border-left:1px solid var(--line)}
 .tool-group button:hover{background:var(--surface)}
 .tool-group button:disabled{opacity:.35;cursor:default;background:transparent}
-.tool-group button.snap{width:auto;padding:0 10px;gap:6px;display:flex;align-items:center;font-size:12px;font-weight:500}
-.tool-group button.snap[aria-pressed="true"]{background:var(--red);color:#fff;border-radius:0 0 10px 10px}
+.tool-group button.snap,.tool-group button.pill{width:auto;padding:0 10px;gap:6px;display:flex;align-items:center;font-size:12px;font-weight:500}
+.tool-group button.snap[aria-pressed="true"],.tool-group button.pill[aria-pressed="true"]{background:var(--red);color:#fff;border-radius:0 0 10px 10px}
 .zoom-read{position:absolute;right:12px;bottom:12px;font-size:11px;color:var(--fg-muted);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);padding:2px 6px}
 .inline-edit{position:absolute;z-index:20;height:34px;min-width:140px;padding:0 8px;border:2px solid var(--red);border-radius:var(--r-sm);background:var(--bg);font:700 15px/1 var(--font-display)}
 /* preset edit bar: hangs from the top edge of the plan like a tab */
@@ -179,6 +186,12 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
 .modal-card img{display:block;max-width:100%;border:1px solid var(--line);border-radius:var(--r-sm);margin-bottom:12px;background:#fff}
 .modal-card .err{color:var(--accent-text);font-size:13px;min-height:1.2em;margin:6px 0}
 .modal-card .actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:12px}
+.sim-heights{margin-bottom:4px;padding:8px 10px;border:1px solid var(--line);border-radius:var(--r-sm);font-size:12px;color:var(--fg-muted)}
+.sim-row{padding:8px 10px;border:1px solid var(--line);border-radius:var(--r-sm)}
+.sim-row-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;justify-content:space-between}
+.sim-row-top b{font-size:13px}
+.sim-row .sub{font-size:12px;color:var(--fg-muted);margin:2px 0}
+.sim-row a{font-size:12px;word-break:break-all}
 .toast{position:fixed;left:50%;top:64px;transform:translateX(-50%);z-index:60;background:var(--ink);color:#fff;padding:8px 14px;border-radius:var(--r-sm);font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}
 .toast.on{opacity:1}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .logo-tag{color:#FFFFFF}}
@@ -201,7 +214,7 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
   .seg .long{display:none}
   .seg .short-jp{display:inline}
   .tg-edit{display:none!important}
-  .tool-group button.snap .lbl{display:none}
+  .tool-group button.snap .lbl,.tool-group button.pill .lbl{display:none}
   .stats{gap:16px;padding:6px 16px}
   .stat b{font-size:18px}
   .left,.inspector{grid-area:sheet;border:0;border-top:1px solid var(--line)}
@@ -304,6 +317,7 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
     <div class="stat"><span class="cap" data-i18n="tables">Tables</span><b id="st-tables">0</b></div>
     <div class="stat"><span class="cap" data-i18n="standing">Standing</span><b id="st-standing">0</b><small data-i18n="standingSub">at 0.5 m²/person</small></div>
     <div class="stat"><span class="cap" data-i18n="freeFloor">Free floor</span><b id="st-floor">0</b><small>m²</small></div>
+    <div class="stat-legend" id="zone-legend" hidden role="group" aria-label="Zones ゾーン"></div>
     <button class="chip" id="st-warn" type="button"></button>
   </div>
 
@@ -367,8 +381,16 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
       <div class="tool-group">
         <button id="tool-snap" class="snap" aria-pressed="true" data-i18n-title="snap"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h4v4H4zM16 4h4v4h-4zM4 16h4v4H4zM16 16h4v4h-4zM8 6h8M8 18h8M6 8v8M18 8v8"/></svg><span class="lbl" data-i18n="snap">Snap 50</span></button>
       </div>
+      <div class="tool-group" id="tool-group-areas" hidden>
+        <button id="tool-areas" class="pill" aria-pressed="true" data-i18n-title="areasTitle"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v16h-7zM4 13h7v7H4z"/></svg><span class="lbl" data-i18n="areas">Areas</span></button>
+      </div>
+      <div class="tool-group">
+        <button id="tool-3d" disabled data-i18n-title="sim3dTitle"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></button>
+        <button id="tool-sim-info" data-i18n-title="simInfoTitle"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg></button>
+      </div>
     </div>
     <div class="zoom-read mono" id="zoom-read"></div>
+    <div id="sim-view" hidden aria-hidden="true"></div>
   </main>
 
   <!-- Right: inspector -->
@@ -437,6 +459,7 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
 
 <script src="plan-data.js"></script>
 <script src="plan-2f.js"></script>
+<script src="plan-3f.js"></script>
 <script src="plan-10f.js"></script>
 <script src="floors.js"></script>
 <script>
@@ -479,6 +502,17 @@ const CAT = {
 };
 const FURN_TYPES = Object.keys(CAT).filter(k => !CAT[k].annot);
 const COLORS = {sky:'#a8dcf7', leaf:'#82c481', yellow:'#fcca00', lavender:'#c6add2', orange:'#f5a200', gray:'#d3d3d4'};
+// darker shade of each zone swatch, for the zone outline (the fill itself stays the light swatch)
+function darkenHex(hex, amt){
+  const n = parseInt(hex.slice(1), 16), r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  const d = v => Math.max(0, Math.round(v * (1 - amt))).toString(16).padStart(2, '0');
+  return '#' + d(r) + d(g) + d(b);
+}
+const DARK_COLORS = Object.fromEntries(Object.entries(COLORS).map(([k, v]) => [k, darkenHex(v, 0.4)]));
+// the mm-per-px a zone label pill is "designed" at (roughly the first fit() of a typical floor); zoomed out
+// further than this, the pill is scaled up so its label keeps a minimum on-screen size at any zoom
+const BASE_CAM_S = 20;
+function pillTextWidth(s, fs){ let wch = 0; for (const ch of s) wch += ch.charCodeAt(0) > 0x2e80 ? 0.62 : 0.52; return wch * fs; }
 const ZONE_PRESETS = [
   {label:'Stage ステージ', color:'yellow', w:4000, h:2000},
   {label:'Reception 受付', color:'sky', w:2400, h:1500},
@@ -528,7 +562,11 @@ const T = {
     copied:'Layout code copied', imgCopied:'Image copied', savedT:'Saved', deleted:'Deleted', imported:'Layout imported', loaded:'Loaded',
     untitled:'Untitled layout', copySuffix:' copy', dblHint:'Double-click to rename',
     keys:[['Drag','move'],['Shift-click','add to selection'],['R','rotate 15° (Shift 90°, Alt back)'],['Arrows','nudge 50 mm (Shift 10)'],['Cmd/Ctrl D','duplicate'],['Delete','remove'],['Cmd/Ctrl Z','undo (Shift redo)'],['Space-drag','pan · wheel zooms']],
-    noPlan:'Floor data (plan-data.js) did not load.'
+    noPlan:'Floor data (plan-data.js) did not load.',
+    areas:'Areas', areasTitle:'Show/hide ownership areas 区分', splitFloor:'Split floor',
+    sim3dTitle:'3D view coming — scans listed in Sim info', simInfoTitle:'Sim info',
+    simTitle:'Simulation data', simHint:'Scans and heights registered for this floor. The 3D view is coming soon.',
+    simNone:'No scans registered for this floor yet.', simCeiling:'Ceiling', simBeam:'Beam underside', simFtF:'Floor to floor'
   },
   jp:{
     layoutName:'レイアウト名', presets:'プリセット', share:'共有',
@@ -569,7 +607,11 @@ const T = {
     copied:'コードをコピーしました', imgCopied:'画像をコピーしました', savedT:'保存しました', deleted:'削除しました', imported:'読み込みました', loaded:'開きました',
     untitled:'無題のレイアウト', copySuffix:' のコピー', dblHint:'ダブルクリックで名前変更',
     keys:[['ドラッグ','移動'],['Shift+クリック','選択に追加'],['R','15°回転（Shift 90°、Alt 逆）'],['矢印','50mm 移動（Shift 10）'],['Cmd/Ctrl D','複製'],['Delete','削除'],['Cmd/Ctrl Z','元に戻す（Shift でやり直し）'],['Space+ドラッグ','パン・ホイールで拡大']],
-    noPlan:'床データ（plan-data.js）を読み込めませんでした。'
+    noPlan:'床データ（plan-data.js）を読み込めませんでした。',
+    areas:'区分', areasTitle:'区分（利用エリア）の表示・非表示', splitFloor:'共有フロア',
+    sim3dTitle:'3Dビューは準備中 — スキャン一覧は「Simの情報」へ', simInfoTitle:'Simの情報',
+    simTitle:'シミュレーションデータ', simHint:'このフロアに登録されたスキャンと高さ情報です。3Dビューは近日公開予定。',
+    simNone:'このフロアにはまだスキャンが登録されていません。', simCeiling:'天井高', simBeam:'梁下', simFtF:'階高'
   }
 };
 let lang = 'en';
@@ -694,6 +736,9 @@ function sanitize(items){
     if (o.label) it.label = String(o.label).slice(0, 80);
     if (o.color && COLORS[o.color]) it.color = o.color;
     if (o.fs) it.fs = clamp(Math.round(+o.fs), 100, 2000);
+    // optional sim hook-up: a registered 3D scan can pin an item's height off the floor / own height (mm)
+    if (o.z_mm !== undefined && isFinite(+o.z_mm)) it.z_mm = Math.round(+o.z_mm);
+    if (o.height_mm !== undefined && isFinite(+o.height_mm)) it.height_mm = clamp(Math.round(+o.height_mm), 1, 6000);
     out.push(it);
   });
   return out;
@@ -730,6 +775,7 @@ function applyCam(){
   const {W, H} = wrapSize();
   svg.setAttribute('viewBox', [cam.cx - W * cam.s / 2, cam.cy - H * cam.s / 2, W * cam.s, H * cam.s].join(' '));
   $('#zoom-read').textContent = '1 m = ' + Math.round(1000 / cam.s) + ' px';
+  updateZoneLabelSizes();
   renderUI();
 }
 function fit(){
@@ -787,13 +833,24 @@ function planCSS(c){
   .it-trash{fill:${c.trash};stroke:${c.fg};stroke-width:1.2px;vector-effect:non-scaling-stroke}
   .it-plant{fill:${c.leaf};fill-opacity:.55;stroke:${c.fg};stroke-width:1px;vector-effect:non-scaling-stroke}
   .hit{fill:transparent;stroke:none}
-  .zone-body{stroke-width:1.5px;vector-effect:non-scaling-stroke}
-  .zone-lbl{fill:${c.fg};font-family:${c.fontDisplay};font-weight:700;letter-spacing:.02em}
+  .zone-body{stroke-width:2.5px;vector-effect:non-scaling-stroke}
+  .zone-pill{stroke:none}
+  .zone-lbl{fill:#231815;font-family:${c.fontDisplay};font-weight:700;letter-spacing:.02em;dominant-baseline:middle}
   .note-txt{fill:${c.fg};font-family:${c.fontDisplay};font-weight:700;text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:${c.floor};stroke-width:70px;stroke-linejoin:round}
-  .sel-box{fill:none;stroke:${c.red};stroke-width:2px;vector-effect:non-scaling-stroke}
+  .sel-box{fill:none;stroke:${c.red};stroke-width:2.5px;vector-effect:non-scaling-stroke}
+  .sel-box.sel-zone{fill:${c.red};fill-opacity:.08}
   .warn-box{fill:none;stroke:${c.red};stroke-width:1.5px;stroke-dasharray:5 3;vector-effect:non-scaling-stroke}
   .handle{fill:${c.red};cursor:nwse-resize}
   .band{fill:${c.red};fill-opacity:.08;stroke:${c.red};stroke-width:1px;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
+  /* ownership/use areas (PLAN.areas): a subtle tinted region under furniture, toggled by #tool-areas */
+  .area{stroke-width:2.5px;stroke-dasharray:14 8;vector-effect:non-scaling-stroke;fill-opacity:.1;pointer-events:none}
+  .area-fabcafe{fill:${c.red};stroke:${c.red}}
+  .area-loftwork{fill:${c.fg};stroke:${c.fg}}
+  .area-other{fill:${c.muted};stroke:${c.muted}}
+  .area-lbl{font-family:${c.fontDisplay};font-weight:700;font-size:170px;letter-spacing:.02em;paint-order:stroke;stroke:${c.floor};stroke-width:40px}
+  .area-lbl-fabcafe{fill:${c.red}}
+  .area-lbl-loftwork{fill:${c.fg}}
+  .area-lbl-other{fill:${c.muted}}
   `;
 }
 const FONT_D = '"Helvetica Neue Condensed Bold","HelveticaNeue-CondensedBold","Roboto Condensed","Arial Narrow",sans-serif';
@@ -817,6 +874,9 @@ function drawBase(){
     el('circle', {class:'gridbub', cx:g.v, cy:EXT.minY + 330, r:300}, gG); txt(gG, g.v, EXT.minY + 330, g.id, {class:'gridtxt'}); });
   gy.forEach(g => { el('line', {class:'gridline', x1:EXT.minX + 650, y1:g.v, x2:V.maxX, y2:g.v}, gG);
     el('circle', {class:'gridbub', cx:EXT.minX + 330, cy:g.v, r:300}, gG); txt(gG, EXT.minX + 330, g.v, g.id, {class:'gridtxt'}); });
+  // ownership/use areas (PLAN.areas): a subtle tinted layer, under rooms/walls and furniture, toggle below
+  el('g', {id:'g-areas'}, gBase);
+  drawAreas();
   // rooms (hatched)
   (PLAN.rooms || []).forEach(r => {
     if (!r.points || r.points.length < 3) return;
@@ -858,11 +918,35 @@ function drawBase(){
   [[0,1000,'sb-a'],[1000,2000,'sb-b'],[2000,5000,'sb-a']].forEach(([a,b,c]) => el('rect', {class:c, x:sx + a, y:sy, width:b - a, height:140}, gS));
   el('rect', {class:'sb-b', x:sx, y:sy, width:5000, height:140, fill:'none'}, gS);
   [[0,'0'],[1000,'1m'],[2000,'2m'],[5000,'5m']].forEach(([d,s]) => txt(gS, sx + d, sy + 400, s, {class:'sb-t'}));
-  // title block
+  // title block (brand line re-set by updateTitleBrand, since it depends on language)
   const tx = V.maxX - 200, ty = V.maxY + 750, gT = el('g', {id:'g-title'}, gBase);
   el('line', {class:'tb-rule', x1:tx - 5200, y1:ty - 480, x2:tx, y2:ty - 480}, gT);
-  txt(gT, tx, ty, 'FabCafe Tokyo ' + FID + ' · 1:100 · ' + ((PLAN.meta && PLAN.meta.titleNote) || 'source 2026/02'), {class:'tb-1'});
+  txt(gT, tx, ty, '', {class:'tb-1', id:'tb-brand'});
   txt(gT, tx, ty + 330, '', {class:'tb-2', id:'tb-layout'});
+  updateTitleBrand();
+}
+// the plan's own title line and the floor switcher / header both read PLAN.meta.tenant when present,
+// falling back to "FabCafe Tokyo" (the 1F name, before floors or tenants existed) when it is missing
+function tenantLabel(ten){ if (!ten) return null; return (lang === 'jp' ? (ten.jp || ten.en) : (ten.en || ten.jp)) || null; }
+function updateTitleBrand(){
+  const b = $('#tb-brand'); if (!b) return;
+  const brand = tenantLabel(PLAN.meta && PLAN.meta.tenant) || 'FabCafe Tokyo';
+  b.textContent = brand + ' ' + FID + ' · 1:100 · ' + ((PLAN.meta && PLAN.meta.titleNote) || 'source 2026/02');
+}
+// ownership/use areas (PLAN.areas): a subtle owner-tinted region per floor, toggled by #tool-areas (per-floor,
+// remembered in this browser) and included in the PNG/print export since it lives in the base SVG layer
+let areasOn = true;
+function drawAreas(){
+  let g = $('#g-areas'); if (!g) g = el('g', {id:'g-areas'}, gBase);
+  g.innerHTML = '';
+  if (!areasOn) return;
+  (PLAN.areas || []).forEach(a => {
+    if (!a.points || a.points.length < 3) return;
+    const owner = (a.owner === 'fabcafe' || a.owner === 'loftwork') ? a.owner : 'other';
+    el('polygon', {class:'area area-' + owner, points:a.points.map(p => p.join(',')).join(' ')}, g);
+    const label = lang === 'jp' ? (a.label_jp || a.label_en) : (a.label_en || a.label_jp);
+    if (label){ const b = bbox(a.points); txt(g, b.minX + 90, b.minY + 260, label, {class:'area-lbl area-lbl-' + owner}); }
+  });
 }
 let BASE_LABELS = [];
 function drawBaseLabels(gL, labels){
@@ -933,10 +1017,17 @@ function drawShape(g, type, w, h, it){
       }
       break; }
     case 'zone': {
-      const col = COLORS[(it && it.color) || 'sky'];
-      el('rect', {class:'zone-body', x:-hw, y:-hh, width:w, height:h, fill:col, 'fill-opacity':.35, stroke:col}, g);
-      if (it){ const fs = clamp(Math.min(w, h) / 5, 180, 360);
-        txt(g, -hw + fs * 0.6, -hh + fs * 1.35, (it.label || t('zone')).toUpperCase(), {class:'zone-lbl', 'font-size':fs}); }
+      const key = (it && it.color) || 'sky', col = COLORS[key], dark = DARK_COLORS[key] || col;
+      el('rect', {class:'zone-body', x:-hw, y:-hh, width:w, height:h, fill:col, 'fill-opacity':.5, stroke:dark}, g);
+      if (it){
+        // a label pill, top-left of the zone box; a wrapping <g> (see updateZoneLabelSizes) keeps it
+        // readable at any zoom instead of shrinking to nothing when the plan is zoomed far out
+        const label = (it.label || t('zone')).toUpperCase();
+        const FS = 170, PAD = 55, textW = pillTextWidth(label, FS), pillW = Math.max(textW + PAD * 2, FS * 1.6), pillH = FS * 1.9;
+        const wrap = el('g', {class:'zone-lbl-wrap', 'data-x':-hw, 'data-y':-hh}, g);
+        el('rect', {class:'zone-pill', x:0, y:0, width:pillW, height:pillH, rx:6, fill:col}, wrap);
+        txt(wrap, pillW / 2, pillH / 2, label, {class:'zone-lbl', 'font-size':FS, 'text-anchor':'middle'});
+      }
       break; }
     case 'note': {
       const fs = (it && it.fs) || 320;
@@ -995,14 +1086,43 @@ function render(){
     drawShape(g, it.type, s.w, s.h, it);
     el('rect', {class:'hit', x:-s.w / 2, y:-s.h / 2, width:s.w, height:s.h}, g);
     if (clashIds.has(it.id)) el('rect', {class:'warn-box', x:-s.w / 2 - 50, y:-s.h / 2 - 50, width:s.w + 100, height:s.h + 100}, g);
-    if (sel.has(it.id)) el('rect', {class:'sel-box', x:-s.w / 2 - 60, y:-s.h / 2 - 60, width:s.w + 120, height:s.h + 120}, g);
+    if (sel.has(it.id)) el('rect', {class:'sel-box' + (it.type === 'zone' ? ' sel-zone' : ''), x:-s.w / 2 - 60, y:-s.h / 2 - 60, width:s.w + 120, height:s.h + 120}, g);
   });
-  renderUI(); updateInspector();
+  updateZoneLabelSizes();
+  renderUI(); updateInspector(); renderZoneLegend();
   // only rebuild the saved list when it actually changed (keeps rename/confirm rows stable while editing)
   const sig = [lang, currentId, store.layouts.map(x => x.id + x.name + x.updated).join('|')].join('#');
   if (sig !== savedSig && !pendingDelete && !renaming){ savedSig = sig; renderSaved(); }
 }
 let savedSig = '';
+// zone label pills: a scale-up transform so the label keeps a minimum on-screen size when zoomed far out
+// (re-applied on every camera move too, since panning/zooming alone does not rebuild the item layer)
+function updateZoneLabelSizes(){
+  const k = Math.max(1, cam.s / BASE_CAM_S);
+  $$('.zone-lbl-wrap').forEach(wrap => {
+    wrap.setAttribute('transform', `translate(${wrap.dataset.x} ${wrap.dataset.y}) scale(${k})`);
+  });
+}
+// legend row for named zones on the stats strip: a color chip + label per distinct zone, click selects it
+let zoneSig = '';
+function renderZoneLegend(){
+  const box = $('#zone-legend'); if (!box) return;
+  const seen = new Map();
+  L.items.forEach(it => {
+    if (it.type !== 'zone' || !it.label) return;
+    const k = it.label + '|' + (it.color || 'sky');
+    if (seen.has(k)) seen.get(k).ids.push(it.id); else seen.set(k, {label:it.label, color:it.color || 'sky', ids:[it.id]});
+  });
+  const sig = Array.from(seen.keys()).sort().join('#');
+  if (sig === zoneSig) return; zoneSig = sig;
+  box.innerHTML = ''; box.hidden = seen.size === 0;
+  seen.forEach(v => {
+    const b = mkBtn('', 'legend-chip', () => { sel = new Set(v.ids); render(); if (isPhone()) setSheet('inspect'); });
+    const dot = document.createElement('span'); dot.className = 'swatch-dot'; dot.style.background = COLORS[v.color] || v.color;
+    b.prepend(dot); b.appendChild(document.createTextNode(v.label));
+    box.appendChild(b);
+  });
+}
 function renderUI(){
   gUI.innerHTML = '';
   if (sel.size === 1){
@@ -1467,11 +1587,38 @@ function openModal(kind, extra){
   const m = $('#modal'); m.hidden = false; m.dataset.kind = kind;
   const ta = $('#modal-text'), img = $('#modal-img'), go = $('#modal-go');
   $('#modal-err').textContent = ''; img.hidden = true; ta.hidden = true; go.hidden = true; $('#modal-file-row').hidden = true;
-  $('#modal-list').hidden = kind !== 'presets'; $('#modal-copy-presets').hidden = kind !== 'presets';
+  $('#modal-list').hidden = kind !== 'presets' && kind !== 'sim'; $('#modal-copy-presets').hidden = kind !== 'presets';
   if (kind === 'presets'){ armed = null; $('#modal-title').textContent = t('pEditTitle'); $('#modal-hint').textContent = t('pEditHint'); renderPresetEditor(); setTimeout(() => $('#modal-close').focus(), 0); }
   if (kind === 'code'){ $('#modal-title').textContent = t('codeTitle'); $('#modal-hint').textContent = t('codeHint'); ta.hidden = false; ta.readOnly = true; ta.value = layoutCode(); setTimeout(() => { ta.focus(); ta.select(); }, 0); }
   if (kind === 'import'){ $('#modal-title').textContent = t('importTitle'); $('#modal-hint').textContent = t('importHint'); ta.hidden = false; ta.readOnly = false; ta.value = ''; $('#modal-file-row').hidden = false; $('#modal-file').value = ''; go.hidden = false; go.textContent = t('importGo'); setTimeout(() => ta.focus(), 0); }
   if (kind === 'image'){ $('#modal-title').textContent = t('imgTitle'); $('#modal-hint').textContent = t('imgHint'); img.hidden = false; img.src = extra; img.alt = L.name; setTimeout(() => $('#modal-close').focus(), 0); }
+  if (kind === 'sim'){ $('#modal-title').textContent = t('simTitle'); $('#modal-hint').textContent = t('simHint'); renderSimInfo(); setTimeout(() => $('#modal-close').focus(), 0); }
+}
+// Sim slot info popover: lists registered 3D scans (window.FC_SIM.plan().scans) + this floor's heights.
+// No viewer yet (3D button stays disabled) — see SIMULATION.md for the data contract and how to register one.
+function renderSimInfo(){
+  const box = $('#modal-list'); box.innerHTML = '';
+  const sim = (PLAN.sim) || {}, h = sim.heights || {}, scans = sim.scans || [];
+  if (h.ceiling_mm || h.beam_mm || h.floor_to_floor_mm){
+    const parts = [];
+    if (h.ceiling_mm) parts.push(t('simCeiling') + ' ' + (h.ceiling_mm / 1000).toFixed(2) + ' m');
+    if (h.beam_mm) parts.push(t('simBeam') + ' ' + (h.beam_mm / 1000).toFixed(2) + ' m');
+    if (h.floor_to_floor_mm) parts.push(t('simFtF') + ' ' + (h.floor_to_floor_mm / 1000).toFixed(2) + ' m');
+    const hd = document.createElement('div'); hd.className = 'sim-heights'; hd.textContent = parts.join(' · '); box.appendChild(hd);
+  }
+  if (!scans.length){ const p = document.createElement('p'); p.className = 'muted'; p.textContent = t('simNone'); box.appendChild(p); return; }
+  scans.forEach(s => {
+    const row = document.createElement('div'); row.className = 'sim-row';
+    const top = document.createElement('div'); top.className = 'sim-row-top';
+    const kind = document.createElement('b'); kind.textContent = [s.kind, s.format].filter(Boolean).join(' · ');
+    top.appendChild(kind);
+    const meta = [s.captured, s.by].filter(Boolean).join(' · ');
+    if (meta){ const sp = document.createElement('span'); sp.className = 'sub'; sp.textContent = meta; top.appendChild(sp); }
+    row.appendChild(top);
+    if (s.note){ const n = document.createElement('p'); n.className = 'sub'; n.textContent = s.note; row.appendChild(n); }
+    if (s.url){ const a = document.createElement('a'); a.href = s.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = s.url; row.appendChild(a); }
+    box.appendChild(row);
+  });
 }
 function closeModal(){ $('#modal').hidden = true; }
 function doImport(text){
@@ -1552,8 +1699,9 @@ function applyLang(){
   $('#lang-jp').setAttribute('aria-pressed', String(lang === 'jp'));
   const keys = $('#keys'); keys.innerHTML = '';
   t('keys').forEach(([k, v]) => { const a = document.createElement('kbd'); a.textContent = k; const b = document.createElement('span'); b.textContent = v; keys.append(a, b); });
-  buildPalette(); drawBaseLabels(); render(); renderPresetMenu(); renderPeBar(!!presetEdit && presetEdit.explicit && !presetEdit.typed);
+  buildPalette(); drawBaseLabels(); updateTitleBrand(); drawAreas(); renderFloorSeg(); render(); renderPresetMenu(); renderPeBar(!!presetEdit && presetEdit.explicit && !presetEdit.typed);
   if (!$('#modal').hidden && $('#modal').dataset.kind === 'presets') openModal('presets');
+  if (!$('#modal').hidden && $('#modal').dataset.kind === 'sim') openModal('sim');
 }
 function setLang(l){ lang = l; store.lang = l; writeStore(store); try { localStorage.setItem(FLOOR_PREF + 'lang', l); } catch(e){} applyLang(); emit(); }
 
@@ -1563,12 +1711,24 @@ function renderFloorSeg(){
   const box = $('#floor-seg'), ids = Object.keys(window.PLANS || {});
   box.hidden = ids.length < 2; box.innerHTML = '';
   ids.forEach(f => {
-    const b = mkBtn(f, '', () => { if (f === FID) return; try { localStorage.setItem(FLOOR_PREF + 'floor', f); } catch(e){}
+    const p = window.PLANS[f], ten = p && p.meta && p.meta.tenant, lbl = tenantLabel(ten);
+    const b = mkBtn('', '', () => { if (f === FID) return; try { localStorage.setItem(FLOOR_PREF + 'floor', f); } catch(e){}
       try { history.replaceState(null, '', '#floor=' + f); } catch(e){} location.reload(); });
-    b.id = 'floor-' + f; b.setAttribute('aria-pressed', String(f === FID)); box.appendChild(b);
+    b.id = 'floor-' + f; b.setAttribute('aria-pressed', String(f === FID));
+    b.appendChild(document.createTextNode(f));
+    if (lbl){
+      const sub = document.createElement('small'); sub.className = 'floor-tenant'; sub.textContent = lbl; b.appendChild(sub);
+      b.title = f + ' · ' + lbl + (ten.owner === 'split' ? ' (' + t('splitFloor') + ')' : '');
+      b.setAttribute('aria-label', b.title);
+      if (ten.owner === 'split'){ const dot = document.createElement('span'); dot.className = 'floor-split'; dot.setAttribute('aria-hidden', 'true'); b.appendChild(dot); }
+    } else { b.title = f; }
+    box.appendChild(b);
   });
   document.title = 'FabCafe ' + FID + ' Map';
   const sign = $('#btn-sign'); if (sign) sign.hidden = !PLAN.machines;
+  const brandSub = $('.brand-sub');
+  if (brandSub){ const ten = PLAN.meta && PLAN.meta.tenant, lbl = tenantLabel(ten); brandSub.textContent = lbl ? FID + ' · ' + lbl : 'MAP'; }
+  const ag = $('#tool-group-areas'); if (ag) ag.hidden = !(PLAN.areas && PLAN.areas.length);
 }
 
 /* ======================= Palette ======================= */
@@ -1789,6 +1949,8 @@ function wire(){
   $('#tool-dup').addEventListener('click', duplicateSel);
   $('#tool-del').addEventListener('click', deleteSel);
   $('#tool-snap').addEventListener('click', e => { snapOn = !snapOn; e.currentTarget.setAttribute('aria-pressed', String(snapOn)); store.snap = snapOn; writeStore(store); });
+  $('#tool-areas').addEventListener('click', e => { areasOn = !areasOn; e.currentTarget.setAttribute('aria-pressed', String(areasOn)); store.areas = areasOn; writeStore(store); drawAreas(); });
+  $('#tool-sim-info').addEventListener('click', () => openModal('sim'));
   $('#st-warn').addEventListener('click', () => { if (!clashIds.size) return; sel = new Set(clashIds); render(); if (isPhone()) setSheet('inspect'); });
   $$('.sheet-tabs button').forEach(b => b.addEventListener('click', () => setSheet(b.dataset.tab, true)));
   const ie = $('#inline-edit');
@@ -1821,10 +1983,19 @@ window.FC_MAP = {
   floor: () => FID,
   normalJp: () => { const o = presetStore().over.cafe; return (o && o.name) || PLAN.normal_jp || '通常営業'; },
   sourceNote: () => FID === '1F' ? '配置図 2026/02 ベース' : ((PLAN.meta && PLAN.meta.titleNote) || ''),
-  annotations: () => L.items.filter(it => CAT[it.type].annot && it.label).map(it => ({type:it.type, label:it.label, color:it.type === 'zone' ? (COLORS[it.color] || it.color || null) : null})),
+  tenant: () => (PLAN.meta && PLAN.meta.tenant) || null,
+  annotations: () => L.items.filter(it => CAT[it.type].annot && it.label).map(it => ({type:it.type, label:it.label,
+    color:it.type === 'zone' ? (COLORS[it.color] || it.color || null) : null, dark:it.type === 'zone' ? (DARK_COLORS[it.color] || null) : null})),
   lang: () => lang,
   onChange: fn => { listeners.push(fn); },
   toast: s => toast(s)
+};
+// Sim data-slot hook (see SIMULATION.md): a future 3D-viewer module calls FC_SIM.register() with a render
+// function; nothing calls it back yet — the "3D" tool button stays disabled until a viewer exists.
+const simListeners = [];
+window.FC_SIM = {
+  plan: () => (PLAN && PLAN.sim) || {scans:[]},
+  register: fn => { if (typeof fn === 'function') simListeners.push(fn); }
 };
 
 /* ======================= Init ======================= */
@@ -1835,6 +2006,7 @@ function init(){
   let pl = null; try { pl = localStorage.getItem(FLOOR_PREF + 'lang'); } catch(e){}
   lang = (pl || store.lang) === 'jp' ? 'jp' : 'en';
   snapOn = store.snap !== false; $('#tool-snap').setAttribute('aria-pressed', String(snapOn));
+  areasOn = store.areas !== false; $('#tool-areas').setAttribute('aria-pressed', String(areasOn));
   prepGeometry(); drawBase(); wire();
   const dr = store.draft;
   if (dr && Array.isArray(dr.items)){ L = {name:dr.name || t('untitled'), items:sanitize(dr.items)}; currentId = store.layouts.some(x => x.id === dr.currentId) ? dr.currentId : null; }

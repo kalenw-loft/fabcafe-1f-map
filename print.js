@@ -87,7 +87,7 @@ function legend(){
   (MAP.annotations() || []).forEach(a => {
     const k = a.type + '|' + a.label + '|' + a.color; if (!a.label || seen.has(k)) return; seen.add(k);
     const li = el('li'), sw = el('span', 'pp-sw' + (a.type === 'note' ? ' note' : ''));
-    if (a.type === 'zone' && a.color) sw.style.background = a.color;
+    if (a.type === 'zone' && a.color){ sw.style.background = a.color; if (a.dark) sw.style.borderColor = a.dark; }
     li.append(sw, el('span', null, a.label)); ul.appendChild(li);
   });
   return ul.children.length ? ul : null;

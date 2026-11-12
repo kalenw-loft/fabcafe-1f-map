@@ -3,9 +3,49 @@
 // interpolation between grid lines X1..X3 / Y4..Y1. Typical error well under 100 mm.
 // Coordinates: mm. Origin = X1 x Y4 (top-left grid corner). x right, y DOWN. rot = degrees clockwise.
 // Chair rot convention: rot 0 = chair faces +y (down), backrest on the -y side.
+//
+// 2026-11-12 accuracy cross-check (Kalen, 1F-only pass): compared this trace against Shuei Fusakawa's
+// 2026-11 architectural CAD (Drive 図面.dxf, id 1QhPL1sFx5AnetDfzqQzvS6B9NBBgLBwL, modified 2026-11-05;
+// companion FabCafe図面.pdf id 17ZQTezrP0aNwYDRtCroFXundGlZQJKPH). The DXF is a Rhino "Make2D" export
+// (two curve layers, no text/dimensions/layer-per-element), so walls/furniture aren't separately
+// labelled — only the drawn curves and the 通り芯 grid-reference symbols survive.
+// Calibration: found the small octagon grid-reference marks along the top edge (X-axis, 3 marks) and
+// left edge (Y-axis, 4 marks) of the DXF, matched their spacing to this file's grid (X1/X2/X3 =
+// 0/5450/13885; Y4/Y3/Y2/Y1 = 0/7530/10730/18260 — confirmed by chain dimensions 7530+3200 and total
+// 13885 printed on the original Naruse Inokuma Architects drawing, lw1F.pdf, 2011.12.21 1:100), then
+// least-squares-fit a per-axis scale+offset (no rotation — the DXF's walls render axis-aligned same as
+// this file). Residuals on the 3 X marks / 4 Y marks were all <10 mm; fitted scale was 0.9970 (x) /
+// 0.9980 (y) — i.e. this trace and the CAD agree on overall building size to ~0.3%.
+// Checked against the CAD (nearest-curve distance, after excluding the 通り芯 reference lines
+// themselves, which otherwise read as false "walls" extended far past the building): top wall ~64 mm,
+// kitchen walls ~55–200 mm, WC block walls 37–108 mm, Y3 service-strip partition ~22 mm, backyard
+// walls ~38 mm, the diagonal glass facade / window-counter line ~visually <150 mm (counter sits
+// slightly inboard of the glass, as expected) — all within or close to the original ~100 mm trace
+// error, so no geometry below was changed (nothing cleared the >150 mm bar with confidence).
+// Open / uncertain: the CAD's Make2D export doesn't draw a distinct face for the east wall near X3 —
+// only the X3 column-grid centerline itself is visible there (this file's wall is ~370 mm inboard of
+// that gridline, at x=13516, which is a plausible wall-to-grid setback but isn't independently
+// confirmed by this CAD). Left unchanged; worth a tape-measure check on site before trusting it to
+// better than ~150 mm. Furniture/fixed items not visible in the Make2D export (it's a 3D-model
+// projection, not a furniture plan) were left as previously traced.
+// Added this pass: meta.tenant, areas (rental halves), sim (Rhino model reference). Geometry (grid,
+// view, floor, walls, rooms, fixed, furniture) is unchanged from the prior 2026/02-PDF trace.
 (window.PLANS = window.PLANS || {})['1F'] = {
   machines: true, // fab machines on this floor: shows the 貼り紙 (no-drinks sign) button
-  meta: { name: 'FabCafe Tokyo 1F', source: 'FC_1F_PLAN_2026.pdf (配置図, 2026/02 更新, 1:100 A3)', units: 'mm' },
+  meta: { name: 'FabCafe Tokyo 1F', source: 'FC_1F_PLAN_2026.pdf (配置図, 2026/02 更新, 1:100 A3)', units: 'mm',
+    tenant: { en: 'FabCafe Tokyo', jp: 'FabCafe Tokyo', owner: 'fabcafe' } },
+  // rental halves (not ownership splits — the whole floor is FabCafe's) matching the BACK_HALF rule
+  // used elsewhere in the editor (y < 10730 && x > 6160). front half is in two pieces because the
+  // back-half rectangle bites into the floor outline's middle; together the 3 polygons exactly tile
+  // the public floor area (119.7 m²) with no gaps/overlap (checked by shoelace area sum).
+  areas: [
+    { id: 'back-half', label_en: 'Back half (rental)', label_jp: '奥半面', owner: 'fabcafe',
+      points: [[6160,205],[12846,205],[13498,700],[13498,6900],[12955,8141],[12826,10001],[12412,10730],[6228,10730],[6228,6863],[6160,6863]] },
+    { id: 'front-half-a', label_en: 'Front half', label_jp: '手前半面', owner: 'fabcafe',
+      points: [[6160,205],[6160,16903],[5751,17294],[4676,17489],[4361,17213],[4071,17236],[1488,16140],[568,15787],[72,15504],[72,13135],[6122,13135],[5345,12357],[5345,11721],[6160,11721],[6160,6863],[5133,6863],[5133,7461],[4177,7461],[4177,5807],[6157,5807],[6157,958]] },
+    { id: 'front-half-b', label_en: 'Front half', label_jp: '手前半面', owner: 'fabcafe',
+      points: [[12412,10730],[12183,11133],[11651,11643],[11592,11686],[6440,16635],[6285,16783],[6160,16903],[6160,11721],[6228,11721],[6228,10730]] },
+  ],
   grid: { x: [{id:'X1',v:0},{id:'X2',v:5450},{id:'X3',v:13885}], y: [{id:'Y4',v:0},{id:'Y3',v:7530},{id:'Y2',v:10730},{id:'Y1',v:18260}] },
   view: { minX: -1700, minY: -1700, maxX: 15000, maxY: 19150 },
   // public floor: main hall + fab area + entrance area + passage to the WCs
@@ -161,5 +201,19 @@
     {"type":"chair","x":2850,"y":14912,"rot":27.4}, // chair
     {"type":"chair","x":3469,"y":15195,"rot":27.4}, // chair
     {"type":"chair","x":2357,"y":15894,"rot":-158.2}, // chair
-  ]
+  ],
+  // 3D/scan references for this floor. Not yet registered to this plan's mm grid (no shared points
+  // measured between the two), so register is left null rather than guessed — treat x/y/rotation
+  // alignment between the Rhino model and this trace as unconfirmed until someone sets it.
+  sim: {
+    scans: [
+      { id: 'rhino-1f', kind: 'cad3d', format: '3dm',
+        url: 'https://drive.google.com/file/d/1LxU97wTpNGjtSN64cmJ8hB1ixUJS7XSw/view',
+        captured: '2026-11-06',
+        note: 'Architect-supplied Rhino model of 1F (FabCafe図面.3dm). Used this pass only via its flattened Make2D DXF export, for a 2D accuracy cross-check — see header comment above. Not registered to this floor\'s origin/scale.',
+        register: { origin_mm: null, z_mm: null, rot_deg: null, scale: null } },
+    ],
+    heights: {},
+    notes: 'No 1F floor-to-floor/ceiling/beam heights recorded yet. (Upper-floor heights, YEP_LAYOUT_2024: beam underside 2600 mm, ceiling 3400 mm — do not assume these apply to 1F, which has a different, taller cafe-hall ceiling.)',
+  },
 };

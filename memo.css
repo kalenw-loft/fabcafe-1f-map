@@ -26,9 +26,40 @@
 .mf .hint::before{content:"社内メモ・印刷されません　";font-weight:700}
 .mf .help{margin:0;font-size:11.5px;line-height:1.4;color:var(--fg-muted)}
 .memo-seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.memo-seg.segn3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .memo-seg button{height:36px;border:0;background:var(--bg);cursor:pointer;font-size:13px;font-weight:500;padding:0 4px;white-space:nowrap}
 .memo-seg button + button{border-left:1px solid var(--line)}
 .memo-seg button[aria-pressed="true"]{background:var(--red);color:#fff;border-radius:0 0 9px 9px}
+
+/* ---------- timeline editor (flexible rows) ---------- */
+.mf-timeline,.mf-shifts-fs{grid-column:1 / -1}
+.mf-rows{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.mf-row{border:1px solid var(--line);border-radius:var(--r-sm);padding:6px 8px;display:flex;flex-direction:column;gap:6px}
+.mf-row-top{display:flex;align-items:center;gap:6px}
+.mf-row-ord{display:flex;flex-direction:column;flex:none;gap:2px}
+.mf-row-ord button{width:20px;height:16px;border:1px solid var(--line);border-radius:3px;background:var(--bg);font-size:8px;line-height:1;cursor:pointer;padding:0;color:var(--fg)}
+.mf-row-ord button:disabled{opacity:.3;cursor:default}
+.mf-row-label{flex:1;min-width:0;height:32px;padding:0 8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:13px;font-weight:700}
+.mf-row-del{flex:none;width:28px;height:28px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);cursor:pointer;color:var(--fg-muted);font-size:12px}
+.mf-row-del:disabled{opacity:.3;cursor:default}
+.mf-row-bot{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:6px;align-items:center}
+.mf-row-time{height:30px;padding:0 6px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-family:var(--font-mono);font-size:12px;text-align:center}
+.mf-row-note{height:30px;min-width:0;padding:0 8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px}
+.mf-row-hi{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--fg-muted);white-space:nowrap;flex:none;cursor:pointer}
+.mf-row-hi input{margin:0}
+.mf-rows-add{margin-bottom:10px}
+.mf-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.mf-chip{height:26px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:var(--bg);font-size:12px;cursor:pointer}
+.mf-chip:hover{border-color:var(--fg)}
+.mf-templates{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:6px}
+.mf-templates .lab{font-size:12px;font-weight:700}
+.mf-templates .lab small{display:block;font-size:10px;font-weight:400;color:var(--fg-muted)}
+.mf-templates button small{display:block;font-size:9px;font-weight:400;opacity:.75}
+.mf-shifts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mf-shift{border:1px solid var(--line);border-radius:var(--r-sm);padding:8px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.mf-shift-lab{font-size:12px;font-weight:700}
+.mf-shift-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.mf-shift-grid input{height:30px;min-width:0;padding:0 8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px}
 .memo-prev{overflow:auto;background:var(--plan-bg);padding:24px 16px 48px;min-width:0}
 .memo-scaler{position:relative;margin:0 auto;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.08),0 8px 28px rgba(0,0,0,.10)}
 .memo-scaler > .memo-sheet{position:absolute;left:0;top:0;transform-origin:0 0}
@@ -58,6 +89,8 @@
   .memo-prev{overflow:visible;padding:16px 16px 48px}
   .mf.w3{grid-column:span 6}
   .mf.w2{grid-column:span 3}
+  .mf-shifts{grid-template-columns:1fr}
+  .mf-row-bot{grid-template-columns:62px minmax(0,1fr) auto}
 }
 
 /* ---------- The sheet itself: one A4 page, always light ---------- */
@@ -96,8 +129,8 @@
 .ms-meta .k{display:inline;font-size:7.5pt}
 .ms-meta .c1{max-width:110mm}
 
-/* time strip */
-.ms-times ol{list-style:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3.5mm}
+/* time strip — variable row count (1–8); >5 wraps to 2 rows of 4 with smaller type */
+.ms-times ol{list-style:none;display:grid;grid-template-columns:repeat(var(--cols,5),minmax(0,1fr));gap:3.5mm}
 .ms-times li{position:relative;border:.35mm solid var(--s-ink);border-radius:0 0 2.4mm 2.4mm;padding:1.4mm 2mm 1.2mm;min-width:0}
 .ms-times li + li::before{content:"";position:absolute;left:-3.1mm;top:50%;width:0;height:0;border-left:1.8mm solid var(--s-ink);border-top:1.3mm solid transparent;border-bottom:1.3mm solid transparent;transform:translateY(-50%)}
 .ms-times .k{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -105,12 +138,30 @@
 .ms-times .v .blank{display:inline-flex;align-items:flex-end;gap:.8mm;height:7.6mm;color:var(--s-mute)}
 .ms-times .v .blank i{display:inline-block;width:8mm;height:6.4mm;border-bottom:.35mm solid var(--s-ink)}
 .ms-times .v .blank b{font-size:15pt;line-height:1}
+.ms-times .rn{display:block;margin-top:.5mm;font-size:6.3pt;line-height:1.3;color:var(--s-mute);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ms-times li.go{background:var(--s-red);border-color:var(--s-red);color:#fff}
 .ms-times li.go .k{color:#fff}
 .ms-times li.go .v .blank{color:#fff}
 .ms-times li.go .v .blank i{border-color:#fff}
+.ms-times li.go .rn{color:#fff;opacity:.85}
 .ms-times .note{margin-top:1.6mm;font-size:8.5pt;color:var(--s-ink)}
 .ms-times .note b{color:var(--s-red)}
+.ms-times.two-row ol{gap:2.2mm 3mm}
+.ms-times.two-row li{padding:1mm 1.6mm .9mm}
+.ms-times.two-row li:nth-child(4n+1)::before{display:none}
+.ms-times.two-row .k{font-size:6.8pt}
+.ms-times.two-row .v{font-size:15pt}
+.ms-times.two-row .v .blank{height:5.4mm}
+.ms-times.two-row .v .blank i{width:6mm;height:4.6mm}
+.ms-times.two-row .v .blank b{font-size:11pt}
+.ms-times.two-row .rn{font-size:5.8pt}
+
+/* shifts — compact, optional, printed only if at least one shift has data */
+.ms-shifts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2mm 4mm;border:.35mm solid var(--s-ink);border-radius:0 0 2.4mm 2.4mm;padding:1.6mm 3mm}
+.ms-shifts .sh{display:flex;flex-wrap:wrap;align-items:baseline;gap:1.6mm;font-size:8.3pt;min-width:0}
+.ms-shifts .sh .tag{flex:none;font-size:7.3pt;background:var(--s-ink);color:#fff;padding:.3mm 1.8mm;border-radius:.8mm}
+.ms-shifts .sh .nm{font-weight:700}
+.ms-shifts .sh .tm{font-family:"Helvetica Neue Condensed Bold","HelveticaNeue-CondensedBold","Roboto Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:9.5pt}
 
 /* role band */
 .ms-role{display:grid;grid-template-columns:44mm minmax(0,1fr) 46mm;border:.35mm solid var(--s-ink);border-radius:0 0 2.4mm 2.4mm}

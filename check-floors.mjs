@@ -23,10 +23,14 @@ async function boot(floor, storage){
   return {w: dom.window, d: dom.window.document, errors};
 }
 const click = (d, sel) => { const n = d.querySelector(sel); if (!n) throw new Error('missing ' + sel); n.click(); };
+// floors to test: whatever window.PLANS actually has at boot (not a fixed list), so a new floor (3F) is
+// picked up the moment its plan-*.js lands, and this suite still passes fine while it does not yet exist
+const probe = await boot('1F');
+const FLOORS = Object.keys(probe.w.PLANS || {});
 const report = {}, failures = [];
 let fail = 0, floor;
 const expect = (ok, what) => { if (!ok){ fail++; failures.push(floor + ': ' + what); } return !!ok; };
-for (floor of ['1F', '2F', '10F']){
+for (floor of FLOORS){
   const {w, d, errors} = await boot(floor);
   const r = report[floor] = {floorId: w.FLOOR_ID, title: d.title, errors};
   try {
@@ -43,6 +47,18 @@ for (floor of ['1F', '2F', '10F']){
     // add a trash can from the palette
     click(d, '#add-trash');
     r.trashAdded = w.FC_MAP.getLayout().items.some(i => i.type === 'trash');
+    // sim slot + areas toggle plumbing: present on every floor regardless of whether it has sim/areas data yet
+    r.simViewPresent = !!d.querySelector('#sim-view') && d.querySelector('#sim-view').hidden;
+    expect(r.simViewPresent, 'hidden #sim-view slot element present');
+    r.tool3dDisabled = d.querySelector('#tool-3d')?.disabled === true;
+    expect(r.tool3dDisabled, '#tool-3d stays disabled (no viewer yet)');
+    const planAreas = (w.PLANS[floor].areas || []).length;
+    r.areasToggleShown = !d.querySelector('#tool-group-areas').hidden;
+    expect(r.areasToggleShown === (planAreas > 0), 'Areas toggle shown only when PLAN.areas is non-empty');
+    click(d, '#tool-sim-info');
+    r.simModalOpen = !d.querySelector('#modal').hidden && d.querySelector('#modal').dataset.kind === 'sim';
+    expect(r.simModalOpen, 'Sim info opens the sim modal');
+    click(d, '#modal-close');
     const key = () => JSON.parse(w.localStorage.getItem(floor === '1F' ? 'fabcafe-1f-map:v1' : 'fabcafe-1f-map:' + floor + ':v1') || '{}');
     const lay = () => w.FC_MAP.getLayout(), pe = () => w.FC_MAP.presetEditing ? w.FC_MAP.presetEditing() : 'no hook';
     const barShown = () => !!d.querySelector('#pe-bar') && !d.querySelector('#pe-bar').hidden;
