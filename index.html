@@ -14,7 +14,7 @@
   --ink:#1a1a1a; --paper:#ffffff;
   --bg:#ffffff; --surface:#f6f6f6; --line:#e8e8e8;
   --fg:#231815; --fg-muted:#595959; --accent-text:#d80c0e; --focus:#d80c0e;
-  --plan-bg:#f6f6f6; --plan-floor:#ffffff; --furn-fill:#ffffff; --furn-table:#ececec; --hatch:#9a9a9a; --grid:#e06666; --col:#cfcfcf;
+  --plan-bg:#f6f6f6; --plan-floor:#ffffff; --furn-fill:#f3f3f3; --furn-table:#ececec; --hatch:#9a9a9a; --grid:#e06666; --col:#cfcfcf;
   --sky:#a8dcf7; --leaf:#82c481; --yellow:#fcca00; --lavender:#c6add2; --orange:#f5a200; --gray:#d3d3d4;
   --font-display:"Helvetica Neue Condensed Bold","HelveticaNeue-CondensedBold","Roboto Condensed","Arial Narrow",sans-serif;
   --font-text:"Helvetica Neue",Helvetica,Roboto,Arial,"Hiragino Sans","Noto Sans JP",sans-serif;
@@ -26,14 +26,14 @@
   :root:not([data-theme="light"]){
     --red-tint:#3a1c1c; --bg:#1a1a1a; --surface:#262626; --line:#3a3a3a;
     --fg:#f6f6f6; --fg-muted:#b5b5b5; --accent-text:#ff6a5c; --focus:#ff6a5c;
-    --plan-bg:#141414; --plan-floor:#262626; --furn-fill:#262626; --furn-table:#3d3d3d; --hatch:#6a6a6a; --grid:#ff6a5c; --col:#555555;
+    --plan-bg:#141414; --plan-floor:#262626; --furn-fill:#333333; --furn-table:#3d3d3d; --hatch:#6a6a6a; --grid:#ff6a5c; --col:#555555;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --red-tint:#3a1c1c; --bg:#1a1a1a; --surface:#262626; --line:#3a3a3a;
   --fg:#f6f6f6; --fg-muted:#b5b5b5; --accent-text:#ff6a5c; --focus:#ff6a5c;
-  --plan-bg:#141414; --plan-floor:#262626; --furn-fill:#262626; --furn-table:#3d3d3d; --hatch:#6a6a6a; --grid:#ff6a5c; --col:#555555;
+  --plan-bg:#141414; --plan-floor:#262626; --furn-fill:#333333; --furn-table:#3d3d3d; --hatch:#6a6a6a; --grid:#ff6a5c; --col:#555555;
   color-scheme:dark;
 }
 
@@ -204,10 +204,10 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
   .tool-group button{width:34px;height:34px}
   .zoom-read{display:none}
 }
+#btn-memo{display:none} /* staff-only; reachable from the print dialog (編集), kept out of the public toolbar */
 @media (max-width: 420px){
   .brand-sub{display:none}
   .logo-tag{width:80px}
-  #btn-memo{display:none} /* reachable from the print dialog (編集) */
   .menu{position:fixed;left:16px;right:16px;top:56px;min-width:0}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
@@ -549,7 +549,7 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
           <button id="share-image"><span data-i18n="copyImage"></span><span class="sub" data-i18n="copyImageSub"></span></button>
         </div>
       </div>
-      <button class="btn" id="btn-sign"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h16v12H4zM12 16v5M8 21h8M12 7v4M12 13v1"/></svg><span class="lbl">貼り紙</span></button>
+      <button class="btn" id="btn-sign"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h16v12H4zM12 16v5M8 21h8M12 7v4M12 13v1"/></svg><span class="lbl" data-i18n="sign">貼り紙</span></button>
       <button class="btn" id="btn-memo"><svg class="i" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM9 11h7M9 15h7M9 7h4"/></svg><span class="lbl" data-i18n="memo">Staff sheet</span></button>
       <button class="btn primary" id="btn-print"><svg class="i" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H4v-8h16v8h-3M7 14h10v7H7z"/></svg><span class="lbl" data-i18n="print">Print</span></button>
       <div class="seg" role="group" aria-label="Language">
@@ -892,7 +892,7 @@ const COLORS = {sky:'#a8dcf7', leaf:'#82c481', yellow:'#fcca00', lavender:'#c6ad
 const ZONE_PRESETS = [
   {label:'Stage ステージ', color:'yellow', w:4000, h:2000},
   {label:'Reception 受付', color:'sky', w:2400, h:1500},
-  {label:'Ai展示', color:'lavender', w:3000, h:2000},
+  {label:'Exhibit 展示', color:'lavender', w:3000, h:2000},
   {label:'Food フード', color:'orange', w:3600, h:1500},
   {label:'Standing 立ち', color:'leaf', w:4000, h:3000}
 ];
@@ -909,7 +909,7 @@ const T = {
     pEmpty:'Empty', pEmptySub:'空 · clear all movable items',
     copyCode:'Copy layout code', copyCodeSub:'Text a teammate can paste in', importCode:'Paste / import', importCodeSub:'From a code or a .json file',
     savePdf:'Save PDF to print', savePdfSub:'A4 portrait, with layout name and seats',
-    memo:'Staff sheet', print:'Print PDF',
+    memo:'Staff sheet', sign:'Sign', print:'Print PDF',
     copyImage:'Copy image', copyImageSub:'PNG of the plan for Slack or slides',
     seats:'Seats', tables:'Tables', standing:'Standing', standingSub:'ppl at 0.5 m² each', freeFloor:'Free floor',
     conflicts:'{n} items clash', conflict1:'1 item clashes', noConflicts:'No clashes',
@@ -940,7 +940,7 @@ const T = {
     pEmpty:'空', pEmptySub:'Empty · 可動家具をすべて外す',
     copyCode:'レイアウトコードをコピー', copyCodeSub:'チームに送って貼り付けてもらう', importCode:'貼り付け・読み込み', importCodeSub:'コードまたは .json ファイルから',
     savePdf:'印刷用PDFを保存', savePdfSub:'A4 縦・レイアウト名と席数入り',
-    memo:'当日シート', print:'印刷用PDF',
+    memo:'当日シート', sign:'貼り紙', print:'印刷用PDF',
     copyImage:'画像をコピー', copyImageSub:'Slack やスライド用の PNG',
     seats:'席数', tables:'テーブル', standing:'立席', standingSub:'名（1人 0.5㎡）', freeFloor:'空き床',
     conflicts:'{n} 件が干渉', conflict1:'1 件が干渉', noConflicts:'干渉なし',
@@ -1185,7 +1185,7 @@ function planCSS(c){
 const FONT_D = '"Helvetica Neue Condensed Bold","HelveticaNeue-CondensedBold","Roboto Condensed","Arial Narrow",sans-serif';
 const FONT_T = '"Helvetica Neue",Helvetica,Roboto,Arial,"Hiragino Sans","Noto Sans JP",sans-serif';
 const CSS_VARS = {bg:'var(--plan-bg)', floor:'var(--plan-floor)', fg:'var(--fg)', muted:'var(--fg-muted)', hatch:'var(--hatch)', grid:'var(--grid)', furn:'var(--furn-fill)', table:'var(--furn-table)', red:'var(--red)', leaf:'var(--leaf)', col:'var(--col)', fontText:FONT_T, fontDisplay:FONT_D};
-const CSS_LIGHT = {bg:'#ffffff', floor:'#ffffff', fg:'#231815', muted:'#595959', hatch:'#9a9a9a', grid:'#e06666', furn:'#ffffff', table:'#ececec', red:'#d80c0e', leaf:'#82c481', col:'#cfcfcf', fontText:FONT_T, fontDisplay:FONT_D};
+const CSS_LIGHT = {bg:'#ffffff', floor:'#ffffff', fg:'#231815', muted:'#595959', hatch:'#9a9a9a', grid:'#e06666', furn:'#f3f3f3', table:'#ececec', red:'#d80c0e', leaf:'#82c481', col:'#cfcfcf', fontText:FONT_T, fontDisplay:FONT_D};
 $('#plan-css').textContent = planCSS(CSS_VARS);
 
 /* ======================= Base plan (not editable) ======================= */
@@ -2139,7 +2139,7 @@ init();
 'use strict';
 const MAP = window.FC_MAP || null;
 const KEY = 'fabcafe-1f-map:memo:v1';
-const TRASH_DEF = 'ピアビル1階ゴミ置き場の奥「階段下」';
+const TRASH_DEF = '';
 const DEF = {eventName:'', date:'', staff:'', staffContact:'', tMeet:'', tPrep:'', tOpen:'', tEnd:'21:30', tLeave:'22:30',
   guests:'', drink:'', keep:'', dishes:'', trash:TRASH_DEF, trashWhen:'', lights:'', lock:'', lostFound:'', extra:''};
 const KEYS = Object.keys(DEF);
@@ -2248,7 +2248,7 @@ function sheetHTML(m){
     <ol>
       <li>一般のお客さんが来たら、入口で<span class="em">「本日は貸切です」</span>と伝える</li>
       <li>ゴミ箱がいっぱいでないか、ときどき見る。ウォーターサーバーが空になったら補充</li>
-      <li>主催者の方が厨房に入ろうとしたり、許可なく FabCafe の備品を使おうとしたら、ひと声かける</li>
+      <li>厨房と FabCafe の備品は許可制。使いたいと言われたら担当社員へ</li>
     </ol>
     <ul><li>受付・設営の力仕事・マイクやスライドの操作など、<span class="em">カフェ以外の仕事</span>を頼まれたら担当社員に相談</li></ul></div>
   <div class="ms-col"><h3><span class="n">3</span>片付け${has(m.tEnd) ? `<small class="num">${esc(m.tEnd.trim())}〜</small>` : ''}</h3>
@@ -2320,7 +2320,7 @@ function plainText(){
   else L.push('ドリンクの出し方：ワンドリンク（チケットを保管→枚数を担当社員に。追加はカウンターで有料）／都度注文（レジで注文と支払い）／飲み放題（ドリンク担当が自由に出す）のどれか');
   L.push(`人数：${has(m.guests) ? guestsTxt(m.guests) : '（未定）'}`, `動かさないもの：${o(m.keep)}`);
   L.push('', '■ 準備', '1. 動かす前に、今の配置をスマホで撮る', '2. 机と椅子は「1Fマップ」のとおりに並べる', '3. 他の階から借りた椅子・机にはマスキングテープで印', '4. ドリンクとフードの数と種類をカフェスタッフと再確認');
-  L.push('', '■ イベント中', '1. 一般のお客さんには入口で「本日は貸切です」', '2. ゴミ箱をときどき確認。ウォーターサーバーが空なら補充', '3. 主催者の方が厨房に入ったり、許可なく備品を使おうとしたら、ひと声かける', '・カフェ以外の仕事（受付・設営の力仕事・マイクやスライド操作）を頼まれたら担当社員に相談');
+  L.push('', '■ イベント中', '1. 一般のお客さんには入口で「本日は貸切です」', '2. ゴミ箱をときどき確認。ウォーターサーバーが空なら補充', '3. 厨房と FabCafe の備品は許可制。使いたいと言われたら担当社員へ', '・カフェ以外の仕事（受付・設営の力仕事・マイクやスライド操作）を頼まれたら担当社員に相談');
   L.push('', `■ 片付け（${o(m.tEnd)}〜）`, '①ゴミ出し ②テーブル拭き ③レイアウトを元に戻す（1Fマップ「通常営業」と準備の写真を見て）', '・借りた椅子と机は、テープの印を見て元の階へ', '・残った飲み物と食べ物は、キッチン・バー側で片付け', `・食器とグラスの洗い物：${o(m.dishes)}`);
   L.push('', '■ ゴミ', '分け方：可燃・生ゴミ／不燃／カン・ビン・PET／段ボール（つぶしてひもで縛る）', `場所：${o(m.trash)}（開け方は担当社員に）`, `いつ出す：${o(m.trashWhen)}`, '×他のテナントのゴミ置き場には絶対に捨てない', '?分け方がわからないもの（傘、電球など）は捨てずに担当社員へ');
   L.push('', '■ 帰る前チェック', '□テーブルを拭いた', '□「通常営業」の配置に戻した', '□借りた椅子・机を返した', '□ゴミを分けて、決められた場所に出した');
@@ -2346,7 +2346,7 @@ const FORM = [
     ['tPrep', '準備', 'Set-up', 'w2', {time:1}],
     ['tOpen', '開場', 'Doors', 'w2', {time:1}],
     ['tEnd', '終了・片付け', 'End', 'w3', {time:1}],
-    ['tLeave', '退勤', 'Leave', 'w3', {time:1, hint:'利用ルールでは撤収含め22:00まで — カフェマネージャーに確認'}]
+    ['tLeave', '退勤', 'Leave', 'w3', {time:1, hint:'撤収の終わりの時間は利用ルールに合わせる'}]
   ]],
   ['当日のやり方', 'On the night', [
     ['drink', 'ドリンクの出し方', 'Drinks', '', {seg:1}],
@@ -2354,8 +2354,8 @@ const FORM = [
   ]],
   ['片付け・戸締り', 'Close-up', [
     ['dishes', '食器とグラスの洗い物', 'Dishes', '', {max:80, hint:'手順が決まっていなければ空欄のまま（手書きの線になります）'}],
-    ['trash', 'ゴミ置き場', 'Trash: where', '', {max:80, hint:'1Fカフェも同じか要確認。暗証番号は書かない'}],
-    ['trashWhen', 'ゴミをいつ出すか', 'Trash: when', '', {max:60, ph:'例：夜のうちに出す／翌朝まで置く', hint:'夜に出してよいか、カフェのゴミと分けるか要確認'}],
+    ['trash', 'ゴミ置き場', 'Trash: where', '', {max:80, hint:'暗証番号は書かない'}],
+    ['trashWhen', 'ゴミをいつ出すか', 'Trash: when', '', {max:60, ph:'例：夜のうちに出す／翌朝まで置く', hint:'夜に出してよいかは担当社員に確認'}],
     ['lights', '消灯・空調・機材の担当', 'Lights / AC', 'w3', {max:30}],
     ['lock', '施錠・鍵の返却の担当', 'Lock-up', 'w3', {max:30, hint:'鍵の返却先を確認'}],
     ['lostFound', '忘れ物を見つけたら', 'Lost & found', '', {max:60, ph:'例：レジ下の箱に入れて担当社員に'}],
