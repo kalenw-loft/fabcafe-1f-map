@@ -6,7 +6,11 @@ if (!MAP) return;
 const $ = s => document.querySelector(s);
 const root = $('#print-root'), dlg = $('#pd');
 if (!root || !dlg) return;
-const FLOOR = (MAP.floor && MAP.floor()) || '1F', NORMAL = (MAP.normalJp && MAP.normalJp()) || '通常営業', SRC = (MAP.sourceNote && MAP.sourceNote()) || '';
+// floor-bound names, re-read each time pages are built (the map can switch floors without a reload)
+let FLOOR, NORMAL, SRC;
+function readFloor(){ FLOOR = (MAP.floor && MAP.floor()) || '1F'; NORMAL = (MAP.normalJp && MAP.normalJp()) || '通常営業'; SRC = (MAP.sourceNote && MAP.sourceNote()) || ''; }
+readFloor();
+if (MAP.onFloor) MAP.onFloor(readFloor);
 
 const T = {
   en:{title:'Print', sub:'Pick the pages to print. Every page is A4 portrait.', map:'Floor plan', memo:'Staff sheet', restore:'Teardown: normal cafe layout',

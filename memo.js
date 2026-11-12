@@ -7,10 +7,15 @@
 (() => {
 'use strict';
 const MAP = window.FC_MAP || null;
-const FLOOR = (MAP && MAP.floor && MAP.floor()) || '1F';
-const KEY = FLOOR === '1F' ? 'fabcafe-1f-map:memo:v1' : 'fabcafe-1f-map:' + FLOOR + ':memo:v1';
-const MAPNAME = FLOOR + 'マップ';
-const NORMAL = (MAP && MAP.normalJp && MAP.normalJp()) || '通常営業';
+// floor-bound names: re-read when the map switches floors (see onFloor below)
+let FLOOR, KEY, MAPNAME, NORMAL;
+function readFloor(){
+  FLOOR = (MAP && MAP.floor && MAP.floor()) || '1F';
+  KEY = FLOOR === '1F' ? 'fabcafe-1f-map:memo:v1' : 'fabcafe-1f-map:' + FLOOR + ':memo:v1';
+  MAPNAME = FLOOR + 'マップ';
+  NORMAL = (MAP && MAP.normalJp && MAP.normalJp()) || '通常営業';
+}
+readFloor();
 const TRASH_DEF = '';
 const ROWS_MAX = 8;
 const TEL = '03-6416-9190';
@@ -114,7 +119,7 @@ function clean(o){
 }
 function readStore(){ try { const o = JSON.parse(localStorage.getItem(KEY)); if (o && o.byLayout && typeof o.byLayout === 'object') return o; } catch(e){} return {byLayout:{}}; }
 function writeStore(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e){} }
-const store = readStore();
+let store = readStore();
 const cur0 = MAP ? MAP.getLayout() : {id:'draft', name:''};
 let layoutId = cur0.id || 'draft', layoutName = cur0.name || '';
 let memo = clean(store.byLayout[layoutId]);
@@ -644,6 +649,13 @@ if (MAP && MAP.onChange) MAP.onChange(info => {
     return;
   }
   if (!$('#memo').hidden){ fillHelp(); renderPreview(); }
+});
+// another floor: save this floor's memo, then load that floor's memo store (runs before the map's onChange)
+if (MAP && MAP.onFloor) MAP.onFloor(() => {
+  flush(); readFloor(); store = readStore();
+  const cur = MAP.getLayout(); layoutId = cur.id || 'draft'; layoutName = cur.name || '';
+  memo = clean(store.byLayout[layoutId]);
+  if (!$('#memo').hidden){ fillForm(); fillHelp(); renderPreview(); }
 });
 
 window.FC_MEMO = {

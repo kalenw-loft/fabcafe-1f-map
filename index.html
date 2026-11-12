@@ -69,7 +69,11 @@ svg.i{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke
 .tag{display:inline-flex;align-items:flex-end;height:44px;padding:0 12px 6px;background:var(--red);color:#fff;font:700 22px/1 var(--font-display);letter-spacing:.01em;border-radius:0 0 12px 12px}
 .logo-tag{display:block;width:110px;height:auto;color:#D80C0E;flex:none}
 .brand-sub{align-self:center;font:700 18px/1 var(--font-display);letter-spacing:.04em}
-.floor-seg{margin-left:2px}
+.floor-seg{margin-left:2px;position:relative}
+/* the red tab glides between floors instead of jumping (one pill behind the buttons, moved by renderFloorSeg) */
+.floor-pill{position:absolute;top:0;left:0;height:40px;width:0;background:var(--red);border-radius:0 0 11px 11px;pointer-events:none;transition:transform .32s cubic-bezier(.2,.8,.2,1),width .32s cubic-bezier(.2,.8,.2,1)}
+.floor-seg.pilled button[aria-pressed="true"]{background:transparent}
+.floor-seg button{z-index:1;transition:color .2s}
 .floor-seg button{display:flex;flex-direction:column;align-items:center;gap:0;font:700 15px/1.05 var(--font-display);letter-spacing:.03em;padding:8px 9px 0;color:var(--fg);position:relative}
 .floor-seg button[aria-pressed="true"]{color:#fff}
 .floor-tenant{display:block;font:500 9px/1.3 var(--font-text);letter-spacing:0;text-transform:none;opacity:.8;max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -173,6 +177,26 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
 .pe-bar-name:focus{border-color:var(--fg);outline:none}
 .pe-bar-acts{display:flex;flex-wrap:wrap;gap:6px}
 .pe-bar.soft .pe-bar-label{white-space:normal}
+/* floor switch: the plan slides a little up (going up a floor) or down, and the floor name flashes in the middle */
+.canvas-wrap{view-transition-name:floor-plan}
+::view-transition-old(root),::view-transition-new(root){animation:none}
+::view-transition-group(floor-plan){animation-duration:.34s}
+::view-transition-old(floor-plan){animation:.2s cubic-bezier(.4,0,1,1) both fl-out-down}
+::view-transition-new(floor-plan){animation:.34s cubic-bezier(.2,.8,.2,1) both fl-in-up}
+:root[data-floor-dir="down"]::view-transition-old(floor-plan){animation-name:fl-out-up}
+:root[data-floor-dir="down"]::view-transition-new(floor-plan){animation-name:fl-in-down}
+@keyframes fl-out-down{to{opacity:0;transform:translateY(28px)}}
+@keyframes fl-out-up{to{opacity:0;transform:translateY(-28px)}}
+@keyframes fl-in-up{from{opacity:0;transform:translateY(-36px)}}
+@keyframes fl-in-down{from{opacity:0;transform:translateY(36px)}}
+/* fallback without view transitions: same idea on the plan only */
+#plan{transition:opacity .16s ease,transform .16s ease}
+.canvas-wrap.fl-leave #plan{opacity:0;transform:translateY(20px)}
+.canvas-wrap.fl-leave.fl-down #plan{transform:translateY(-20px)}
+.floor-flash{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);z-index:5;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 22px 12px;background:var(--bg);border:1px solid var(--fg);border-top:0;border-radius:0 0 16px 16px;opacity:0;transition:opacity .25s ease}
+.floor-flash.on{opacity:1;transition-duration:.12s}
+.floor-flash b{font:700 44px/1 var(--font-display);letter-spacing:.02em;color:var(--accent-text)}
+.floor-flash small{font-size:12px;color:var(--fg-muted);max-width:240px;text-align:center}
 .no-plan{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--fg-muted)}
 
 /* ---------- Sheet tabs (phone) ---------- */
@@ -725,6 +749,7 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
         <button id="tool-sim-info" data-i18n-title="simInfoTitle"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg></button>
       </div>
     </div>
+    <div class="floor-flash" id="floor-flash" aria-hidden="true"><b></b><small></small></div>
     <div class="zoom-read mono" id="zoom-read"></div>
     <div id="sim-view" hidden aria-hidden="true"></div>
   </main>
@@ -2617,17 +2642,18 @@ const catName = type => CAT[type] ? (lang === 'jp' ? CAT[type].jp : CAT[type].en
 const catSub = type => CAT[type] ? (lang === 'jp' ? CAT[type].en : CAT[type].jp) : '';
 
 /* ======================= Storage ======================= */
-const FID = window.FLOOR_ID || '1F';
+let FID = window.FLOOR_ID || '1F';
 // 1F keeps its original key so layouts saved before floors existed are still there
 const FLOOR_PREF = 'fabcafe-map:';
-const KEY = FID === '1F' ? 'fabcafe-1f-map:v1' : 'fabcafe-1f-map:' + FID + ':v1';
+const keyFor = f => f === '1F' ? 'fabcafe-1f-map:v1' : 'fabcafe-1f-map:' + f + ':v1';
+let KEY = keyFor(FID);
 function readStore(){ try { const s = JSON.parse(localStorage.getItem(KEY)); return (s && typeof s === 'object') ? s : {}; } catch(e){ return {}; } }
 function writeStore(s){ try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e){} }
 let store = readStore();
 if (!Array.isArray(store.layouts)) store.layouts = [];
 
 /* ======================= Plan geometry ======================= */
-const PLAN = window.PLAN;
+let PLAN = window.PLAN;
 function pip(p, poly){
   let inside = false;
   for (let i = 0, j = poly.length - 1; i < poly.length; j = i++){
@@ -3374,10 +3400,15 @@ const BUILTIN = {
   breakfast:{fn:() => withTrash(presetBreakfast()), en:() => t('pBreak'), sub:() => t('pBreakSub'), name:() => lang === 'jp' ? '朝会 Breakfast' : 'Breakfast 朝会'},
   empty:{fn:() => [], en:() => t('pEmpty'), sub:() => t('pEmptySub'), name:() => lang === 'jp' ? '空' : 'Empty 空'}
 };
-(PLAN.presets || []).forEach(d => {
-  BUILTIN[d.id] = {fn:() => sanitize(d.items), en:() => lang === 'jp' ? d.jp || d.en : d.en, sub:() => (lang === 'jp' ? d.sub_jp : d.sub_en) || '',
+// presets that come with a floor's plan data; rebuilt when the floor changes
+function addPlanPresets(){
+  Object.keys(BUILTIN).forEach(k => { if (BUILTIN[k].plan) delete BUILTIN[k]; });
+  (PLAN.presets || []).forEach(d => {
+  BUILTIN[d.id] = {plan:true, fn:() => sanitize(d.items), en:() => lang === 'jp' ? d.jp || d.en : d.en, sub:() => (lang === 'jp' ? d.sub_jp : d.sub_en) || '',
     name:() => lang === 'jp' ? (d.jp || d.en) + ' ' + d.en : d.en + ' ' + (d.jp || '')};
-});
+  });
+}
+addPlanPresets();
 // what people changed, per floor: own presets, renamed / re-laid built-ins, hidden built-ins
 function presetStore(){
   const p = store.presets && typeof store.presets === 'object' ? store.presets : {};
@@ -3703,14 +3734,14 @@ function applyLang(){
 function setLang(l){ lang = l; store.lang = l; writeStore(store); try { localStorage.setItem(FLOOR_PREF + 'lang', l); } catch(e){} applyLang(); emit(); }
 
 /* ======================= Floors ======================= */
-// switching floors reloads the page into the other plan: every floor keeps its own saved layouts and presets
+// switching floors swaps the plan in place (no reload): every floor keeps its own saved layouts, presets and staff sheet
 function renderFloorSeg(){
   const box = $('#floor-seg'), ids = Object.keys(window.PLANS || {});
   box.hidden = ids.length < 2; box.innerHTML = '';
+  const pill = document.createElement('span'); pill.className = 'floor-pill'; pill.setAttribute('aria-hidden', 'true'); box.appendChild(pill);
   ids.forEach(f => {
     const p = window.PLANS[f], ten = p && p.meta && p.meta.tenant, lbl = tenantLabel(ten);
-    const b = mkBtn('', '', () => { if (f === FID) return; try { localStorage.setItem(FLOOR_PREF + 'floor', f); } catch(e){}
-      try { history.replaceState(null, '', '#floor=' + f); } catch(e){} location.reload(); });
+    const b = mkBtn('', '', () => switchFloor(f));
     b.id = 'floor-' + f; b.setAttribute('aria-pressed', String(f === FID));
     b.appendChild(document.createTextNode(f));
     if (lbl){
@@ -3721,11 +3752,76 @@ function renderFloorSeg(){
     } else { b.title = f; }
     box.appendChild(b);
   });
+  movePill(false);
   document.title = 'FabCafe ' + FID + ' Map';
   const sign = $('#btn-sign'); if (sign) sign.hidden = !PLAN.machines;
   const brandSub = $('.brand-sub');
   if (brandSub){ const ten = PLAN.meta && PLAN.meta.tenant, lbl = tenantLabel(ten); brandSub.textContent = lbl ? FID + ' · ' + lbl : 'MAP'; }
   const ag = $('#tool-group-areas'); if (ag) ag.hidden = !(PLAN.areas && PLAN.areas.length);
+}
+
+function movePill(animate, target){
+  const box = $('#floor-seg'), pill = box && box.querySelector('.floor-pill'), b = $('#floor-' + (target || FID));
+  if (!pill || !b || !b.offsetWidth){ if (box) box.classList.remove('pilled'); return; }   // not laid out (hidden / jsdom): plain red button
+  if (!animate) pill.style.transition = 'none';
+  pill.style.width = b.offsetWidth + 'px'; pill.style.transform = 'translateX(' + b.offsetLeft + 'px)';
+  if (!animate){ void pill.offsetWidth; pill.style.transition = ''; }
+  box.classList.add('pilled');
+}
+let flashTimer = 0;
+function flashFloor(){
+  const fl = $('#floor-flash'); if (!fl) return;
+  const lbl = tenantLabel(PLAN.meta && PLAN.meta.tenant);
+  fl.querySelector('b').textContent = FID; fl.querySelector('small').textContent = lbl || 'FabCafe Tokyo';
+  fl.classList.add('on'); clearTimeout(flashTimer); flashTimer = setTimeout(() => fl.classList.remove('on'), 650);
+}
+const floorListeners = [];
+const floorOrder = f => { const n = parseInt(f, 10); return isNaN(n) ? 0 : n; };
+// load a floor's plan + its own saved state into the running editor (also used on first load)
+function loadFloorState(){
+  store = readStore(); if (!Array.isArray(store.layouts)) store.layouts = [];
+  areasOn = store.areas !== false; $('#tool-areas').setAttribute('aria-pressed', String(areasOn));
+  prepGeometry(); drawBase();
+  const dr = store.draft;
+  if (dr && Array.isArray(dr.items)){ L = {name:dr.name || t('untitled'), items:sanitize(dr.items)}; currentId = store.layouts.some(x => x.id === dr.currentId) ? dr.currentId : null; }
+  else { L = {name:PRESETS.cafe.name(), items:presetCafe()}; currentId = null; }
+  $('#layout-name').value = L.name;
+  resetHistory();
+}
+let floorBusy = false;
+function switchFloor(f){
+  if (f === FID || floorBusy || !window.PLANS || !window.PLANS[f]) return;
+  // write this floor's draft now (the debounced save may still be pending)
+  clearTimeout(draftTimer); store.draft = {name:L.name, items:L.items.map(({id, ...r}) => r), currentId}; writeStore(store);
+  try { localStorage.setItem(FLOOR_PREF + 'floor', f); } catch(e){}
+  try { history.replaceState(null, '', '#floor=' + f); } catch(e){}
+  const down = floorOrder(f) < floorOrder(FID);
+  document.documentElement.dataset.floorDir = down ? 'down' : 'up';
+  const swap = () => {
+    FID = f; window.FLOOR_ID = f; PLAN = window.PLAN = window.PLANS[f]; KEY = keyFor(f);
+    presetEdit = null; sel.clear(); drag = null; armed = null; pendingDelete = null; renaming = null;
+    closeMenus(); closeModal(); savedSig = ''; zoneSig = '';
+    addPlanPresets(); loadFloorState();
+    floorListeners.forEach(fn => { try { fn(f); } catch(e){ console.error(e); } });
+    applyLang(); fit(); emit();
+  };
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  movePill(!reduce, f);   // the pill starts gliding right away; buttons re-render after the swap
+  $$('#floor-seg button').forEach(b => b.setAttribute('aria-pressed', String(b.id === 'floor-' + f)));
+  floorBusy = true;
+  const done = () => { floorBusy = false; movePill(false); flashFloor(); };
+  if (!reduce && document.startViewTransition){
+    // watchdog: if the browser never paints the transition (hidden tab, odd frame), swap anyway
+    let ran = false; const once = () => { if (!ran){ ran = true; swap(); } };
+    try {
+      const vt = document.startViewTransition(once); vt.finished.then(done, done);
+      setTimeout(() => { if (!ran){ try { vt.skipTransition(); } catch(e){} once(); done(); } }, 700);
+      return;
+    } catch(e){ if (ran){ done(); return; } }
+  }
+  if (reduce){ swap(); done(); return; }
+  wrap.classList.toggle('fl-down', down); wrap.classList.add('fl-leave');
+  setTimeout(() => { swap(); requestAnimationFrame(() => { wrap.classList.remove('fl-leave'); done(); }); }, 160);
 }
 
 /* ======================= Palette ======================= */
@@ -3985,6 +4081,8 @@ window.FC_MAP = {
     color:it.type === 'zone' ? (COLORS[it.color] || it.color || null) : null, dark:it.type === 'zone' ? (DARK_COLORS[it.color] || null) : null})),
   lang: () => lang,
   onChange: fn => { listeners.push(fn); },
+  onFloor: fn => { if (typeof fn === 'function') floorListeners.push(fn); },
+  switchFloor: f => switchFloor(f),
   toast: s => toast(s)
 };
 // Sim data-slot hook (see SIMULATION.md): a future 3D-viewer module calls FC_SIM.register() with a render
@@ -4003,16 +4101,12 @@ function init(){
   let pl = null; try { pl = localStorage.getItem(FLOOR_PREF + 'lang'); } catch(e){}
   lang = (pl || store.lang) === 'jp' ? 'jp' : 'en';
   snapOn = store.snap !== false; $('#tool-snap').setAttribute('aria-pressed', String(snapOn));
-  areasOn = store.areas !== false; $('#tool-areas').setAttribute('aria-pressed', String(areasOn));
-  prepGeometry(); drawBase(); wire();
-  const dr = store.draft;
-  if (dr && Array.isArray(dr.items)){ L = {name:dr.name || t('untitled'), items:sanitize(dr.items)}; currentId = store.layouts.some(x => x.id === dr.currentId) ? dr.currentId : null; }
-  else { L = {name:PRESETS.cafe.name(), items:presetCafe()}; }
-  $('#layout-name').value = L.name;
-  resetHistory();
+  wire(); loadFloorState();
   applyLang();
   requestAnimationFrame(fit);
   emit();
+  window.addEventListener('resize', () => movePill(false));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => movePill(false));
 }
 init();
 })();
@@ -4180,10 +4274,15 @@ init();
 (() => {
 'use strict';
 const MAP = window.FC_MAP || null;
-const FLOOR = (MAP && MAP.floor && MAP.floor()) || '1F';
-const KEY = FLOOR === '1F' ? 'fabcafe-1f-map:memo:v1' : 'fabcafe-1f-map:' + FLOOR + ':memo:v1';
-const MAPNAME = FLOOR + 'マップ';
-const NORMAL = (MAP && MAP.normalJp && MAP.normalJp()) || '通常営業';
+// floor-bound names: re-read when the map switches floors (see onFloor below)
+let FLOOR, KEY, MAPNAME, NORMAL;
+function readFloor(){
+  FLOOR = (MAP && MAP.floor && MAP.floor()) || '1F';
+  KEY = FLOOR === '1F' ? 'fabcafe-1f-map:memo:v1' : 'fabcafe-1f-map:' + FLOOR + ':memo:v1';
+  MAPNAME = FLOOR + 'マップ';
+  NORMAL = (MAP && MAP.normalJp && MAP.normalJp()) || '通常営業';
+}
+readFloor();
 const TRASH_DEF = '';
 const ROWS_MAX = 8;
 const TEL = '03-6416-9190';
@@ -4287,7 +4386,7 @@ function clean(o){
 }
 function readStore(){ try { const o = JSON.parse(localStorage.getItem(KEY)); if (o && o.byLayout && typeof o.byLayout === 'object') return o; } catch(e){} return {byLayout:{}}; }
 function writeStore(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e){} }
-const store = readStore();
+let store = readStore();
 const cur0 = MAP ? MAP.getLayout() : {id:'draft', name:''};
 let layoutId = cur0.id || 'draft', layoutName = cur0.name || '';
 let memo = clean(store.byLayout[layoutId]);
@@ -4818,6 +4917,13 @@ if (MAP && MAP.onChange) MAP.onChange(info => {
   }
   if (!$('#memo').hidden){ fillHelp(); renderPreview(); }
 });
+// another floor: save this floor's memo, then load that floor's memo store (runs before the map's onChange)
+if (MAP && MAP.onFloor) MAP.onFloor(() => {
+  flush(); readFloor(); store = readStore();
+  const cur = MAP.getLayout(); layoutId = cur.id || 'draft'; layoutName = cur.name || '';
+  memo = clean(store.byLayout[layoutId]);
+  if (!$('#memo').hidden){ fillForm(); fillHelp(); renderPreview(); }
+});
 
 window.FC_MEMO = {
   get: () => {
@@ -4879,7 +4985,11 @@ if (!MAP) return;
 const $ = s => document.querySelector(s);
 const root = $('#print-root'), dlg = $('#pd');
 if (!root || !dlg) return;
-const FLOOR = (MAP.floor && MAP.floor()) || '1F', NORMAL = (MAP.normalJp && MAP.normalJp()) || '通常営業', SRC = (MAP.sourceNote && MAP.sourceNote()) || '';
+// floor-bound names, re-read each time pages are built (the map can switch floors without a reload)
+let FLOOR, NORMAL, SRC;
+function readFloor(){ FLOOR = (MAP.floor && MAP.floor()) || '1F'; NORMAL = (MAP.normalJp && MAP.normalJp()) || '通常営業'; SRC = (MAP.sourceNote && MAP.sourceNote()) || ''; }
+readFloor();
+if (MAP.onFloor) MAP.onFloor(readFloor);
 
 const T = {
   en:{title:'Print', sub:'Pick the pages to print. Every page is A4 portrait.', map:'Floor plan', memo:'Staff sheet', restore:'Teardown: normal cafe layout',
