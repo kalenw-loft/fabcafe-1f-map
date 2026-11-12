@@ -8,7 +8,7 @@ A floor-plan tool for FabCafe Tokyo 1F. Plan an event layout, fill in the part-t
 
 ## What you can do
 
-- **Lay out the floor:** start from a preset (Cafe, Talk ~50, Talk – back half, Workshop, Breakfast, Empty), then drag, rotate and add tables, chairs, zones and notes. Seats, tables and standing room update as you go, and items that hit a wall or each other are flagged.
+- **Lay out the floor:** start from a preset (Cafe, Talk ~50, Talk – back half, Workshop, Breakfast, Empty), then drag, rotate and add tables, chairs, zones and notes. Seats, tables and standing room update as you go, and items that hit a wall or each other are flagged. To change a preset, tap ✎ next to it (or **+ New preset**), arrange it, then **Save**, **Save as new** or **Cancel**. Changed presets stay in this browser; send them with **Manage presets… → Copy presets code**.
 - **Fill in the staff sheet (当日シート):** event name, times, the drink style and lock-up owners for part-time staff. It prints as one A4 page in Japanese.
 - **Print:** **Print PDF / 印刷用PDF** lets you pick pages and preview them:
   1. **Floor plan:** your layout with the event details and a legend

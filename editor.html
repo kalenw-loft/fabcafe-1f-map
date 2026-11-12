@@ -76,6 +76,10 @@ svg.i{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke
 .menu button{display:flex;flex-direction:column;align-items:flex-start;width:100%;border:0;background:transparent;text-align:left;padding:8px 10px;border-radius:var(--r-sm);cursor:pointer}
 .menu button:hover,.menu button:focus-visible{background:var(--surface)}
 .menu .sub{font-size:12px;color:var(--fg-muted)}
+.menu .menu-row{display:flex;align-items:stretch;gap:2px}
+.menu .menu-row > button[data-preset]{flex:1;min-width:0}
+.menu .menu-row .pe-pen{flex:none;width:36px;align-items:center;justify-content:center;padding:0;color:var(--fg-muted)}
+.menu .menu-row .pe-pen:hover,.menu .menu-row .pe-pen:focus-visible{color:var(--fg)}
 
 /* ---------- Stats strip ---------- */
 .stats{grid-area:stats;display:flex;align-items:center;gap:24px;padding:6px 16px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;min-width:0}
@@ -146,6 +150,14 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
 .tool-group button.snap[aria-pressed="true"]{background:var(--red);color:#fff;border-radius:0 0 10px 10px}
 .zoom-read{position:absolute;right:12px;bottom:12px;font-size:11px;color:var(--fg-muted);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);padding:2px 6px}
 .inline-edit{position:absolute;z-index:20;height:34px;min-width:140px;padding:0 8px;border:2px solid var(--red);border-radius:var(--r-sm);background:var(--bg);font:700 15px/1 var(--font-display)}
+/* preset edit bar: hangs from the top edge of the plan like a tab */
+.pe-bar{position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:25;display:flex;flex-wrap:wrap;align-items:center;gap:8px;max-width:calc(100% - 32px);padding:8px 10px 8px 12px;background:var(--bg);border:1px solid var(--fg);border-top:0;border-radius:0 0 12px 12px}
+.pe-bar > svg.i{color:var(--accent-text)}
+.pe-bar-label{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;max-width:100%}
+.pe-bar-name{flex:1 1 180px;min-width:0;height:32px;padding:0 8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font:700 15px/1 var(--font-display)}
+.pe-bar-name:focus{border-color:var(--fg);outline:none}
+.pe-bar-acts{display:flex;flex-wrap:wrap;gap:6px}
+.pe-bar.soft .pe-bar-label{white-space:normal}
 .no-plan{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--fg-muted)}
 
 /* ---------- Sheet tabs (phone) ---------- */
@@ -203,6 +215,7 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
   .sheet-tabs button{flex:1;border:0;background:transparent;font-size:13px;font-weight:500;color:var(--fg-muted);cursor:pointer;height:38px}
   .sheet-tabs button[aria-selected="true"]{background:var(--red);color:#fff;border-radius:0 0 10px 10px}
   .canvas-tools{left:8px;bottom:8px;max-width:calc(100% - 16px)}
+  .pe-bar{left:16px;right:16px;transform:none;max-width:none}
   .tool-group button{width:34px;height:34px}
   .zoom-read{display:none}
 }
@@ -211,6 +224,13 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
   .logo-tag{width:80px}
   #btn-memo{display:none} /* reachable from the print dialog (編集) */
   .menu{position:fixed;left:16px;right:16px;top:56px;min-width:0}
+  .pe-bar{padding:8px}
+  .pe-bar-label{flex:1 1 0}
+  .pe-bar-name{flex-basis:calc(100% - 26px);order:3}   /* icon + name share row 1 (label hidden below) */
+  .pe-bar-acts{order:4;flex:1 1 100%}
+  .pe-bar-acts .btn{flex:1 1 auto}
+  .pe-bar.soft .pe-bar-label{flex:1 1 calc(100% - 26px)}
+  .pe-bar:not(.soft) .pe-bar-label{display:none}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 
@@ -318,6 +338,16 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
       <g id="g-ui" class="ui"></g>
     </svg>
     <input id="inline-edit" class="inline-edit" type="text" autocomplete="off" hidden>
+    <div class="pe-bar" id="pe-bar" role="region" aria-label="Preset editor" hidden>
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>
+      <span class="pe-bar-label" id="pe-bar-label" aria-live="polite"></span>
+      <input id="pe-bar-name" class="pe-bar-name" type="text" maxlength="80" autocomplete="off" spellcheck="false">
+      <div class="pe-bar-acts">
+        <button class="btn primary" id="pe-bar-save" type="button"></button>
+        <button class="btn" id="pe-bar-saveas" type="button"></button>
+        <button class="btn" id="pe-bar-cancel" type="button"></button>
+      </div>
+    </div>
     <div class="canvas-tools" id="canvas-tools">
       <div class="tool-group">
         <button id="tool-zoom-out" data-i18n-title="zoomOut"><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
@@ -475,9 +505,11 @@ const T = {
     seats:'Seats', tables:'Tables', standing:'Standing', standingSub:'ppl at 0.5 m² each', freeFloor:'Free floor',
     conflicts:'{n} items clash', conflict1:'1 item clashes', noConflicts:'No clashes',
     furniture:'Furniture', annotate:'Zones & notes', zone:'Zone', note:'Note', saved:'Saved layouts', save:'Save', saveAs:'Save as', rename:'Rename', del:'Delete', cancel:'Cancel', load:'Load',
-    pSaveNew:'+ Save current layout as a preset', pSaveNewSub:'Adds it to this list (this browser, this floor)',
-    pEdit:'Edit presets…', pEditSub:'Rename, re-lay, hide or delete presets',
-    pEditTitle:'Edit presets', pEditHint:'“Use current layout” replaces a preset with what is on the plan now. Changes stay in this browser — Copy presets code to give them to a teammate (they paste it in Share → Paste / import).',
+    pNew:'+ New preset', pNewSub:'Starts from what’s on the plan now', pNewName:'New preset',
+    pEdit:'Manage presets…', pEditSub:'Rename, hide, reset, delete, share code',
+    pEditTitle:'Manage presets', pEditHint:'Easiest way to change one: Presets → ✎ next to it, move things, Save preset. Here, “Use current layout” replaces a preset with what is on the plan now. Changes stay in this browser — Copy presets code to give them to a teammate (they paste it in Share → Paste / import).',
+    pEditOne:'Edit preset “{n}”', peRegion:'Preset editor', peEditing:'Editing preset', peChanged:'Changed from preset “{n}”', peName:'Preset name',
+    peSave:'Save preset', peCreate:'Create preset', peUpdate:'Update preset', peSaveAs:'Save as new preset', peDismiss:'Dismiss',
     pUseCurrent:'Use current layout', pReset:'Reset', pHide:'Hide', pShow:'Show', pSure:'Sure? Click again',
     pBuiltin:'built-in', pChanged:'built-in · changed', pMine:'mine', pChangedSub:'Changed in this browser', pMineSub:'My preset · {n} items',
     pSaved:'Saved preset “{n}”', pUpdated:'Updated “{n}”', pImported:'Presets imported', pCopyCode:'Copy presets code',
@@ -514,9 +546,11 @@ const T = {
     seats:'席数', tables:'テーブル', standing:'立席', standingSub:'名（1人 0.5㎡）', freeFloor:'空き床',
     conflicts:'{n} 件が干渉', conflict1:'1 件が干渉', noConflicts:'干渉なし',
     furniture:'家具', annotate:'ゾーン・メモ', zone:'ゾーン', note:'メモ', saved:'保存したレイアウト', save:'保存', saveAs:'別名で保存', rename:'名前を変更', del:'削除', cancel:'キャンセル', load:'開く',
-    pSaveNew:'＋ 今のレイアウトをプリセットに保存', pSaveNewSub:'この一覧に追加（このブラウザ・この階のみ）',
-    pEdit:'プリセットを編集…', pEditSub:'名前の変更・置き換え・非表示・削除',
-    pEditTitle:'プリセットを編集', pEditHint:'「今のレイアウトにする」で、いま図面にある配置をそのプリセットにします。変更はこのブラウザ内のみ。人に渡すときは「プリセットのコードをコピー」→ 相手は「共有」→「貼り付け・読み込み」。',
+    pNew:'＋ 新しいプリセット', pNewSub:'いま図面にある配置から作る', pNewName:'新しいプリセット',
+    pEdit:'プリセットの管理…', pEditSub:'名前変更・非表示・リセット・削除・コード共有',
+    pEditTitle:'プリセットの管理', pEditHint:'変えるだけなら「プリセット」→ 横の ✎ → 配置を動かして「保存」が簡単です。ここの「今のレイアウトにする」は、いま図面にある配置をそのプリセットにします。変更はこのブラウザ内のみ。人に渡すときは「プリセットのコードをコピー」→ 相手は「共有」→「貼り付け・読み込み」。',
+    pEditOne:'「{n}」を編集', peRegion:'プリセットの編集', peEditing:'プリセットを編集中', peChanged:'「{n}」から変更あり', peName:'プリセット名',
+    peSave:'保存', peCreate:'作成', peUpdate:'プリセットを更新', peSaveAs:'別プリセットで保存', peDismiss:'閉じる',
     pUseCurrent:'今のレイアウトにする', pReset:'元に戻す', pHide:'隠す', pShow:'表示', pSure:'本当に？もう一度クリック',
     pBuiltin:'標準', pChanged:'標準・変更あり', pMine:'自分用', pChangedSub:'このブラウザで変更済み', pMineSub:'自分のプリセット · {n} 点',
     pSaved:'プリセット「{n}」を保存しました', pUpdated:'「{n}」を更新しました', pImported:'プリセットを読み込みました', pCopyCode:'プリセットのコードをコピー',
@@ -665,18 +699,18 @@ function sanitize(items){
   return out;
 }
 const snapshot = () => JSON.stringify({name:L.name, items:L.items.map(({id, ...r}) => r)});
-let hist = [], hi = -1;
-function resetHistory(){ hist = [snapshot()]; hi = 0; updateUndo(); }
+let hist = [], hi = -1, hids = [], hseq = 0;   // hids = a serial per history entry (survives the 200 cap shift; branches drop it)
+function resetHistory(){ hist = [snapshot()]; hids = [++hseq]; hi = 0; updateUndo(); }
 function commit(){
   const s = snapshot();
-  if (s !== hist[hi]){ hist = hist.slice(0, hi + 1); hist.push(s); if (hist.length > 200) hist.shift(); hi = hist.length - 1; }
-  saveDraft(); render(); updateUndo(); emit();
+  if (s !== hist[hi]){ hist = hist.slice(0, hi + 1); hids = hids.slice(0, hi + 1); hist.push(s); hids.push(++hseq); if (hist.length > 200){ hist.shift(); hids.shift(); } hi = hist.length - 1; }
+  saveDraft(); render(); updateUndo(); emit(); renderPeBar();
 }
 function restore(s){
   const o = JSON.parse(s); const prevSel = Array.from(sel).map(id => { const it = byId(id); return it ? L.items.indexOf(it) : -1; });
   L = {name:o.name, items:sanitize(o.items)};
   sel = new Set(prevSel.filter(i => i >= 0 && i < L.items.length).map(i => L.items[i].id));
-  $('#layout-name').value = L.name; saveDraft(); render(); updateUndo(); emit();
+  $('#layout-name').value = L.name; saveDraft(); render(); updateUndo(); emit(); renderPeBar();
 }
 function undo(){ if (hi > 0){ hi--; restore(hist[hi]); } }
 function redo(){ if (hi < hist.length - 1){ hi++; restore(hist[hi]); } }
@@ -700,10 +734,10 @@ function applyCam(){
 }
 function fit(){
   const {W, H} = wrapSize();
-  const tools = W < 520 ? 60 : 64;
+  const tools = W < 520 ? 60 : 64, bar = $('#pe-bar'), top = bar.hidden ? 8 : bar.offsetHeight + 8;   // keep the edit bar off the plan
   cam.cx = (EXT.minX + EXT.maxX) / 2; cam.cy = (EXT.minY + EXT.maxY) / 2;
-  cam.s = Math.max((EXT.maxX - EXT.minX) / (W - 16), (EXT.maxY - EXT.minY) / (H - tools));
-  cam.cy += tools * cam.s / 2 - 8 * cam.s;
+  cam.s = Math.max((EXT.maxX - EXT.minX) / (W - 16), (EXT.maxY - EXT.minY) / Math.max(1, H - tools - top + 8));
+  cam.cy += (tools - top) * cam.s / 2;
   applyCam();
 }
 function toMM(clientX, clientY){
@@ -1252,13 +1286,16 @@ const presetByKey = k => presetList(true).find(p => p.key === k);
 function renderPresetMenu(){
   const m = $('#menu-presets'); m.innerHTML = '';
   presetList().forEach(p => {
+    const row = document.createElement('div'); row.className = 'menu-row';
     const b = document.createElement('button'); b.type = 'button'; b.id = 'preset-' + p.key.replace(':', '-'); b.dataset.preset = p.key;
     const a = document.createElement('span'); a.textContent = p.label() + (p.custom ? ' ★' : '');
     const z = document.createElement('span'); z.className = 'sub'; z.textContent = p.sub();
-    b.append(a, z); m.appendChild(b);
+    b.append(a, z);
+    const e = mkIcon('<path d="M4 20h4L19 9l-4-4L4 16z"/>', t('pEditOne', p.label()), () => {}); e.className = 'pe-pen'; e.id = 'preset-editbtn-' + p.key.replace(':', '-'); e.dataset.editPreset = p.key;
+    row.append(b, e); m.appendChild(row);
   });
   const hr = document.createElement('hr'); hr.className = 'menu-hr'; m.appendChild(hr);
-  [['preset-save-new', 'pSaveNew', 'pSaveNewSub'], ['preset-edit', 'pEdit', 'pEditSub']].forEach(([id, k, ks]) => {
+  [['preset-new', 'pNew', 'pNewSub'], ['preset-edit', 'pEdit', 'pEditSub']].forEach(([id, k, ks]) => {
     const b = document.createElement('button'); b.type = 'button'; b.id = id;
     const a = document.createElement('span'); a.textContent = t(k);
     const z = document.createElement('span'); z.className = 'sub'; z.textContent = t(ks);
@@ -1268,13 +1305,58 @@ function renderPresetMenu(){
 const PRESETS = new Proxy({}, {get:(_, k) => typeof k === 'string' ? presetByKey(k) : undefined});
 function applyPreset(k){
   const p = presetByKey(k); if (!p) return;
-  L.items = p.fn(); L.name = p.name(); currentId = null; sel.clear();
+  presetEdit = null; L.items = p.fn(); L.name = p.name(); currentId = null; sel.clear();
   $('#layout-name').value = L.name; commit();
+  presetEdit = {key:k, explicit:false, base:itemsJSON(), h0:hids[hi]}; renderPeBar();   // soft: bar appears once the plan differs
 }
-function savePresetNew(){
-  const ps = presetStore(), name = (L.name || t('untitled')).trim().slice(0, 80);
-  ps.custom.push({id:Date.now().toString(36), name, items:L.items.map(({id, ...r}) => r)});
-  writeStore(store); renderPresetMenu(); toast(t('pSaved', name));
+
+/* ======================= Preset edit bar ======================= */
+// presetEdit = {key (null = new), explicit (✎ / + New), snap (plan before, explicit only), base (preset items at load), h0 (history serial at load), typed (name field edited)}
+let presetEdit = null;
+const itemsJSON = () => JSON.stringify(L.items.map(({id, ...r}) => r));
+function startPresetEdit(k){
+  const snap = {name:L.name, items:L.items.map(({id, ...r}) => r), currentId};
+  if (k){ applyPreset(k); if (!presetEdit) return; }
+  presetEdit = {key:k || null, explicit:true, snap, base:itemsJSON(), h0:hids[hi]}; renderPeBar(true); fit();
+  setTimeout(() => { if (k) $('#pe-bar-save').focus(); else { const n = $('#pe-bar-name'); n.focus(); n.select(); } }, 0);
+}
+function renderPeBar(fill){
+  const bar = $('#pe-bar');
+  if (presetEdit && presetEdit.key && !presetByKey(presetEdit.key)){ if (presetEdit.explicit) presetEdit.key = null; else presetEdit = null; }   // deleted in Manage
+  if (presetEdit && !presetEdit.explicit && hids.indexOf(presetEdit.h0) < 0) presetEdit = null;   // apply entry cut off (undo + new edit, or history cap)
+  const pe = presetEdit, soft = !!pe && !pe.explicit;
+  bar.hidden = !pe || (soft && (hids.indexOf(pe.h0) > hi || itemsJSON() === pe.base)); bar.classList.toggle('soft', soft);
+  if (!pe) return;
+  const p = pe.key && presetByKey(pe.key), nm = $('#pe-bar-name'), c = $('#pe-bar-cancel'), sa = $('#pe-bar-saveas');
+  if (fill) nm.value = p ? p.label() : (L.name || t('pNewName'));
+  bar.setAttribute('aria-label', t('peRegion')); nm.setAttribute('aria-label', t('peName')); nm.hidden = soft;
+  $('#pe-bar-label').textContent = soft ? t('peChanged', p.label()) : t('peEditing');
+  $('#pe-bar-save').textContent = soft ? t('peUpdate') : p ? t('peSave') : t('peCreate');
+  sa.hidden = !p; sa.textContent = t('peSaveAs');
+  c.classList.toggle('icon', soft);
+  if (soft){ c.innerHTML = '<svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>'; c.title = t('peDismiss'); c.setAttribute('aria-label', t('peDismiss')); }
+  else { c.textContent = t('cancel'); c.removeAttribute('title'); c.removeAttribute('aria-label'); }
+}
+function savePresetEdit(asNew){
+  const pe = presetEdit; if (!pe) return;
+  const ps = presetStore(), items = L.items.map(({id, ...r}) => r), p = !asNew && pe.key && presetByKey(pe.key);
+  const v = (pe.explicit ? $('#pe-bar-name').value : L.name || '').trim().slice(0, 80);
+  let key;
+  if (p && p.custom){ p.ref.items = items; if (pe.explicit && v) p.ref.name = v; key = p.key; }
+  else if (p){ const o = ps.over[p.key] || (ps.over[p.key] = {}); o.items = items; if (pe.explicit){ const l0 = lang, dflt = ['en', 'jp'].map(l => (lang = l, BUILTIN[p.key].en())); lang = l0; if (v && !dflt.includes(v)) o.name = v; else delete o.name; } key = p.key; }
+  else { const c = {id:Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name:v || t('untitled'), items}; ps.custom.push(c); key = 'u:' + c.id; }
+  writeStore(store); renderPresetMenu();
+  const q = presetByKey(key), f = peFocused(); presetEdit = null;
+  L.name = q.name(); currentId = null; $('#layout-name').value = L.name; commit(); renderSaved();   // plan is now the preset, not the saved layout it came from
+  toast(p ? t('pUpdated', q.label()) : t('pSaved', q.label())); peRefocus(f);
+}
+const peFocused = () => $('#pe-bar').contains(document.activeElement) || document.activeElement === document.body;
+function peRefocus(f){ if (f) $('#btn-presets').focus(); }
+function cancelPresetEdit(){
+  const pe = presetEdit; if (!pe) return; const f = peFocused(); presetEdit = null;
+  if (pe.explicit && pe.snap){ L = {name:pe.snap.name, items:sanitize(pe.snap.items)}; currentId = pe.snap.currentId; sel.clear(); $('#layout-name').value = L.name; commit(); renderSaved(); }
+  else renderPeBar();
+  peRefocus(f);
 }
 
 /* ======================= Preset editor ======================= */
@@ -1357,7 +1439,7 @@ function renderSaved(){
     const n = document.createElement('span'); n.textContent = s.name;
     const d = document.createElement('small'); d.textContent = new Date(s.updated).toLocaleString(lang === 'jp' ? 'ja-JP' : 'en-GB', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) + ' · ' + s.items.length + ' items';
     b.append(n, d);
-    b.addEventListener('click', () => { L = {name:s.name, items:sanitize(s.items)}; currentId = s.id; sel.clear(); $('#layout-name').value = L.name; resetHistory(); saveDraft(); render(); emit(); toast(t('loaded')); });
+    b.addEventListener('click', () => { presetEdit = null; L = {name:s.name, items:sanitize(s.items)}; currentId = s.id; sel.clear(); $('#layout-name').value = L.name; resetHistory(); saveDraft(); render(); emit(); renderPeBar(); toast(t('loaded')); });
     const rn = mkIcon('<path d="M4 20h4L19 9l-4-4L4 16z"/>', t('rename'), () => { renaming = s.id; pendingDelete = null; renderSaved(); }); rn.id = 'rename-btn-' + s.id;
     const dl = mkIcon('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>', t('del'), () => { pendingDelete = s.id; renaming = null; renderSaved(); }); dl.id = 'delete-btn-' + s.id;
     li.append(b, rn, dl); ul.appendChild(li);
@@ -1404,7 +1486,7 @@ function doImport(text){
   const of = o && !Array.isArray(o) ? (o.floor || '1F') : FID;
   if (of !== FID && window.PLANS && window.PLANS[of]){ $('#modal-err').textContent = t('importFloor').replace(/\{f\}/g, of); return; }
   L = {name:(o && o.name) ? String(o.name).slice(0, 80) : t('untitled'), items:sanitize(items)};
-  currentId = null; sel.clear(); $('#layout-name').value = L.name; commit();
+  presetEdit = null; currentId = null; sel.clear(); $('#layout-name').value = L.name; commit();
   if (o && o.memo && typeof o.memo === 'object' && window.FC_MEMO) window.FC_MEMO.set(o.memo);
   closeModal(); toast(t('imported'));
 }
@@ -1470,7 +1552,7 @@ function applyLang(){
   $('#lang-jp').setAttribute('aria-pressed', String(lang === 'jp'));
   const keys = $('#keys'); keys.innerHTML = '';
   t('keys').forEach(([k, v]) => { const a = document.createElement('kbd'); a.textContent = k; const b = document.createElement('span'); b.textContent = v; keys.append(a, b); });
-  buildPalette(); drawBaseLabels(); render(); renderPresetMenu();
+  buildPalette(); drawBaseLabels(); render(); renderPresetMenu(); renderPeBar(!!presetEdit && presetEdit.explicit && !presetEdit.typed);
   if (!$('#modal').hidden && $('#modal').dataset.kind === 'presets') openModal('presets');
 }
 function setLang(l){ lang = l; store.lang = l; writeStore(store); try { localStorage.setItem(FLOOR_PREF + 'lang', l); } catch(e){} applyLang(); emit(); }
@@ -1672,9 +1754,16 @@ function wire(){
   $('#menu-presets').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return; closeMenus();
     if (b.dataset.preset) applyPreset(b.dataset.preset);
-    else if (b.id === 'preset-save-new') savePresetNew();
+    else if (b.dataset.editPreset) startPresetEdit(b.dataset.editPreset);
+    else if (b.id === 'preset-new') startPresetEdit(null);
     else if (b.id === 'preset-edit') openModal('presets');
   });
+  $('#pe-bar-save').addEventListener('click', () => savePresetEdit(false));
+  $('#pe-bar-saveas').addEventListener('click', () => savePresetEdit(true));
+  $('#pe-bar-cancel').addEventListener('click', cancelPresetEdit);
+  $('#pe-bar-name').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); savePresetEdit(false); } });
+  $('#pe-bar-name').addEventListener('input', () => { if (presetEdit) presetEdit.typed = true; });
+  $('#pe-bar').addEventListener('keydown', e => { if (e.key === 'Escape'){ e.preventDefault(); e.stopPropagation(); cancelPresetEdit(); } });
   $('#modal-copy-presets').addEventListener('click', () => { const ta = $('#modal-text'); ta.hidden = false; ta.readOnly = true; ta.value = presetsCode(); ta.focus(); ta.select(); $('#modal-hint').textContent = t('pCodeHint'); });
   renderFloorSeg();
   $('#share-code').addEventListener('click', () => { closeMenus(); copyCode(); });
@@ -1728,6 +1817,7 @@ window.FC_MAP = {
   svg: svgFor,
   presetItems: k => PRESETS[k] ? PRESETS[k].fn().map(({id, ...r}) => r) : null,
   presetName: k => PRESETS[k] ? PRESETS[k].name() : '',
+  presetEditing: () => presetEdit && {key:presetEdit.key, explicit:presetEdit.explicit, barShown:!$('#pe-bar').hidden},
   floor: () => FID,
   normalJp: () => { const o = presetStore().over.cafe; return (o && o.name) || PLAN.normal_jp || '通常営業'; },
   sourceNote: () => FID === '1F' ? '配置図 2026/02 ベース' : ((PLAN.meta && PLAN.meta.titleNote) || ''),
