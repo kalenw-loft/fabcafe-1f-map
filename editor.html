@@ -6,7 +6,7 @@
   --ink:#1a1a1a; --paper:#ffffff;
   --bg:#ffffff; --surface:#f6f6f6; --line:#e8e8e8;
   --fg:#231815; --fg-muted:#595959; --accent-text:#d80c0e; --focus:#d80c0e;
-  --plan-bg:#f6f6f6; --plan-floor:#ffffff; --furn-fill:#ffffff; --furn-table:#ececec; --hatch:#9a9a9a; --grid:#e06666; --col:#cfcfcf;
+  --plan-bg:#f6f6f6; --plan-floor:#ffffff; --furn-fill:#f3f3f3; --furn-table:#ececec; --hatch:#9a9a9a; --grid:#e06666; --col:#cfcfcf;
   --sky:#a8dcf7; --leaf:#82c481; --yellow:#fcca00; --lavender:#c6add2; --orange:#f5a200; --gray:#d3d3d4;
   --font-display:"Helvetica Neue Condensed Bold","HelveticaNeue-CondensedBold","Roboto Condensed","Arial Narrow",sans-serif;
   --font-text:"Helvetica Neue",Helvetica,Roboto,Arial,"Hiragino Sans","Noto Sans JP",sans-serif;
@@ -18,14 +18,14 @@
   :root:not([data-theme="light"]){
     --red-tint:#3a1c1c; --bg:#1a1a1a; --surface:#262626; --line:#3a3a3a;
     --fg:#f6f6f6; --fg-muted:#b5b5b5; --accent-text:#ff6a5c; --focus:#ff6a5c;
-    --plan-bg:#141414; --plan-floor:#262626; --furn-fill:#262626; --furn-table:#3d3d3d; --hatch:#6a6a6a; --grid:#ff6a5c; --col:#555555;
+    --plan-bg:#141414; --plan-floor:#262626; --furn-fill:#333333; --furn-table:#3d3d3d; --hatch:#6a6a6a; --grid:#ff6a5c; --col:#555555;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --red-tint:#3a1c1c; --bg:#1a1a1a; --surface:#262626; --line:#3a3a3a;
   --fg:#f6f6f6; --fg-muted:#b5b5b5; --accent-text:#ff6a5c; --focus:#ff6a5c;
-  --plan-bg:#141414; --plan-floor:#262626; --furn-fill:#262626; --furn-table:#3d3d3d; --hatch:#6a6a6a; --grid:#ff6a5c; --col:#555555;
+  --plan-bg:#141414; --plan-floor:#262626; --furn-fill:#333333; --furn-table:#3d3d3d; --hatch:#6a6a6a; --grid:#ff6a5c; --col:#555555;
   color-scheme:dark;
 }
 
@@ -232,10 +232,10 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
   .tool-group button{width:34px;height:34px}
   .zoom-read{display:none}
 }
+#btn-memo{display:none} /* staff-only; reachable from the print dialog (編集), kept out of the public toolbar */
 @media (max-width: 420px){
   .brand-sub{display:none}
   .logo-tag{width:80px}
-  #btn-memo{display:none} /* reachable from the print dialog (編集) */
   .menu{position:fixed;left:16px;right:16px;top:56px;min-width:0}
   .pe-bar{padding:8px}
   .pe-bar-label{flex:1 1 0}
@@ -301,7 +301,7 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
           <button id="share-image"><span data-i18n="copyImage"></span><span class="sub" data-i18n="copyImageSub"></span></button>
         </div>
       </div>
-      <button class="btn" id="btn-sign"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h16v12H4zM12 16v5M8 21h8M12 7v4M12 13v1"/></svg><span class="lbl">貼り紙</span></button>
+      <button class="btn" id="btn-sign"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h16v12H4zM12 16v5M8 21h8M12 7v4M12 13v1"/></svg><span class="lbl" data-i18n="sign">貼り紙</span></button>
       <button class="btn" id="btn-memo"><svg class="i" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM9 11h7M9 15h7M9 7h4"/></svg><span class="lbl" data-i18n="memo">Staff sheet</span></button>
       <button class="btn primary" id="btn-print"><svg class="i" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H4v-8h16v8h-3M7 14h10v7H7z"/></svg><span class="lbl" data-i18n="print">Print</span></button>
       <div class="seg" role="group" aria-label="Language">
@@ -534,7 +534,7 @@ const T = {
     pEmpty:'Empty', pEmptySub:'空 · clear all movable items',
     copyCode:'Copy layout code', copyCodeSub:'Text a teammate can paste in', importCode:'Paste / import', importCodeSub:'From a code or a .json file',
     savePdf:'Save PDF to print', savePdfSub:'A4 portrait, with layout name and seats',
-    memo:'Staff sheet', print:'Print PDF',
+    memo:'Staff sheet', sign:'Sign', print:'Print PDF',
     copyImage:'Copy image', copyImageSub:'PNG of the plan for Slack or slides',
     seats:'Seats', tables:'Tables', standing:'Standing', standingSub:'ppl at 0.5 m² each', freeFloor:'Free floor',
     conflicts:'{n} items clash', conflict1:'1 item clashes', noConflicts:'No clashes',
@@ -579,7 +579,7 @@ const T = {
     pEmpty:'空', pEmptySub:'Empty · 可動家具をすべて外す',
     copyCode:'レイアウトコードをコピー', copyCodeSub:'チームに送って貼り付けてもらう', importCode:'貼り付け・読み込み', importCodeSub:'コードまたは .json ファイルから',
     savePdf:'印刷用PDFを保存', savePdfSub:'A4 縦・レイアウト名と席数入り',
-    memo:'当日シート', print:'印刷用PDF',
+    memo:'当日シート', sign:'貼り紙', print:'印刷用PDF',
     copyImage:'画像をコピー', copyImageSub:'Slack やスライド用の PNG',
     seats:'席数', tables:'テーブル', standing:'立席', standingSub:'名（1人 0.5㎡）', freeFloor:'空き床',
     conflicts:'{n} 件が干渉', conflict1:'1 件が干渉', noConflicts:'干渉なし',
@@ -856,7 +856,7 @@ function planCSS(c){
 const FONT_D = '"Helvetica Neue Condensed Bold","HelveticaNeue-CondensedBold","Roboto Condensed","Arial Narrow",sans-serif';
 const FONT_T = '"Helvetica Neue",Helvetica,Roboto,Arial,"Hiragino Sans","Noto Sans JP",sans-serif';
 const CSS_VARS = {bg:'var(--plan-bg)', floor:'var(--plan-floor)', fg:'var(--fg)', muted:'var(--fg-muted)', hatch:'var(--hatch)', grid:'var(--grid)', furn:'var(--furn-fill)', table:'var(--furn-table)', red:'var(--red)', leaf:'var(--leaf)', trash:'var(--sky)', col:'var(--col)', fontText:FONT_T, fontDisplay:FONT_D};
-const CSS_LIGHT = {bg:'#ffffff', floor:'#ffffff', fg:'#231815', muted:'#595959', hatch:'#9a9a9a', grid:'#e06666', furn:'#ffffff', table:'#ececec', red:'#d80c0e', leaf:'#82c481', trash:'#a8dcf7', col:'#cfcfcf', fontText:FONT_T, fontDisplay:FONT_D};
+const CSS_LIGHT = {bg:'#ffffff', floor:'#ffffff', fg:'#231815', muted:'#595959', hatch:'#9a9a9a', grid:'#e06666', furn:'#f3f3f3', table:'#ececec', red:'#d80c0e', leaf:'#82c481', trash:'#a8dcf7', col:'#cfcfcf', fontText:FONT_T, fontDisplay:FONT_D};
 $('#plan-css').textContent = planCSS(CSS_VARS);
 
 /* ======================= Base plan (not editable) ======================= */
