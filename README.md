@@ -15,9 +15,16 @@ A floor-plan tool for FabCafe Tokyo 1F. Plan an event layout, fill in the part-t
   2. **Staff sheet:** the 当日シート
   3. **Teardown:** the normal cafe layout, for putting everything back
 - **Machine sign (貼り紙):** a "no drinks on the machines" sign, A4 landscape.
-- **Share a layout:** Share → Copy layout code, then the other person pastes it in. The staff sheet travels with it.
+- **Share a layout:** Share → **Copy layout link** gives a link that opens the layout and staff sheet directly (or Copy layout code, which the other person pastes in).
+- **Save the PDF:** Print PDF saves one A4 `.pdf` file straight to Downloads — no print dialog.
 
 Everything stays in your browser (local storage). There's no account, no server and no tracking.
+
+## For AI agents and scripts
+
+- Open a ready layout with `…/#floor=1F&layout=<code>` (the link from Share → Copy layout link).
+- In the page: `FC_MAP.switchFloor('10F')`, `FC_MAP.loadCode(text)`, `FC_MAP.layoutCode()`, `FC_MAP.layoutLink()`, `FC_MEMO.set({...})` for the staff sheet.
+- `FC_PRINT.savePDF(['map', 'memo', 'restore'])` downloads the A4 PDF (pick the pages you want).
 
 ## Tips
 

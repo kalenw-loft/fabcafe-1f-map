@@ -319,6 +319,7 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
         <button class="btn" id="btn-share" aria-haspopup="true" aria-expanded="false" aria-controls="menu-share">
           <svg class="i" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 13v8h16v-8"/></svg><span class="lbl" data-i18n="share">Share</span></button>
         <div class="menu" id="menu-share" hidden>
+          <button id="share-link"><span data-i18n="copyLink"></span><span class="sub" data-i18n="copyLinkSub"></span></button>
           <button id="share-code"><span data-i18n="copyCode"></span><span class="sub" data-i18n="copyCodeSub"></span></button>
           <button id="share-import"><span data-i18n="importCode"></span><span class="sub" data-i18n="importCodeSub"></span></button>
           <button id="share-pdf"><span data-i18n="savePdf"></span><span class="sub" data-i18n="savePdfSub"></span></button>
@@ -565,6 +566,7 @@ const T = {
     pWork:'Workshop', pWorkSub:'ワークショップ · long-table islands, 6 seats each',
     pBreak:'Breakfast 朝会', pBreakSub:'Long-table rows, food line, standing zone',
     pEmpty:'Empty', pEmptySub:'空 · clear all movable items',
+    copyLink:'Copy layout link', copyLinkSub:'Opens this layout + staff sheet directly', linkCopied:'Layout link copied',
     copyCode:'Copy layout code', copyCodeSub:'Text a teammate can paste in', importCode:'Paste / import', importCodeSub:'From a code or a .json file',
     savePdf:'Save PDF to print', savePdfSub:'A4 portrait, with layout name and seats',
     memo:'Staff sheet', sign:'Sign', print:'Print PDF',
@@ -610,6 +612,7 @@ const T = {
     pWork:'ワークショップ', pWorkSub:'Workshop · 長テーブルの島、各6席',
     pBreak:'朝会ブレックファスト', pBreakSub:'Breakfast · 長テーブル、フード、立ちエリア',
     pEmpty:'空', pEmptySub:'Empty · 可動家具をすべて外す',
+    copyLink:'レイアウトのリンクをコピー', copyLinkSub:'開くとこの配置と当日シートが表示されます', linkCopied:'リンクをコピーしました',
     copyCode:'レイアウトコードをコピー', copyCodeSub:'チームに送って貼り付けてもらう', importCode:'貼り付け・読み込み', importCodeSub:'コードまたは .json ファイルから',
     savePdf:'印刷用PDFを保存', savePdfSub:'A4 縦・レイアウト名と席数入り',
     memo:'当日シート', sign:'貼り紙', print:'印刷用PDF',
@@ -1732,6 +1735,26 @@ function copyImage(){
     } else fallback();
   } catch(e){ fallback(); }
 }
+// layout link: #floor=1F&layout=<base64url of the layout code> opens that layout (and staff sheet) directly
+const b64u = {
+  enc: s => { const b = new TextEncoder().encode(s); let x = ''; for (let i = 0; i < b.length; i += 0x8000) x += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(x).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); },
+  dec: s => { const x = atob(s.replace(/-/g, '+').replace(/_/g, '/')); const b = new Uint8Array(x.length); for (let i = 0; i < x.length; i++) b[i] = x.charCodeAt(i); return new TextDecoder().decode(b); }
+};
+function layoutLink(){ return location.href.split('#')[0] + '#floor=' + FID + '&layout=' + b64u.enc(layoutCode()); }
+function copyLink(){
+  const s = layoutLink();
+  try { if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(s).then(() => toast(t('linkCopied'))).catch(() => prompt(t('copyLink'), s)); return; } } catch(e){}
+  prompt(t('copyLink'), s);
+}
+function importFromHash(){
+  const m = /[#&]layout=([A-Za-z0-9_-]+)/.exec(location.hash || ''); if (!m) return false;
+  let text = null; try { text = b64u.dec(m[1]); } catch(e){}
+  try { history.replaceState(null, '', '#floor=' + FID); } catch(e){}   // a reload keeps the edits, not the link
+  if (!text){ toast(t('importErr')); return false; }
+  $('#modal-err').textContent = ''; doImport(text);
+  if ($('#modal-err').textContent){ toast($('#modal-err').textContent); closeModal(); return false; }
+  return true;
+}
 function copyCode(){
   const s = layoutCode();
   try {
@@ -2060,6 +2083,7 @@ function wire(){
   $('#modal-copy-presets').addEventListener('click', () => { const ta = $('#modal-text'); ta.hidden = false; ta.readOnly = true; ta.value = presetsCode(); ta.focus(); ta.select(); $('#modal-hint').textContent = t('pCodeHint'); });
   renderFloorSeg();
   $('#share-code').addEventListener('click', () => { closeMenus(); copyCode(); });
+  $('#share-link').addEventListener('click', () => { closeMenus(); copyLink(); });
   $('#share-import').addEventListener('click', () => { closeMenus(); openModal('import'); });
   $('#share-image').addEventListener('click', () => { closeMenus(); copyImage(); });
   $('#share-pdf').addEventListener('click', () => closeMenus());
@@ -2123,6 +2147,11 @@ window.FC_MAP = {
   onChange: fn => { listeners.push(fn); },
   onFloor: fn => { if (typeof fn === 'function') floorListeners.push(fn); },
   switchFloor: f => switchFloor(f),
+  // for scripts / AI agents: layoutCode() → text, loadCode(text) → replaces the layout, layoutLink() → shareable URL;
+  // PDFs: FC_PRINT.savePDF(['map','memo','restore']) downloads one A4 .pdf
+  layoutCode: () => layoutCode(),
+  loadCode: text => { $('#modal-err').textContent = ''; doImport(typeof text === 'string' ? text : JSON.stringify(text)); return !$('#modal-err').textContent; },
+  layoutLink: () => layoutLink(),
   toast: s => toast(s)
 };
 // Sim data-slot hook (see SIMULATION.md): a future 3D-viewer module calls FC_SIM.register() with a render
@@ -2146,6 +2175,9 @@ function init(){
   requestAnimationFrame(fit);
   emit();
   window.addEventListener('resize', () => movePill(false));
+  const fromHash = () => { if (importFromHash()) requestAnimationFrame(fit); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fromHash); else setTimeout(fromHash, 0);
+  window.addEventListener('hashchange', () => { if (/[#&]layout=/.test(location.hash)) location.reload(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => movePill(false));
 }
 init();
@@ -2182,7 +2214,14 @@ init();
   document.getElementById('sign-back').addEventListener('click',function(){showSign(false)});
   // The page runs in a sandboxed frame where window.print() is blocked, so the sign is drawn to a
   // canvas, wrapped in a one-page A4-landscape PDF and offered through the downloads capability.
-  var dlP = (window.claude && window.claude.use) ? window.claude.use('downloads').catch(function(){return null}) : Promise.resolve(null);
+  // Outside the artifact frame there is no downloads capability: save with a plain browser download, so
+  // "Save PDF" hands over a real .pdf (one click for people, and browser agents never meet a print dialog).
+  var webDl = {save:function(o){
+    var u = URL.createObjectURL(o.data), a = document.createElement('a');
+    a.href = u; a.download = o.filename; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(u); }, 10000); return Promise.resolve();
+  }};
+  var dlP = (window.claude && window.claude.use) ? window.claude.use('downloads').then(function(d){ return d || webDl; }, function(){ return webDl; }) : Promise.resolve(webDl);
   window.__dlP = dlP; // shared with the print composer
 
   var LOGO_IMG=null;
