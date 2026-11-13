@@ -1828,7 +1828,11 @@ function loadFloorState(){
   prepGeometry(); drawBase();
   const dr = store.draft;
   if (dr && Array.isArray(dr.items)){ L = {name:dr.name || t('untitled'), items:sanitize(dr.items)}; currentId = store.layouts.some(x => x.id === dr.currentId) ? dr.currentId : null; }
-  else { L = {name:PRESETS.cafe.name(), items:presetCafe()}; currentId = null; }
+  else {
+    // first view per floor: 1F opens on the cafe layout (通常営業); floors with defaultPreset (2F / 10F: 'empty') open on that
+    const dk = PLAN.defaultPreset && PRESETS[PLAN.defaultPreset] ? PLAN.defaultPreset : 'cafe';
+    L = {name:PRESETS[dk].name(), items:sanitize(PRESETS[dk].fn())}; currentId = null;
+  }
   $('#layout-name').value = L.name;
   resetHistory();
 }

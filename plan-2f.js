@@ -10,6 +10,7 @@
   "units": "mm",
   "titleNote": "source plan 2015"
  },
+ "defaultPreset": "empty",
  "normal_en": "Usual (no furniture data)",
  "normal_jp": "通常",
  "normal_sub": {

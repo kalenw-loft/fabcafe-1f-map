@@ -25,6 +25,7 @@
    "short": "Loftwork"
   }
  },
+ "defaultPreset": "empty",
  "normal_en": "Usual",
  "normal_jp": "通常",
  "normal_sub": {
