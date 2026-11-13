@@ -519,6 +519,7 @@ const CAT = {
   'easel':            {w:600,  h:400, round:false, en:'Easel / sign', jp:'イーゼル・看板'},
   'projector-screen': {w:2000, h:200, round:false, en:'Screen',       jp:'スクリーン'},
   'tv':               {w:1400, h:300, round:false, en:'TV monitor',   jp:'モニター'},
+  'pa':               {w:1200, h:600, round:false, en:'PA desk',      jp:'PA卓・音響'},
   'plant':            {w:500,  h:500, round:true,  en:'Plant',        jp:'植栽'},
   'trash':            {w:350,  h:350, round:false, en:'Trash can',    jp:'ゴミ箱'},
   'trash-sort':       {w:1100, h:400, round:false, en:'Trash station', jp:'分別ゴミ箱'},
@@ -704,6 +705,7 @@ function fixedPoly(f){
   if (f.shape === 'rect') return rectPoly(f.x, f.y, f.w || 100, f.h || 100, f.rot);
   return null;
 }
+let KEEP_POLYS = [], EVENT_AREA = null;
 let FLOOR = [], FLOOR_AREA = 0, WALL_SEGS = [], FIXED_POLYS = [], ROOM_POLYS = [], DOOR_POLYS = [], FIXED_AREA = 0;
 function prepGeometry(){
   FLOOR = (PLAN.floor || []).map(p => [+p[0], +p[1]]);
@@ -723,6 +725,10 @@ function prepGeometry(){
     if (FLOOR.length && pip(centroid(p), FLOOR)) FIXED_AREA += polyArea(p);
   });
   ROOM_POLYS = (PLAN.rooms || []).map(r => r.points);
+  // preset placement rules per floor: keepClear = kitchen / entrance zones presets never fill;
+  // eventArea = where events usually happen (2F: back half only) — presets stay inside it
+  KEEP_POLYS = (PLAN.keepClear || []).map(k => k.points).filter(p => p && p.length > 2);
+  EVENT_AREA = PLAN.eventArea && PLAN.eventArea.length > 2 ? PLAN.eventArea : null;
 }
 const EDGE_TOL = 150;
 function distToFloorEdge(p){ let m = Infinity; for (let i = 0; i < FLOOR.length; i++) m = Math.min(m, ptSegDist(p, FLOOR[i], FLOOR[(i+1) % FLOOR.length])); return m; }
@@ -735,6 +741,9 @@ function clash(P, opts){
   for (const F of FIXED_POLYS) if (polysIntersect(P, F)) return 'fixed';
   for (const R of ROOM_POLYS) if (R && R.length > 2 && polysIntersect(P, R)) return 'room';
   if (opts.doors) for (const D of DOOR_POLYS) if (polysIntersect(P, D)) return 'door';
+  // {doors:true} is what the preset generators ask for: they also keep out of keepClear and inside eventArea
+  if (opts.doors) for (const K of KEEP_POLYS) if (polysIntersect(P, K)) return 'keep';
+  if (opts.doors && EVENT_AREA) for (const c of P) if (!pip(c, EVENT_AREA)) return 'area';
   if (opts.extra) for (const E of opts.extra) if (polysIntersect(P, E)) return 'item';
   return null;
 }
@@ -1024,6 +1033,13 @@ function drawShape(g, type, w, h, it){
     case 'tv':
       el('rect', {class:'it-dark', x:-hw, y:-hh, width:w, height:h * 0.55}, g);
       el('rect', {class:'it-body', x:-hw * 0.35, y:-hh + h * 0.55, width:w * 0.35, height:h * 0.45}, g); break;
+    case 'pa': {
+      // sound desk: a table with the mixer on it (dark block + a row of faders)
+      el('rect', {class:'it-table', x:-hw, y:-hh, width:w, height:h, rx:20}, g);
+      const mw = w * 0.62, mh = h * 0.6;
+      el('rect', {class:'it-dark', x:-mw / 2, y:-mh / 2, width:mw, height:mh, rx:20}, g);
+      for (let i = 1; i < 6; i++){ const x = -mw / 2 + mw * i / 6; el('line', {class:'it-line', x1:x, y1:-mh / 2 + 60, x2:x, y2:mh / 2 - 60}, g); }
+      break; }
     case 'plant':
       el('circle', {class:'it-plant', r:hw}, g);
       for (let i = 0; i < 4; i++){ const a = rad(i * 45 + 22); el('line', {class:'it-line', x1:-Math.cos(a) * hw * .75, y1:-Math.sin(a) * hw * .75, x2:Math.cos(a) * hw * .75, y2:Math.sin(a) * hw * .75}, g); }
@@ -1239,13 +1255,18 @@ function pickDisplay(){
   const b = bbox(FLOOR); return {x:(b.minX + b.maxX) / 2, y:b.minY, len:2000};
 }
 function presetCafe(){ return sanitize(PLAN.furniture || []); }
+// floors can mark spots that are standing room only during events (10F: the kitchen counter)
+function withStanding(out){
+  (PLAN.standing || []).forEach(z => out.push({type:'zone', x:z.x, y:z.y, rot:z.rot || 0, w:z.w, h:z.h, label:z.label || 'Standing 立ち見', color:'leaf'}));
+  return out;
+}
 // Talk ~50: seated theater rows (no centre aisle) in the hall facing the large display, staggered so each row looks
 // between the heads in front; speaker chairs on the stage; no rear rows: the back is standing room.
 function presetTalk(){
   const out = [], TARGET = 50, CH = 420;
   // stage, podium and speaker chairs (facing the audience: rot 0 = facing +y)
   out.push({type:'zone', x:10022, y:1850, rot:0, w:5000, h:1200, label:'Stage ステージ', color:'yellow'});
-  out.push({type:'podium', x:12300, y:1850, rot:0});
+  out.push({type:'podium', x:11900, y:1850, rot:0});
   const speakers = [9200, 9900, 10600];
   speakers.forEach(x => out.push({type:'chair', x, y:1800, rot:0}));
   out.push({type:'note', x:9900, y:2250, rot:0, label:'Speakers 登壇者', fs:150});
@@ -1325,15 +1346,27 @@ function presetBreakfast(){
 // Talk in the back half (奥半面 = everything north of Y2, east of X2): the 26 chairs that sit there in the
 // cafe layout are re-used as theater rows facing the large display; the tables there go to storage.
 // The entrance-side (front half) furniture stays as it is.
+// nearest spot to goal where a w×h box clears walls, fixtures, doors, keep-clear zones and the items already in out
+function nearFree(w, h, goal, out){
+  const avoid = out.filter(it => CAT[it.type] && !CAT[it.type].annot).map(it => { const s = size(it); return rectPoly(it.x, it.y, s.w + 300, s.h + 300, it.rot); });
+  let best = null, bd = Infinity;
+  for (let dy = -4000; dy <= 4000; dy += 200) for (let dx = -4000; dx <= 4000; dx += 200){
+    const d = Math.hypot(dx, dy); if (d >= bd) continue;
+    const x = goal[0] + dx, y = goal[1] + dy;
+    if (clash(rectPoly(x, y, w, h, 0), {doors:true, extra:avoid})) continue;
+    best = [x, y]; bd = d;
+  }
+  return best;
+}
 const BACK_HALF = it => it.y < 10730 && it.x > 6160;
 function presetTalkBack(){
   const out = [];
-  // keep front-half furniture as drawn
-  (PLAN.furniture || []).forEach(f => { if (!BACK_HALF(f)) out.push(f); });
+  // keep front-half furniture as drawn, except anything standing in a keep-clear zone (entrance, counter front)
+  (PLAN.furniture || []).forEach(f => { if (!BACK_HALF(f) && !KEEP_POLYS.some(K => pip([f.x, f.y], K))) out.push(f); });
   const nChairs = (PLAN.furniture || []).filter(f => f.type === 'chair' && BACK_HALF(f)).length; // 26
   // stage + podium in front of the large display
   out.push({type:'zone', x:10022, y:1850, rot:0, w:5000, h:1200, label:'Stage ステージ', color:'yellow'});
-  out.push({type:'podium', x:12300, y:1850, rot:0});
+  out.push({type:'podium', x:11900, y:1850, rot:0});
   // theater rows: 3 + aisle + 3, facing the display (rot 180 = facing up)
   const cols = [8850, 9350, 9850, 11170, 11670, 12170], rows = [2900, 3800, 4700, 5600, 6500];
   let n = 0;
@@ -1341,9 +1374,10 @@ function presetTalkBack(){
     const xs = n + cols.length <= nChairs ? cols : [9850, 11170, 9350, 11670, 8850, 12170].slice(0, nChairs - n);
     for (const x of xs){ if (n >= nChairs) break; out.push({type:'chair', x, y, rot:180}); n++; }
   }
-  // front desk by the entrance
-  out.push({type:'zone', x:1300, y:14200, rot:0, w:2400, h:1500, label:'Reception 受付', color:'sky'});
-  out.push({type:'table-bar', x:1300, y:14250, rot:0});
+  // front desk where guests cross into the back half (the entrance itself stays clear)
+  const rc = nearFree(1800, 1000, [8000, 10600], out) || [8300, 11350];
+  out.push({type:'zone', x:rc[0], y:rc[1], rot:0, w:1800, h:1000, label:'Reception 受付', color:'sky'});
+  out.push({type:'table-bar', x:rc[0], y:rc[1] + 50, rot:0});
   // food in the fab area, away from the machines
   out.push({type:'zone', x:11300, y:9400, rot:0, w:1500, h:4700, label:'Food フード', color:'orange'});
   out.push({type:'table-long', x:11300, y:8850, rot:90}, {type:'table-long', x:11300, y:10650, rot:90});
@@ -1397,10 +1431,10 @@ const BUILTIN = {
     sub:() => PLAN.normal_sub ? PLAN.normal_sub[lang] || PLAN.normal_sub.en : t('pCafeSub'),
     name:() => lang === 'jp' ? (PLAN.normal_jp || '通常営業') + ' ' + (PLAN.normal_en || 'Cafe') : (PLAN.normal_en || 'Cafe (current)') + ' ' + (PLAN.normal_jp || '通常営業')},
   talkback:{only:'1F', fn:() => withTrash(presetTalkBack()), en:() => t('pTalkBack'), sub:() => t('pTalkBackSub'), name:() => lang === 'jp' ? '奥半面トーク Talk' : 'Talk – back half 奥半面トーク'},
-  talkstage:{when:() => !!PLAN.stage, fn:() => withTrash(presetTalkStage()), en:() => t('pTalkStage'), sub:() => t('pTalkStageSub'), name:() => lang === 'jp' ? 'トーク' : 'Talk トーク'},
+  talkstage:{when:() => !!PLAN.stage, fn:() => sanitize(withStanding(withTrash(presetTalkStage()))), en:() => t('pTalkStage'), sub:() => t('pTalkStageSub'), name:() => lang === 'jp' ? 'トーク' : 'Talk トーク'},
   talk:{only:'1F', fn:() => withTrash(presetTalk()), en:() => t('pTalk'), sub:() => t('pTalkSub'), name:() => lang === 'jp' ? 'トーク 約50名' : 'Talk ~50 トーク'},
-  workshop:{fn:() => withTrash(presetWorkshop()), en:() => t('pWork'), sub:() => t('pWorkSub'), name:() => lang === 'jp' ? 'ワークショップ' : 'Workshop ワークショップ'},
-  breakfast:{fn:() => withTrash(presetBreakfast()), en:() => t('pBreak'), sub:() => t('pBreakSub'), name:() => lang === 'jp' ? '朝会 Breakfast' : 'Breakfast 朝会'},
+  workshop:{fn:() => sanitize(withStanding(withTrash(presetWorkshop()))), en:() => t('pWork'), sub:() => t('pWorkSub'), name:() => lang === 'jp' ? 'ワークショップ' : 'Workshop ワークショップ'},
+  breakfast:{fn:() => sanitize(withStanding(withTrash(presetBreakfast()))), en:() => t('pBreak'), sub:() => t('pBreakSub'), name:() => lang === 'jp' ? '朝会 Breakfast' : 'Breakfast 朝会'},
   empty:{fn:() => [], en:() => t('pEmpty'), sub:() => t('pEmptySub'), name:() => lang === 'jp' ? '空' : 'Empty 空'}
 };
 // presets that come with a floor's plan data; rebuilt when the floor changes

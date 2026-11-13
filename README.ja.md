@@ -41,6 +41,7 @@ node check.mjs        # 動作テスト（jsdomが必要：npm i jsdom）
 | `memo.html` / `memo.css` / `memo.js` | 当日シート |
 | `print.html` / `print.css` / `print.js` | 印刷：ページ選択、A4ページ、PDF |
 | `build.py` | すべてを1つのページにまとめます |
+| `check-presets.mjs` | プリセットがキッチン・入口を空けているか（2Fは奥半面のみ） |
 | `check.mjs` | jsdomによる動作テスト |
 
 ソースを編集したら `python3 build.py` を実行し、commit・pushしてください。GitHub Pagesのサイトは1〜2分で更新されます。

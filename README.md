@@ -41,6 +41,7 @@ node check.mjs        # smoke test (needs jsdom: npm i jsdom)
 | `memo.html` / `memo.css` / `memo.js` | 当日シート: the fill-in staff sheet |
 | `print.html` / `print.css` / `print.js` | Print composer: page picker, A4 pages, PDF |
 | `build.py` | Inlines everything into one self-contained page |
+| `check-presets.mjs` | Presets keep kitchen/entrances clear (2F: back half only) |
 | `check.mjs` | jsdom smoke test |
 
 Edit the source files, run `python3 build.py`, then commit and push. GitHub Pages updates the site in a minute or two.
