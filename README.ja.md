@@ -2,7 +2,7 @@
 
 [English](README.md) · **日本語**
 
-FabCafe Tokyo（1F・2F・10F）の配置図ツールです。イベントのレイアウトを作って、A4で印刷できます。
+FabCafe Tokyo（1F・2F・3F・10F）の配置図ツールです。イベントのレイアウトを作って、A4で印刷できます。
 
 **開く:** https://kalenw-loft.github.io/fabcafe-1f-map/
 

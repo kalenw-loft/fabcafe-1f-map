@@ -71,6 +71,7 @@ for (floor of FLOORS){
     expect(edits.length === r.presets.length && edits.every(b => b.id === 'preset-editbtn-' + key2id(b.dataset.editPreset) && !b.hasAttribute('data-preset') && b.getAttribute('aria-label')), 'one ✎ (preset-editbtn-<key>, aria-label, no data-preset) per preset');
     expect([...d.querySelectorAll('#menu-presets [data-preset]')].every(b => !b.hasAttribute('data-edit-preset') && b.id === 'preset-' + key2id(b.dataset.preset)), '[data-preset] lists apply buttons only');
     expect(!d.querySelector('#preset-save-new') && d.querySelector('#preset-new') && d.querySelector('#preset-edit'), 'footer = #preset-new + #preset-edit, no #preset-save-new');
+    if (r.presets.includes('cafe')){
     // (b) ✎ cafe → explicit edit, add a trash can, rename, save over the built-in
     click(d, '#preset-editbtn-cafe');
     r.editCafe = pe();
@@ -153,6 +154,7 @@ for (floor of FLOORS){
     r.crossFloorMsg = fresh.d.querySelector('#modal-err').textContent;
     r.printPages = !!w.FC_PRINT;
     expect(!fresh.errors.length, 'import: no errors');
+    } else r.editFlow = 'skipped (no cafe preset on this floor)';
   } catch (e){ expect(false, 'threw: ' + e.message); }
   expect(!errors.length, 'no errors: ' + errors.join(' | '));
 }

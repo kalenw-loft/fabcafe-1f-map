@@ -1481,6 +1481,7 @@ function presetList(all){
   const ps = presetStore(), out = [];
   Object.keys(BUILTIN).forEach(k => {
     const b = BUILTIN[k]; if ((b.only && b.only !== FID) || (b.when && !b.when())) return;
+    if (Array.isArray(PLAN.presetsOnly) && !PLAN.presetsOnly.includes(k)) return;   // floors that offer only some built-ins (3F: Empty)
     const o = ps.over[k] || {}, hidden = ps.hidden.includes(k);
     if (hidden && !all) return;
     out.push({key:k, builtin:true, hidden, changed:!!(o.name || o.items),

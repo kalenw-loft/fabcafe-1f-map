@@ -2,7 +2,7 @@
 
 **English** · [日本語](README.ja.md)
 
-A floor-plan tool for FabCafe Tokyo (1F, 2F, 10F). Plan an event layout and print it on A4.
+A floor-plan tool for FabCafe Tokyo (1F, 2F, 3F, 10F). Plan an event layout and print it on A4.
 
 **Open it:** https://kalenw-loft.github.io/fabcafe-1f-map/
 

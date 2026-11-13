@@ -17,7 +17,7 @@ def opt(n):
 def main():
     s = read('editor.html')
     # floor plans (1F, 2F, 3F, 10F) + the floor picker, inlined in this order.
-    # plan-3f.js is tolerated missing (empty <script></script>) until a 3F trace exists;
+    # each plan-*.js is tolerated missing (empty <script></script>);
     # Object.keys(window.PLANS) then just skips 3F everywhere that reads it.
     for n in ('plan-data.js', 'plan-2f.js', 'plan-3f.js', 'plan-10f.js', 'floors.js'):
         tag = f'<script src="{n}"></script>'
