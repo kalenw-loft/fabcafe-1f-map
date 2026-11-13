@@ -189,7 +189,7 @@
     ],
     [
      5965,
-     600
+     2170
     ]
    ],
    "closed": false,
@@ -415,9 +415,9 @@
    "id": "door-lobby",
    "kind": "door",
    "shape": "arc",
-   "x": 6000,
+   "x": 6040,
    "y": 2170,
-   "r": 800,
+   "r": 760,
    "rot": 0,
    "sweep": 90,
    "label_en": "Door from lobby",
