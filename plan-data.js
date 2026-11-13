@@ -190,10 +190,12 @@
   // alignment between the Rhino model and this trace as unconfirmed until someone sets it.
   // kept free by every preset (see header)
   keepClear: [
-    { id: 'entrance', label_en: 'Entrance', label_jp: '入口', points: [[72, 14300], [2400, 14300], [2400, 17000], [72, 17000]] },
+    { id: 'entrance', label_en: 'Entrance', label_jp: '入口', points: [[72, 15050], [2000, 15050], [2000, 17000], [72, 17000]] },
     { id: 'counter-front', label_en: 'Order / pickup at the counter', label_jp: 'カウンター前（注文・受け取り）', points: [[72, 13135], [6122, 13135], [6122, 14100], [72, 14100]] },
     { id: 'side-entrance', label_en: 'Side entrance', label_jp: '側面入口', points: [[12500, 300], [13500, 300], [13500, 3300], [12500, 3300]] },
   ],
+  // event reception: just inside the cafe door, between the counter strip and the door path
+  reception: { x: 1300, y: 14550, w: 1800, h: 800 },
   sim: {
     scans: [
       { id: 'rhino-1f', kind: 'cad3d', format: '3dm',

@@ -31,10 +31,13 @@ for (const floor of Object.keys(probe.w.PLANS)){
     const plan = (P.presets || []).some(p => p.id === k);   // hand-drawn plan presets: keepClear is advisory
     let bad = 0;
     for (const it of furn){
-      const inKeep = keep.find(z => pip([it.x, it.y], z.points));
+      const R = P.reception, atDesk = R && Math.abs(it.x - R.x) <= R.w / 2 && Math.abs(it.y - R.y) <= R.h / 2;
+      const inKeep = !atDesk && keep.find(z => pip([it.x, it.y], z.points));
       const outArea = area && !pip([it.x, it.y], area);
       if ((inKeep || outArea) && !plan){ bad++; failures.push(`${floor} ${k}: ${it.type} at ${it.x},${it.y} ${inKeep ? 'in ' + inKeep.id : 'outside event area'}`); }
     }
+    const rec = !P.reception || items.some(i => i.type === 'zone' && /Reception/.test(i.label || ''));
+    if (!rec && k !== 'empty') failures.push(`${floor} ${k}: no reception at the door`);
     report[floor][k] = {items: items.length, furniture: furn.length, chairs: furn.filter(i => i.type === 'chair').length, bad, standing: items.some(i => /Standing 立ち見 \(kitchen\)/.test(i.label || ''))};
   }
   if (errors.length) failures.push(floor + ': ' + errors.join('; '));
