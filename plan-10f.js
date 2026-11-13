@@ -1198,7 +1198,7 @@
      "type": "zone",
      "w": 900,
      "h": 2500,
-     "label": "Chairs 椅子置き場",
+     "label": "Chair storage 椅子置き場",
      "color": "gray"
     },
     {
@@ -1218,7 +1218,7 @@
      "w": 4500,
      "h": 1500,
      "rot": 294,
-     "label": "Speakers / drinks 控室・ドリンク",
+     "label": "Green room 控室・ドリンク",
      "color": "orange"
     },
     {

@@ -2821,7 +2821,7 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
      "type": "zone",
      "w": 900,
      "h": 2500,
-     "label": "Chairs 椅子置き場",
+     "label": "Chair storage 椅子置き場",
      "color": "gray"
     },
     {
@@ -2841,7 +2841,7 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
      "w": 4500,
      "h": 1500,
      "rot": 294,
-     "label": "Speakers / drinks 控室・ドリンク",
+     "label": "Green room 控室・ドリンク",
      "color": "orange"
     },
     {
@@ -3121,7 +3121,14 @@ const ZONE_PRESETS = [
   {label:'Reception 受付', color:'sky', w:2400, h:1500},
   {label:'Exhibit 展示', color:'lavender', w:3000, h:2000},
   {label:'Food フード', color:'orange', w:3600, h:1500},
-  {label:'Standing 立ち', color:'leaf', w:4000, h:3000}
+  {label:'Standing 立ち見', color:'leaf', w:4000, h:3000},
+  {label:'Drinks ドリンク', color:'orange', w:2400, h:1200},
+  {label:'Bar バー', color:'orange', w:2400, h:1500},
+  {label:'Green room 控室', color:'orange', w:3000, h:2000},
+  {label:'Magazines 雑誌', color:'yellow', w:3300, h:600},
+  {label:'Projection 投影', color:'lavender', w:2500, h:600},
+  {label:'Chair storage 椅子置き場', color:'gray', w:900, h:2500},
+  {label:'Bags 荷物置き', color:'gray', w:1800, h:1200}
 ];
 
 /* ======================= i18n ======================= */
@@ -3917,7 +3924,7 @@ function presetBreakfast(){
   }
   out.push(...islands(4, avoid));
   const sp = scanPlace(4000, 3000, 300, avoid);
-  if (sp) out.push({type:'zone', x:sp[0], y:sp[1], rot:0, w:4000, h:3000, label:'Standing 立ち', color:'leaf'});
+  if (sp) out.push({type:'zone', x:sp[0], y:sp[1], rot:0, w:4000, h:3000, label:'Standing 立ち見', color:'leaf'});
   return sanitize(out);
 }
 // Talk in the back half (奥半面 = everything north of Y2, east of X2): the 26 chairs that sit there in the
