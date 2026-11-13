@@ -10,9 +10,8 @@
   "units": "mm",
   "titleNote": "plan 2015 · layout 2026"
  },
- "defaultPreset": "empty",
- "normal_en": "Usual (2026)",
- "normal_jp": "通常",
+ "normal_en": "Normal hours",
+ "normal_jp": "通常時",
  "normal_sub": {
   "en": "Normal hours: 4 tables in the back half + work tables on the MTRL side",
   "jp": "通常時：奥半面に机4台＋MTRL側の作業机"
