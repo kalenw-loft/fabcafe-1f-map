@@ -1,7 +1,10 @@
 /* FabCafe 3F — conference / YEP floor. Same building shell, grid, core and columns as 2F (plan-2f.js);
    the 2025/10 3F base drawing matches the 2F outline (ELV block, WC, stair, diagonal façade, back room).
    No fixed furniture: 3F is set up per event, so it opens empty and offers only the Empty preset (presetsOnly);
-   people can still save their own presets. Positions inherit 2F's ±0.5 m. */
+   people can still save their own presets. Positions inherit 2F's ±0.5 m. 
+   2026/11/13 — room zones (backyard, lab space 1, lounge, lab space 2, war room) and a YEP 2026 preset with the
+   cloak in lab space 1, from the 11/10 YEP layout draft. The conference room east of the war room is outside
+   this outline. Entrance from the EV hall = the core doors (kept clear). */
 (window.PLANS = window.PLANS || {})['3F'] = {
  "meta": {
   "name": "FabCafe 3F",
@@ -508,32 +511,81 @@
   }
  ],
  "furniture": [],
- "presets": [],
+ "presets": [
+  {
+   "id": "yep-2026",
+   "en": "YEP 2026 (draft)",
+   "jp": "YEP 2026（案）",
+   "sub_en": "Cloak in lab space 1, Theme A in the war room, Theme B in the lounge — from the 11/10 layout draft (±0.5 m)",
+   "sub_jp": "クロークはラボスペース1、テーマAはウォールーム、テーマBはラウンジ（11/10版レイアウト案より・±0.5m）",
+   "items": [
+    {
+     "type": "zone",
+     "x": 3400,
+     "y": 7500,
+     "rot": 45,
+     "w": 5000,
+     "h": 5000,
+     "label": "Cloak クローク",
+     "color": "gray"
+    },
+    {
+     "type": "zone",
+     "x": 7560,
+     "y": 11330,
+     "rot": 0,
+     "w": 5200,
+     "h": 4200,
+     "label": "Theme B テーマB",
+     "color": "orange"
+    },
+    {
+     "type": "zone",
+     "x": 14430,
+     "y": 12470,
+     "rot": 0,
+     "w": 6870,
+     "h": 7180,
+     "label": "Theme A テーマA",
+     "color": "lavender"
+    },
+    {
+     "type": "note",
+     "x": 9800,
+     "y": 9700,
+     "rot": 0,
+     "label": "入口 Entrance ↓",
+     "fs": 260
+    }
+   ]
+  }
+ ],
  "defaultPreset": "empty",
  "presetsOnly": [
-  "empty"
+  "empty",
+  "yep-2026"
  ],
  "keepClear": [
   {
-   "id": "lobby",
-   "label_en": "Lobby door",
-   "label_jp": "EVホール側の入口",
+   "id": "entrance",
+   "label_en": "Entrance (core doors)",
+   "label_jp": "入口（コア側の扉）",
    "points": [
     [
-     4483,
-     600
+     8900,
+     8932
     ],
     [
-     7337,
-     600
+     10740,
+     8932
     ],
     [
-     7337,
-     4000
+     10740,
+     10400
     ],
     [
-     4483,
-     4000
+     8900,
+     10400
     ]
    ]
   }
@@ -547,5 +599,211 @@
    "floor_z_mm": 0
   },
   "notes": "Ceiling 3400 mm / beam underside 2600 mm (measured on 3F for the year-end party layout)."
- }
+ },
+ "areas": [
+  {
+   "id": "backyard",
+   "label_en": "Backyard",
+   "label_jp": "バックヤード",
+   "owner": "loftwork",
+   "label_at": [
+    3900,
+    400
+   ],
+   "points": [
+    [
+     3729,
+     -1291
+    ],
+    [
+     4483,
+     -2152
+    ],
+    [
+     5965,
+     -2152
+    ],
+    [
+     5965,
+     600
+    ],
+    [
+     7337,
+     600
+    ],
+    [
+     7337,
+     3985
+    ],
+    [
+     1422,
+     3985
+    ],
+    [
+     2241,
+     2116
+    ]
+   ]
+  },
+  {
+   "id": "lab1",
+   "label_en": "Lab space 1 (YEP: cloak)",
+   "label_jp": "ラボスペース1（YEP時はクローク）",
+   "owner": "loftwork",
+   "label_at": [
+    1700,
+    4500
+   ],
+   "points": [
+    [
+     1422,
+     3985
+    ],
+    [
+     7337,
+     3985
+    ],
+    [
+     6858,
+     8932
+    ],
+    [
+     3300,
+     12300
+    ],
+    [
+     3122,
+     12170
+    ],
+    [
+     -179,
+     8786
+    ],
+    [
+     -359,
+     8302
+    ],
+    [
+     -233,
+     7764
+    ]
+   ]
+  },
+  {
+   "id": "lounge",
+   "label_en": "Lounge",
+   "label_jp": "ラウンジ",
+   "owner": "loftwork",
+   "label_at": [
+    7300,
+    9400
+   ],
+   "points": [
+    [
+     6858,
+     8932
+    ],
+    [
+     10740,
+     8932
+    ],
+    [
+     10740,
+     12900
+    ],
+    [
+     10048,
+     12935
+    ],
+    [
+     7083,
+     13500
+    ],
+    [
+     3300,
+     12300
+    ]
+   ]
+  },
+  {
+   "id": "lab2",
+   "label_en": "Lab space 2",
+   "label_jp": "ラボスペース2",
+   "owner": "loftwork",
+   "label_at": [
+    5200,
+    13700
+   ],
+   "points": [
+    [
+     3300,
+     12300
+    ],
+    [
+     7083,
+     13500
+    ],
+    [
+     10048,
+     12935
+    ],
+    [
+     10480,
+     15607
+    ],
+    [
+     10480,
+     16682
+    ],
+    [
+     7300,
+     16450
+    ],
+    [
+     3122,
+     12170
+    ]
+   ]
+  },
+  {
+   "id": "warroom",
+   "label_en": "War room",
+   "label_jp": "ウォールーム",
+   "owner": "loftwork",
+   "label_at": [
+    11000,
+    8800
+   ],
+   "points": [
+    [
+     10740,
+     8200
+    ],
+    [
+     18260,
+     8200
+    ],
+    [
+     18260,
+     17250
+    ],
+    [
+     10480,
+     16682
+    ],
+    [
+     10480,
+     15607
+    ],
+    [
+     10048,
+     12935
+    ],
+    [
+     10740,
+     12900
+    ]
+   ]
+  }
+ ]
 };
