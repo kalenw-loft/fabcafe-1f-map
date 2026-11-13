@@ -18,20 +18,28 @@
    pixel read suggested the 受付 (reception) counter in `fixed` may sit ~0.5–1m further south/east than the drawing
    shows it — the two independent pixel reads I tried disagreed with each other enough that I'm not confident
    enough in a number to change it; worth a human eyeballing lw10F.pdf vs this file's reception box next time
-   someone's in the room. Estimated error elsewhere: ±150–300mm (tracing/raster error), grid itself: ~0mm. */
+   someone's in the room. Estimated error elsewhere: ±150–300mm (tracing/raster error), grid itself: ~0mm. 
+   2026/11/13 — furniture, areas and the RB preset re-laid from the RB 山崎 event sheet (動態表 → layout tab).
+   That image is this plan rotated 90° CCW at ~14.5 mm/px (sofa + kitchen island land within 0.4 m), so positions
+   are ±0.5 m. The old per-table "placeholder" areas are replaced by room zones, like 1F. */
 (window.PLANS = window.PLANS || {})['10F'] = {
  "meta": {
   "name": "Loftwork COOOP10 10F",
   "source": "10F_loft_平面 (BATTA NATION, 2017/12/24 情報更新)",
   "units": "mm",
   "titleNote": "source plan 2017/12",
-  "tenant": {"en": "Loftwork COOOP10", "jp": "ロフトワーク COOOP10", "owner": "loftwork"}
+  "tenant": {
+   "en": "Loftwork COOOP10",
+   "jp": "ロフトワーク COOOP10",
+   "owner": "loftwork",
+   "short": "Loftwork"
+  }
  },
- "normal_en": "Usual (2017 plan)",
+ "normal_en": "Usual",
  "normal_jp": "通常",
  "normal_sub": {
-  "en": "Stools + sofa as drawn on the 2017 plan — check against the room",
-  "jp": "2017年の図面どおり（スツール・ソファ）— 実物と要確認"
+  "en": "Big tables, window tables, sofa + stools",
+  "jp": "大テーブル・窓側の机・ソファ・スツール"
  },
  "stage": {
   "x": 17000,
@@ -681,6 +689,46 @@
  ],
  "furniture": [
   {
+   "x": 14530,
+   "y": 12100,
+   "rot": 0,
+   "type": "table-long",
+   "w": 2700,
+   "h": 1500
+  },
+  {
+   "x": 14900,
+   "y": 15290,
+   "rot": 0,
+   "type": "table-long",
+   "w": 2700,
+   "h": 1500
+  },
+  {
+   "x": 8690,
+   "y": 14350,
+   "rot": 0,
+   "type": "table-long",
+   "w": 2100,
+   "h": 700
+  },
+  {
+   "x": 4270,
+   "y": 11590,
+   "rot": 45,
+   "type": "table-sq",
+   "w": 900,
+   "h": 900
+  },
+  {
+   "x": 1510,
+   "y": 7680,
+   "rot": 25,
+   "type": "table-sq",
+   "w": 900,
+   "h": 900
+  },
+  {
    "type": "stool",
    "x": 571,
    "y": 7174,
@@ -791,61 +839,417 @@
  ],
  "areas": [
   {
-   "id": "area-sofa",
-   "label_en": "Sofa",
-   "label_jp": "ソファ",
+   "id": "hall",
+   "label_at": [
+    10950,
+    9800
+   ],
+   "label_en": "Main hall",
+   "label_jp": "メインホール",
    "owner": "loftwork",
-   "points": [[7800, 15563], [10310, 15563], [10310, 16370], [7800, 16370]]
+   "points": [
+    [
+     10740,
+     9100
+    ],
+    [
+     12909,
+     9100
+    ],
+    [
+     13000,
+     9199
+    ],
+    [
+     18260,
+     10454
+    ],
+    [
+     18260,
+     17250
+    ],
+    [
+     11800,
+     16780
+    ],
+    [
+     10740,
+     16700
+    ]
+   ]
   },
   {
-   "id": "area-kitchen",
+   "id": "lounge",
+   "label_at": [
+    7750,
+    9750
+   ],
+   "label_en": "Sofa lounge",
+   "label_jp": "ソファラウンジ",
+   "owner": "loftwork",
+   "points": [
+    [
+     7530,
+     9235
+    ],
+    [
+     10740,
+     9235
+    ],
+    [
+     10740,
+     16700
+    ],
+    [
+     7300,
+     16450
+    ],
+    [
+     7530,
+     12000
+    ]
+   ]
+  },
+  {
+   "id": "window",
+   "label_at": [
+    700,
+    6800
+   ],
+   "label_en": "Window side",
+   "label_jp": "窓側",
+   "owner": "loftwork",
+   "points": [
+    [
+     -179,
+     8786
+    ],
+    [
+     -359,
+     8302
+    ],
+    [
+     -233,
+     7764
+    ],
+    [
+     2241,
+     2116
+    ],
+    [
+     5146,
+     2116
+    ],
+    [
+     5146,
+     9109
+    ],
+    [
+     7530,
+     9235
+    ],
+    [
+     7530,
+     12000
+    ],
+    [
+     7300,
+     16450
+    ]
+   ]
+  },
+  {
+   "id": "kitchen",
+   "label_at": [
+    5300,
+    5300
+   ],
    "label_en": "Kitchen & counter",
    "label_jp": "キッチン＆カウンター",
    "owner": "loftwork",
-   "points": [[5146, 4895], [7442, 4895], [7442, 9109], [5146, 9109]]
-  },
-  {
-   "id": "area-table-s-a",
-   "label_en": "Small table A",
-   "label_jp": "小テーブルA",
-   "owner": "loftwork",
-   "points": [[4050, 10050], [4950, 10050], [4950, 10950], [4050, 10950]],
-   "note": "placeholder — not drawn on any source plan (2017/2012 CAD predates it); position is a guess, check in the room"
-  },
-  {
-   "id": "area-table-s-b",
-   "label_en": "Small table B",
-   "label_jp": "小テーブルB",
-   "owner": "loftwork",
-   "points": [[5750, 11350], [6650, 11350], [6650, 12250], [5750, 12250]],
-   "note": "placeholder — not drawn on any source plan; position is a guess, check in the room"
-  },
-  {
-   "id": "area-table-s-c",
-   "label_en": "Small table C",
-   "label_jp": "小テーブルC",
-   "owner": "loftwork",
-   "points": [[7550, 12750], [8450, 12750], [8450, 13650], [7550, 13650]],
-   "note": "placeholder — not drawn on any source plan; position is a guess, check in the room"
-  },
-  {
-   "id": "area-table-l-a",
-   "label_en": "Large table A",
-   "label_jp": "大テーブルA",
-   "owner": "loftwork",
-   "points": [[12100, 11050], [13900, 11050], [13900, 11950], [12100, 11950]],
-   "note": "placeholder — not drawn on any source plan; position is a guess, check in the room"
-  },
-  {
-   "id": "area-table-l-b",
-   "label_en": "Large table B",
-   "label_jp": "大テーブルB",
-   "owner": "loftwork",
-   "points": [[14600, 13050], [16400, 13050], [16400, 13950], [14600, 13950]],
-   "note": "placeholder — not drawn on any source plan; position is a guess, check in the room"
+   "points": [
+    [
+     5146,
+     4895
+    ],
+    [
+     7442,
+     4895
+    ],
+    [
+     7442,
+     9109
+    ],
+    [
+     5146,
+     9109
+    ]
+   ]
   }
  ],
  "presets": [
+  {
+   "id": "rb-2026-10",
+   "en": "Talk + tables (RB 2026/10)",
+   "jp": "トーク＋テーブル（RB 2026/10）",
+   "sub_en": "From the RB 山崎 event sheet (layout tab): 2 big tables + 4 tables from 2F, PA, reception at the inner door",
+   "sub_jp": "RB山崎イベントの動態表「layout」より：大テーブル2台＋2Fの机4台、PA、奥の扉で受付",
+   "items": [
+    {
+     "x": 14530,
+     "y": 12100,
+     "rot": 0,
+     "type": "table-long",
+     "w": 2700,
+     "h": 1500
+    },
+    {
+     "x": 14900,
+     "y": 15290,
+     "rot": 0,
+     "type": "table-long",
+     "w": 2700,
+     "h": 1500
+    },
+    {
+     "x": 8690,
+     "y": 14350,
+     "rot": 0,
+     "type": "table-long",
+     "w": 2100,
+     "h": 700
+    },
+    {
+     "x": 15070,
+     "y": 11090,
+     "rot": 0,
+     "type": "chair"
+    },
+    {
+     "x": 14060,
+     "y": 11090,
+     "rot": 0,
+     "type": "chair"
+    },
+    {
+     "x": 15390,
+     "y": 13190,
+     "rot": 180,
+     "type": "chair"
+    },
+    {
+     "x": 14490,
+     "y": 13190,
+     "rot": 180,
+     "type": "chair"
+    },
+    {
+     "x": 13720,
+     "y": 13190,
+     "rot": 180,
+     "type": "chair"
+    },
+    {
+     "x": 15360,
+     "y": 14320,
+     "rot": 0,
+     "type": "chair"
+    },
+    {
+     "x": 14390,
+     "y": 14320,
+     "rot": 0,
+     "type": "chair"
+    },
+    {
+     "x": 15800,
+     "y": 16410,
+     "rot": 180,
+     "type": "chair"
+    },
+    {
+     "x": 14900,
+     "y": 16410,
+     "rot": 180,
+     "type": "chair"
+    },
+    {
+     "x": 14100,
+     "y": 16410,
+     "rot": 180,
+     "type": "chair"
+    },
+    {
+     "x": 11290,
+     "y": 11130,
+     "rot": 0,
+     "type": "table-sq",
+     "w": 800,
+     "h": 1300
+    },
+    {
+     "x": 10260,
+     "y": 11130,
+     "rot": 0,
+     "type": "table-sq",
+     "w": 800,
+     "h": 1300
+    },
+    {
+     "x": 11110,
+     "y": 9970,
+     "rot": 0,
+     "type": "chair"
+    },
+    {
+     "x": 10200,
+     "y": 9970,
+     "rot": 0,
+     "type": "chair"
+    },
+    {
+     "x": 11270,
+     "y": 12000,
+     "rot": 180,
+     "type": "chair"
+    },
+    {
+     "x": 10290,
+     "y": 12000,
+     "rot": 180,
+     "type": "chair"
+    },
+    {
+     "x": 11880,
+     "y": 14610,
+     "rot": 0,
+     "type": "table-sq",
+     "w": 800,
+     "h": 1300
+    },
+    {
+     "x": 10970,
+     "y": 14610,
+     "rot": 0,
+     "type": "table-sq",
+     "w": 800,
+     "h": 1300
+    },
+    {
+     "x": 12140,
+     "y": 13450,
+     "rot": 0,
+     "type": "chair"
+    },
+    {
+     "x": 11110,
+     "y": 13450,
+     "rot": 0,
+     "type": "chair"
+    },
+    {
+     "x": 11810,
+     "y": 15770,
+     "rot": 180,
+     "type": "chair"
+    },
+    {
+     "x": 10020,
+     "y": 14700,
+     "rot": 270,
+     "type": "chair"
+    },
+    {
+     "x": 4270,
+     "y": 11590,
+     "rot": 45,
+     "type": "table-sq",
+     "w": 900,
+     "h": 900
+    },
+    {
+     "x": 1510,
+     "y": 7680,
+     "rot": 25,
+     "type": "table-sq",
+     "w": 900,
+     "h": 900
+    },
+    {
+     "x": 13870,
+     "y": 10070,
+     "rot": 0,
+     "type": "zone",
+     "w": 1000,
+     "h": 1000,
+     "label": "PA 音響",
+     "color": "lavender"
+    },
+    {
+     "x": 8440,
+     "y": 9850,
+     "rot": 0,
+     "type": "zone",
+     "w": 800,
+     "h": 1500,
+     "label": "Reception 受付",
+     "color": "sky"
+    },
+    {
+     "x": 5960,
+     "y": 10070,
+     "rot": 90,
+     "type": "table-long",
+     "w": 1900,
+     "h": 600
+    },
+    {
+     "x": 5960,
+     "y": 10070,
+     "rot": 0,
+     "type": "note",
+     "label": "ソファ机：荷物置き",
+     "fs": 150
+    },
+    {
+     "x": 4270,
+     "y": 8090,
+     "rot": 0,
+     "type": "zone",
+     "w": 900,
+     "h": 2500,
+     "label": "Chairs 椅子置き場",
+     "color": "gray"
+    },
+    {
+     "type": "zone",
+     "x": 5240,
+     "y": 13700,
+     "w": 3300,
+     "h": 600,
+     "rot": 46,
+     "label": "Magazines 雑誌",
+     "color": "yellow"
+    },
+    {
+     "type": "zone",
+     "x": 1870,
+     "y": 5320,
+     "w": 4500,
+     "h": 1500,
+     "rot": 294,
+     "label": "Green room 控室 / ドリンク",
+     "color": "orange"
+    },
+    {
+     "x": 3910,
+     "y": 4560,
+     "rot": 90,
+     "type": "projector-screen",
+     "w": 1400
+    }
+   ]
+  },
   {
    "id": "yep-10f",
    "en": "YEP exhibit 10F",
@@ -853,11 +1257,56 @@
    "sub_en": "2026 Year-End Party exhibit zones — approximate, scaled off the Drive \"10F floor map.png\" zoning overlay (not yep10F.pdf, which is just the blank architectural plan)",
    "sub_jp": "YEPの展示ゾーン（概算）。Driveの「10F floor map.png」配置図から縮尺換算 — yep10F.pdfは無地の図面のみで配置情報なし",
    "items": [
-    {"type": "zone", "x": 4630, "y": 2895, "rot": 0, "w": 2480, "h": 390, "label": "PJ展示 Projector display", "color": "lavender"},
-    {"type": "zone", "x": 5650, "y": 13610, "rot": 0, "w": 1340, "h": 1340, "label": "三谷バル Mitani Bar", "color": "orange"},
-    {"type": "zone", "x": 6565, "y": 14455, "rot": 0, "w": 1290, "h": 1290, "label": "timespace", "color": "sky"},
-    {"type": "zone", "x": 9105, "y": 14760, "rot": 0, "w": 1910, "h": 1120, "label": "シミュレーター AI simulator", "color": "lavender"},
-    {"type": "zone", "x": 14465, "y": 12275, "rot": 0, "w": 7470, "h": 7650, "label": "MVMNT", "color": "gray"}
+    {
+     "type": "zone",
+     "x": 4630,
+     "y": 2895,
+     "rot": 0,
+     "w": 2480,
+     "h": 390,
+     "label": "PJ展示 Projector display",
+     "color": "lavender"
+    },
+    {
+     "type": "zone",
+     "x": 5650,
+     "y": 13610,
+     "rot": 0,
+     "w": 1340,
+     "h": 1340,
+     "label": "三谷バル Mitani Bar",
+     "color": "orange"
+    },
+    {
+     "type": "zone",
+     "x": 6565,
+     "y": 14455,
+     "rot": 0,
+     "w": 1290,
+     "h": 1290,
+     "label": "timespace",
+     "color": "sky"
+    },
+    {
+     "type": "zone",
+     "x": 9105,
+     "y": 14760,
+     "rot": 0,
+     "w": 1910,
+     "h": 1120,
+     "label": "シミュレーター AI simulator",
+     "color": "lavender"
+    },
+    {
+     "type": "zone",
+     "x": 14465,
+     "y": 12275,
+     "rot": 0,
+     "w": 7470,
+     "h": 7650,
+     "label": "MVMNT",
+     "color": "gray"
+    }
    ]
   }
  ],
@@ -870,10 +1319,23 @@
     "url": "https://my.matterport.com/show/?m=2wLqAYP9nfx",
     "captured": "2026-09-14",
     "note": "COOOP10 walkthrough scan, shared 2026-09-14 — unregistered (no origin/rotation alignment to this plan yet)",
-    "register": {"origin_mm": [0, 0], "z_mm": 0, "rot_deg": 0, "scale": 1}
+    "register": {
+     "origin_mm": [
+      0,
+      0
+     ],
+     "z_mm": 0,
+     "rot_deg": 0,
+     "scale": 1
+    }
    }
   ],
-  "heights": {"floor_to_floor_mm": null, "ceiling_mm": 3400, "beam_mm": 2600, "floor_z_mm": 0},
+  "heights": {
+   "floor_to_floor_mm": null,
+   "ceiling_mm": 3400,
+   "beam_mm": 2600,
+   "floor_z_mm": 0
+  },
   "notes": "Ceiling/beam heights are the YEP_LAYOUT_2024 figures, measured for 3F — applied here as a same-shell placeholder since 10F wasn't separately measured; confirm before relying on them for 10F specifically. floor_to_floor_mm not available from any source read."
  }
 };
