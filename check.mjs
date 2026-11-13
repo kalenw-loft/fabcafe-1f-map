@@ -17,7 +17,7 @@ const dom = new JSDOM(html, { runScripts: 'dangerously', pretendToBeVisual: true
   } });
 const w = dom.window;
 await new Promise(r => setTimeout(r, 500));
-const out = { errors, seats: w.document.querySelector('#st-seats')?.textContent, api: !!w.FC_MAP, memo: !!w.FC_MEMO, print: !!w.FC_PRINT };
+const out = { errors, seats: w.document.querySelector('#st-seats')?.textContent, api: !!w.FC_MAP, print: !!w.FC_PRINT };
 if (w.FC_MAP) { out.stats = w.FC_MAP.stats(); out.svgLen = w.FC_MAP.svg().length; out.cafeSvgLen = w.FC_MAP.svg(w.FC_MAP.presetItems('cafe'), '通常営業').length; }
 if (process.argv.includes('--extra') && w.__extraCheck) out.extra = await w.__extraCheck();
 console.log(JSON.stringify(out, null, 1));

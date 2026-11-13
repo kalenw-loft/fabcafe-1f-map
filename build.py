@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the single-file FabCafe Floor Map (1F / 2F / 3F / 10F): editor + floor data + staff sheet + print composer.
+"""Build the single-file FabCafe Floor Map (1F / 2F / 3F / 10F): editor + floor data + print composer.
 
     python3 build.py        -> fabcafe-1f-map.html (artifact) + index.html (web)
 """
@@ -24,15 +24,15 @@ def main():
         assert s.count(tag) == 1, n + ' tag not found'
         s = s.replace(tag, '<script>\n' + opt(n).replace('</script', '<\\/script') + '\n</script>')
 
-    css = ''.join(f'<style id="{n.replace(".", "-")}">\n{opt(n)}\n</style>\n' for n in ('memo.css', 'print.css', 'sim.css') if opt(n))
+    css = ''.join(f'<style id="{n.replace(".", "-")}">\n{opt(n)}\n</style>\n' for n in ('print.css', 'sim.css') if opt(n))
     anchor = '<style id="plan-css"></style>\n'
     assert s.count(anchor) == 1, 'plan-css anchor not found'
     s = s.replace(anchor, anchor + css)
 
     # modules load after the editor script, so window.FC_MAP / window.FC_SIM already exist.
-    # sim.js is optional (none committed yet — see SIMULATION.md); it slots in next to memo/print.
+    # sim.js is optional (none committed yet — see SIMULATION.md); it slots in next to print.
     tail = ''
-    for mod in ('memo', 'print', 'sim'):
+    for mod in ('print', 'sim'):
         tail += opt(mod + '.html')
         if opt(mod + '.js'):
             tail += f'\n<script>\n{opt(mod + ".js")}\n</script>\n'

@@ -1,5 +1,5 @@
 // Headless test for switching floors in place (no reload): JSDOM_FROM=<dir with jsdom>/x node check-switch.mjs
-// 1F edit -> 2F -> back to 1F: each floor keeps its own draft, presets and staff sheet; print reads the live floor.
+// 1F edit -> 2F -> back to 1F: each floor keeps its own draft and presets; print reads the live floor.
 import { createRequire } from 'module';
 const require = createRequire(process.env.JSDOM_FROM || import.meta.url);
 const { JSDOM, VirtualConsole } = require('jsdom');
@@ -26,28 +26,25 @@ const click = sel => { const n = d.querySelector(sel); if (!n) throw new Error('
 const presets = () => [...d.querySelectorAll('#menu-presets [data-preset]')].map(b => b.dataset.preset);
 const r = {};
 
-// 1F: change the plan (Empty preset) and name the staff sheet
+// 1F: change the plan (Empty preset)
 r.p1 = presets();
 click('#preset-empty');
-w.FC_MEMO.set(Object.assign(w.FC_MEMO.get(), {eventName:'1F event'}));
 const items1 = w.FC_MAP.getLayout().items.length;
 
 // -> 2F
 click('#floor-2F');
 await wait(400);
-r.after2 = {floor: w.FC_MAP.floor(), title: d.title, hash: w.location.hash, items: w.FC_MAP.getLayout().items.length, memo: w.FC_MEMO.get().eventName,
+r.after2 = {floor: w.FC_MAP.floor(), title: d.title, hash: w.location.hash, items: w.FC_MAP.getLayout().items.length,
   pressed: [...d.querySelectorAll('#floor-seg button[aria-pressed="true"]')].map(b => b.id), presets: presets()};
 expect(r.after2.floor === '2F', 'FC_MAP.floor() is 2F');
 expect(r.after2.title === 'FabCafe 2F Map', 'title follows floor');
 expect(r.after2.hash === '#floor=2F', 'hash follows floor');
 expect(r.after2.pressed.join() === 'floor-2F', 'only 2F pressed');
 expect(!r.after2.presets.includes('talk'), '1F-only Talk preset hidden on 2F');
-expect(r.after2.memo !== '1F event', 'staff sheet is per floor');
 expect(w.localStorage.getItem('fabcafe-map:floor') === '2F', 'floor pref saved');
 expect(JSON.parse(w.localStorage.getItem('fabcafe-1f-map:v1')).draft.items.length === items1, '1F draft written before leaving');
 
 // 2F edit, print reads 2F
-w.FC_MEMO.set(Object.assign(w.FC_MEMO.get(), {eventName:'2F event'}));
 click('#btn-print');
 await wait(100);
 r.printText2 = (d.querySelector('#pd') || {}).textContent || '';
@@ -57,12 +54,10 @@ const esc = new w.KeyboardEvent('keydown', {key:'Escape', bubbles:true}); d.disp
 d.querySelectorAll('.pd').forEach(n => n.hidden = true);
 click('#floor-1F');
 await wait(400);
-r.back1 = {floor: w.FC_MAP.floor(), items: w.FC_MAP.getLayout().items.length, memo: w.FC_MEMO.get().eventName, presets: presets()};
+r.back1 = {floor: w.FC_MAP.floor(), items: w.FC_MAP.getLayout().items.length, presets: presets()};
 expect(r.back1.floor === '1F', 'back on 1F');
 expect(r.back1.items === items1, '1F draft restored');
-expect(r.back1.memo === '1F event', '1F staff sheet restored');
 expect(r.back1.presets.join() === r.p1.join(), '1F presets identical after round trip');
-expect(JSON.parse(w.localStorage.getItem('fabcafe-1f-map:2F:memo:v1')).byLayout.draft.eventName === '2F event', '2F staff sheet saved under its own key');
 
 // every floor once, stats sane, no errors, no reloads
 r.tour = [];

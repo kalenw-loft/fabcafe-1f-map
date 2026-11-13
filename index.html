@@ -264,7 +264,6 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
   .tool-group button{width:34px;height:34px}
   .zoom-read{display:none}
 }
-#btn-memo{display:none} /* staff-only; reachable from the print dialog (編集), kept out of the public toolbar */
 @media (max-width: 420px){
   .brand-sub{display:none}
   .logo-tag{width:80px}
@@ -306,244 +305,6 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
 }
 </style>
 <style id="plan-css"></style>
-<style id="memo-css">
-/* ---------- 当日シート overlay (screen) ---------- */
-.memo{position:fixed;inset:0;z-index:45;background:var(--bg);color:var(--fg);display:flex;flex-direction:column;font-family:"Hiragino Sans","Noto Sans JP",var(--font-text)}
-.memo-bar{flex:none;display:flex;align-items:center;gap:12px;height:56px;padding:0 16px;border-bottom:1px solid var(--line);min-width:0}
-.memo-h{margin:0;font:700 20px/1 var(--font-display);letter-spacing:.02em;display:flex;align-items:baseline;gap:10px;min-width:0;white-space:nowrap}
-.memo-h small{font:500 12px/1 var(--font-text);color:var(--fg-muted);letter-spacing:0}
-.memo-acts{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none}
-.memo-confirm{display:flex;align-items:center;gap:6px;padding:4px 4px 4px 10px;border:1px solid var(--accent-text);border-radius:var(--r-sm);background:var(--red-tint);font-size:12px}
-.memo-confirm .btn{height:26px;padding:0 10px;font-size:12px}
-.memo-tabs{display:none}
-.memo-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(320px,440px) minmax(0,1fr)}
-.memo-form{overflow-y:auto;padding:4px 16px 48px;border-right:1px solid var(--line)}
-.memo-form fieldset{border:0;margin:0;padding:16px 0 4px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px 10px}
-.memo-form fieldset + fieldset{border-top:1px solid var(--line)}
-.memo-form legend{float:left;grid-column:1 / -1;width:100%;padding:0;margin:0 0 2px;font:700 17px/1.2 var(--font-display);letter-spacing:.02em}
-.memo-form legend small{margin-left:8px;font:500 11px/1 var(--font-text);color:var(--fg-muted);letter-spacing:.06em;text-transform:uppercase}
-.mf{display:flex;flex-direction:column;gap:4px;min-width:0;grid-column:span 6}
-.mf.w3{grid-column:span 3}
-.mf.w2{grid-column:span 2}
-.mf label,.mf .lab{font-size:13px;font-weight:700;line-height:1.3}
-.mf label small,.mf .lab small{display:block;font-size:11px;font-weight:400;color:var(--fg-muted);letter-spacing:.02em}
-.mf input,.mf textarea{width:100%;min-width:0;height:36px;padding:0 10px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:14px}
-.mf textarea{height:64px;padding:8px 10px;resize:vertical;line-height:1.45}
-.mf input:focus,.mf textarea:focus{border-color:var(--fg);outline:none}
-.mf input.time{font-family:var(--font-mono);font-variant-numeric:tabular-nums;text-align:center;padding:0 4px}
-.mf .hint{margin:0;font-size:11.5px;line-height:1.4;color:var(--accent-text)}
-.mf .hint::before{content:"社内メモ・印刷されません　";font-weight:700}
-.mf .help{margin:0;font-size:11.5px;line-height:1.4;color:var(--fg-muted)}
-.memo-seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
-.memo-seg.segn3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.memo-seg button{height:36px;border:0;background:var(--bg);cursor:pointer;font-size:13px;font-weight:500;padding:0 4px;white-space:nowrap}
-.memo-seg button + button{border-left:1px solid var(--line)}
-.memo-seg button[aria-pressed="true"]{background:var(--red);color:#fff;border-radius:0 0 9px 9px}
-
-/* ---------- timeline editor (flexible rows) ---------- */
-.mf-timeline,.mf-shifts-fs{grid-column:1 / -1}
-.mf-rows{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
-.mf-row{border:1px solid var(--line);border-radius:var(--r-sm);padding:6px 8px;display:flex;flex-direction:column;gap:6px}
-.mf-row-top{display:flex;align-items:center;gap:6px}
-.mf-row-ord{display:flex;flex-direction:column;flex:none;gap:2px}
-.mf-row-ord button{width:20px;height:16px;border:1px solid var(--line);border-radius:3px;background:var(--bg);font-size:8px;line-height:1;cursor:pointer;padding:0;color:var(--fg)}
-.mf-row-ord button:disabled{opacity:.3;cursor:default}
-.mf-row-label{flex:1;min-width:0;height:32px;padding:0 8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:13px;font-weight:700}
-.mf-row-del{flex:none;width:28px;height:28px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);cursor:pointer;color:var(--fg-muted);font-size:12px}
-.mf-row-del:disabled{opacity:.3;cursor:default}
-.mf-row-bot{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:6px;align-items:center}
-.mf-row-time{height:30px;padding:0 6px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-family:var(--font-mono);font-size:12px;text-align:center}
-.mf-row-note{height:30px;min-width:0;padding:0 8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px}
-.mf-row-hi{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--fg-muted);white-space:nowrap;flex:none;cursor:pointer}
-.mf-row-hi input{margin:0}
-.mf-rows-add{margin-bottom:10px}
-.mf-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.mf-chip{height:26px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:var(--bg);font-size:12px;cursor:pointer}
-.mf-chip:hover{border-color:var(--fg)}
-.mf-templates{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:6px}
-.mf-templates .lab{font-size:12px;font-weight:700}
-.mf-templates .lab small{display:block;font-size:10px;font-weight:400;color:var(--fg-muted)}
-.mf-templates button small{display:block;font-size:9px;font-weight:400;opacity:.75}
-.mf-shifts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.mf-shift{border:1px solid var(--line);border-radius:var(--r-sm);padding:8px;display:flex;flex-direction:column;gap:6px;min-width:0}
-.mf-shift-lab{font-size:12px;font-weight:700}
-.mf-shift-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
-.mf-shift-grid input{height:30px;min-width:0;padding:0 8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px}
-.memo-prev{overflow:auto;background:var(--plan-bg);padding:24px 16px 48px;min-width:0}
-.memo-scaler{position:relative;margin:0 auto;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.08),0 8px 28px rgba(0,0,0,.10)}
-.memo-scaler > .memo-sheet{position:absolute;left:0;top:0;transform-origin:0 0}
-.memo-prev-note{max-width:560px;margin:12px auto 0;text-align:center;font-size:12px;color:var(--fg-muted)}
-.memo-copybox{position:absolute;left:50%;top:72px;transform:translateX(-50%);width:min(560px,calc(100% - 32px));z-index:2;background:var(--bg);border:1px solid var(--fg);border-radius:var(--r-md);padding:16px}
-.memo-copybox p{margin:0 0 8px;font-size:13px;color:var(--fg-muted)}
-.memo-copybox textarea{width:100%;height:220px;padding:10px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);font:12px/1.5 var(--font-mono);resize:vertical}
-.memo-copybox .btn-row{justify-content:flex-end;margin-top:8px}
-@media (max-width: 1080px){ .memo-bar .memo-h small{display:none} }
-@media (max-width: 760px){
-  .memo-bar{gap:8px;padding:0 16px}
-  .memo-acts{gap:4px}
-  .memo-bar .btn .lbl{display:none}
-  .memo-bar .btn{width:34px;padding:0}
-  .memo-bar #memo-back{width:auto;padding:0 8px}
-  .memo-bar #memo-back .lbl{display:inline}
-  .memo-confirm{position:absolute;left:16px;right:16px;top:60px;z-index:3;justify-content:flex-end}
-  .memo-confirm > span{flex:1}
-  .memo-confirm .btn{width:auto!important;padding:0 10px!important}
-  .memo-h{font-size:17px}
-  .memo-tabs{display:flex;gap:4px;padding:0 16px;border-bottom:1px solid var(--line);flex:none}
-  .memo-tabs button{flex:1;height:38px;border:0;background:transparent;font-size:13px;font-weight:500;color:var(--fg-muted);cursor:pointer}
-  .memo-tabs button[aria-selected="true"]{background:var(--red);color:#fff;border-radius:0 0 10px 10px}
-  .memo-body{display:block;overflow-y:auto}
-  .memo-body[data-tab="form"] .memo-prev,.memo-body[data-tab="prev"] .memo-form{display:none}
-  .memo-form{border-right:0;overflow:visible}
-  .memo-prev{overflow:visible;padding:16px 16px 48px}
-  .mf.w3{grid-column:span 6}
-  .mf.w2{grid-column:span 3}
-  .mf-shifts{grid-template-columns:1fr}
-  .mf-row-bot{grid-template-columns:62px minmax(0,1fr) auto}
-}
-
-/* ---------- The sheet itself: one A4 page, always light ---------- */
-.memo-sheet{
-  --s-red:#d80c0e; --s-ink:#231815; --s-mute:#5f5f5f; --s-line:#cfcfcf; --s-soft:#f3f3f3;
-  width:210mm;height:297mm;box-sizing:border-box;padding:11mm 12mm 10mm;overflow:hidden;
-  display:flex;flex-direction:column;gap:2.8mm;
-  background:#fff;color:var(--s-ink);
-  font:400 9pt/1.5 "Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",Meiryo,sans-serif;
-  -webkit-print-color-adjust:exact;print-color-adjust:exact;text-align:left;letter-spacing:0;
-}
-.memo-sheet *{box-sizing:border-box}
-.memo-sheet h1,.memo-sheet h2,.memo-sheet h3,.memo-sheet p,.memo-sheet ol,.memo-sheet ul,.memo-sheet dl,.memo-sheet dd{margin:0;padding:0}
-.memo-sheet b,.memo-sheet strong{font-weight:700}
-.memo-sheet .num{font-family:"Helvetica Neue Condensed Bold","HelveticaNeue-CondensedBold","Roboto Condensed","Arial Narrow",sans-serif;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.01em}
-.memo-sheet .c1,.memo-sheet .c2,.memo-sheet .c3{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
-.memo-sheet .c1{-webkit-line-clamp:1}
-.memo-sheet .c2{-webkit-line-clamp:2}
-.memo-sheet .c3{-webkit-line-clamp:3}
-.memo-sheet .ln{display:inline-block;min-width:28mm;height:1em;border-bottom:.3mm solid var(--s-ink);vertical-align:-.2em}
-.memo-sheet .ln.s{min-width:16mm}
-.memo-sheet .ln.l{min-width:60mm}
-.memo-sheet .k{display:block;font-size:7.5pt;line-height:1.3;color:var(--s-mute);font-weight:700;letter-spacing:.04em}
-
-/* header */
-.ms-head{display:flex;flex-direction:column;gap:1.4mm}
-.ms-top{display:flex;align-items:flex-start;gap:3mm;margin-top:-7mm}
-.ms-tag{display:inline-flex;align-items:flex-end;height:11mm;padding:0 2.6mm 1.4mm;background:var(--s-red);color:#fff;border-radius:0 0 3mm 3mm;font:700 13pt/1 "Helvetica Neue Condensed Bold","HelveticaNeue-CondensedBold","Roboto Condensed","Arial Narrow",sans-serif}
-.ms-kind{padding-top:4.6mm;font-size:10pt;font-weight:700;letter-spacing:.06em}
-.ms-kind small{margin-left:2mm;font-size:8pt;font-weight:400;color:var(--s-mute);letter-spacing:0}
-.ms-map{margin-left:auto;padding-top:4.8mm;max-width:70mm;font-size:7.5pt;color:var(--s-mute);text-align:right}
-.ms-title{font-size:17pt;line-height:1.25;font-weight:700;letter-spacing:.01em;margin-top:1mm}
-.ms-title .ln{min-width:110mm;height:9mm}
-.ms-meta{display:flex;flex-wrap:wrap;gap:1mm 8mm;font-size:9.5pt;padding-bottom:2.4mm;border-bottom:.5mm solid var(--s-ink)}
-.ms-meta > span{display:flex;align-items:baseline;gap:2mm;min-width:0;max-width:100%}
-.ms-meta .k{display:inline;font-size:7.5pt}
-.ms-meta .c1{max-width:110mm}
-
-/* time strip — variable row count (1–8); >5 wraps to 2 rows of 4 with smaller type */
-.ms-times ol{list-style:none;display:grid;grid-template-columns:repeat(var(--cols,5),minmax(0,1fr));gap:3.5mm}
-.ms-times li{position:relative;border:.35mm solid var(--s-ink);border-radius:0 0 2.4mm 2.4mm;padding:1.4mm 2mm 1.2mm;min-width:0}
-.ms-times li + li::before{content:"";position:absolute;left:-3.1mm;top:50%;width:0;height:0;border-left:1.8mm solid var(--s-ink);border-top:1.3mm solid transparent;border-bottom:1.3mm solid transparent;transform:translateY(-50%)}
-.ms-times .k{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ms-times .v{display:block;font-size:22pt;line-height:1.05;white-space:nowrap;overflow:hidden}
-.ms-times .v .blank{display:inline-flex;align-items:flex-end;gap:.8mm;height:7.6mm;color:var(--s-mute)}
-.ms-times .v .blank i{display:inline-block;width:8mm;height:6.4mm;border-bottom:.35mm solid var(--s-ink)}
-.ms-times .v .blank b{font-size:15pt;line-height:1}
-.ms-times .rn{display:block;margin-top:.5mm;font-size:6.3pt;line-height:1.3;color:var(--s-mute);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ms-times li.go{background:var(--s-red);border-color:var(--s-red);color:#fff}
-.ms-times li.go .k{color:#fff}
-.ms-times li.go .v .blank{color:#fff}
-.ms-times li.go .v .blank i{border-color:#fff}
-.ms-times li.go .rn{color:#fff;opacity:.85}
-.ms-times .note{margin-top:1.6mm;font-size:8.5pt;color:var(--s-ink)}
-.ms-times .note b{color:var(--s-red)}
-.ms-times.two-row ol{gap:2.2mm 3mm}
-.ms-times.two-row li{padding:1mm 1.6mm .9mm}
-.ms-times.two-row li:nth-child(4n+1)::before{display:none}
-.ms-times.two-row .k{font-size:6.8pt}
-.ms-times.two-row .v{font-size:15pt}
-.ms-times.two-row .v .blank{height:5.4mm}
-.ms-times.two-row .v .blank i{width:6mm;height:4.6mm}
-.ms-times.two-row .v .blank b{font-size:11pt}
-.ms-times.two-row .rn{font-size:5.8pt}
-
-/* shifts — compact, optional, printed only if at least one shift has data */
-.ms-shifts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2mm 4mm;border:.35mm solid var(--s-ink);border-radius:0 0 2.4mm 2.4mm;padding:1.6mm 3mm}
-.ms-shifts .sh{display:flex;flex-wrap:wrap;align-items:baseline;gap:1.6mm;font-size:8.3pt;min-width:0}
-.ms-shifts .sh .tag{flex:none;font-size:7.3pt;background:var(--s-ink);color:#fff;padding:.3mm 1.8mm;border-radius:.8mm}
-.ms-shifts .sh .nm{font-weight:700}
-.ms-shifts .sh .tm{font-family:"Helvetica Neue Condensed Bold","HelveticaNeue-CondensedBold","Roboto Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:9.5pt}
-
-/* role band */
-.ms-role{display:grid;grid-template-columns:44mm minmax(0,1fr) 46mm;border:.35mm solid var(--s-ink);border-radius:0 0 2.4mm 2.4mm}
-.ms-role > div{padding:2mm 3mm;min-width:0}
-.ms-role > div + div{border-left:.25mm solid var(--s-line)}
-.ms-job b{display:block;font-size:13pt;line-height:1.25;margin-top:.6mm}
-.ms-drink .how{font-size:10pt;font-weight:700;line-height:1.35}
-.ms-drink .how + p{font-size:8.5pt;margin-top:.4mm}
-.ms-drink ul{list-style:none;display:flex;flex-direction:column;gap:.3mm;font-size:8.5pt;line-height:1.35}
-.ms-drink ul li::before{content:"○";display:inline-block;width:4mm;color:var(--s-mute)}
-.ms-facts{display:flex;flex-direction:column;gap:1.2mm}
-.ms-facts .v{font-size:10pt;font-weight:700;line-height:1.3}
-.ms-facts .v .ln{min-width:30mm}
-
-/* three phases */
-.ms-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4mm}
-.ms-col{min-width:0}
-.ms-col h3{display:flex;align-items:center;gap:1.8mm;font-size:11pt;line-height:1.2;padding-bottom:1.2mm;margin-bottom:1.6mm;border-bottom:.35mm solid var(--s-ink)}
-.ms-col h3 .n{display:inline-grid;place-items:center;width:5mm;height:5mm;border-radius:0 0 1.4mm 1.4mm;background:var(--s-ink);color:#fff;font-size:8.5pt}
-.ms-col h3 small{margin-left:auto;font-size:9pt;color:var(--s-mute)}
-.ms-col ol{list-style:none;counter-reset:st;display:flex;flex-direction:column;gap:1mm}
-.ms-col ol > li{counter-increment:st;position:relative;padding-left:4.6mm}
-.ms-col ol > li::before{content:counter(st);position:absolute;left:0;top:.35mm;width:3.4mm;height:3.4mm;border:.25mm solid var(--s-ink);border-radius:50%;display:grid;place-items:center;font-size:6.5pt;line-height:1;font-weight:700}
-.ms-col ol.order > li::before{background:var(--s-ink);color:#fff}
-.ms-col ul{list-style:none;margin-top:1.6mm;padding-top:1.4mm;border-top:.25mm dashed var(--s-line);display:flex;flex-direction:column;gap:1mm;font-size:8.5pt}
-.ms-col ul li{position:relative;padding-left:3mm}
-.ms-col ul li::before{content:"";position:absolute;left:.4mm;top:.62em;width:1.2mm;height:1.2mm;background:var(--s-mute)}
-.ms-col .em{font-weight:700}
-
-/* trash + checks */
-.ms-low{display:grid;grid-template-columns:76mm minmax(0,1fr);gap:4mm}
-.ms-box{border:.35mm solid var(--s-ink);border-radius:0 0 2.4mm 2.4mm;padding:2mm 3mm 2.4mm;min-width:0}
-.ms-box h3{font-size:10.5pt;line-height:1.2;margin-bottom:1.4mm}
-.ms-trash dl{display:grid;grid-template-columns:13mm minmax(0,1fr);gap:1.1mm 2mm;font-size:8.5pt;line-height:1.4}
-.ms-trash dt{font-size:7.5pt;font-weight:700;color:var(--s-mute);padding-top:.3mm}
-.ms-trash dd b{font-size:9pt}
-.ms-trash ul{list-style:none;margin-top:1.6mm;padding-top:1.4mm;border-top:.25mm dashed var(--s-line);font-size:8.5pt;display:flex;flex-direction:column;gap:.6mm}
-.ms-trash ul li{position:relative;padding-left:4mm}
-.ms-trash ul li::before{position:absolute;left:0;font-weight:700}
-.ms-trash ul li.no::before{content:"×";color:var(--s-red)}
-.ms-trash ul li.ask::before{content:"?"}
-.ms-check ul{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.4mm 4mm;font-size:8.8pt;line-height:1.38}
-.ms-check li{position:relative;padding-left:5.4mm;min-width:0}
-.ms-check li::before{content:"";position:absolute;left:0;top:.2mm;width:3.6mm;height:3.6mm;border:.3mm solid var(--s-ink);border-radius:.4mm;background:#fff}
-.ms-check li small{display:block;font-size:7.8pt;color:var(--s-mute)}
-.ms-check li small .ln{min-width:20mm}
-
-/* free memo */
-.ms-extra{border:.3mm dashed var(--s-mute);border-radius:0 0 2.4mm 2.4mm;padding:1.6mm 3mm;font-size:9pt}
-.ms-extra .k{display:inline;margin-right:2mm}
-.ms-extra p{white-space:pre-line}
-
-/* help footer */
-.ms-help{margin-top:auto;background:var(--s-soft);border-radius:0 0 2.4mm 2.4mm;padding:2mm 3mm 2.2mm}
-.ms-help h3{font-size:10pt;line-height:1.2;margin-bottom:1mm}
-.ms-help dl{display:grid;grid-template-columns:14mm minmax(0,1fr);gap:.7mm 2mm;font-size:8.5pt;line-height:1.4}
-.ms-help dt{font-weight:700}
-.ms-help .tel{font-size:10pt}
-
-/* without the print module: printing from the open sheet prints just the sheet */
-@media print{
-  body.memo-solo-print{overflow:visible!important;height:auto!important;background:#fff!important}
-  body.memo-solo-print > *:not(#memo){display:none!important}
-  body.memo-solo-print #memo{position:static!important;display:block!important;background:#fff!important}
-  body.memo-solo-print #memo > :not(.memo-body){display:none!important}
-  body.memo-solo-print .memo-body{display:block!important;overflow:visible!important}
-  body.memo-solo-print .memo-form,body.memo-solo-print .memo-prev-note{display:none!important}
-  body.memo-solo-print .memo-prev{display:block!important;padding:0!important;background:#fff!important;overflow:visible!important}
-  body.memo-solo-print .memo-scaler{width:auto!important;height:auto!important;box-shadow:none!important;overflow:visible!important}
-  body.memo-solo-print .memo-scaler > .memo-sheet{position:static!important;transform:none!important}
-}
-
-</style>
 <style id="print-css">
 /* ======================= Print composer ======================= */
 /* ---------- Dialog ---------- */
@@ -663,7 +424,6 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
         </div>
       </div>
       <button class="btn" id="btn-sign"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h16v12H4zM12 16v5M8 21h8M12 7v4M12 13v1"/></svg><span class="lbl" data-i18n="sign">貼り紙</span></button>
-      <button class="btn" id="btn-memo"><svg class="i" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM9 11h7M9 15h7M9 7h4"/></svg><span class="lbl" data-i18n="memo">Staff sheet</span></button>
       <button class="btn primary" id="btn-print"><svg class="i" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H4v-8h16v8h-3M7 14h10v7H7z"/></svg><span class="lbl" data-i18n="print">Print</span></button>
       <div class="seg" role="group" aria-label="Language">
         <button id="lang-en" aria-pressed="true">EN</button>
@@ -3577,7 +3337,7 @@ const T = {
     pWork:'Workshop', pWorkSub:'ワークショップ · long-table islands, 6 seats each',
     pBreak:'Breakfast 朝会', pBreakSub:'Long-table rows, food line, standing zone',
     pEmpty:'Empty', pEmptySub:'空 · clear all movable items',
-    copyLink:'Copy layout link', copyLinkSub:'Opens this layout + staff sheet directly', linkCopied:'Layout link copied',
+    copyLink:'Copy layout link', copyLinkSub:'Opens this layout directly', linkCopied:'Layout link copied',
     copyCode:'Copy layout code', copyCodeSub:'Text a teammate can paste in', importCode:'Paste / import', importCodeSub:'From a code or a .json file',
     savePdf:'Save PDF to print', savePdfSub:'A4 portrait, with layout name and seats',
     memo:'Staff sheet', sign:'Sign', print:'Print PDF',
@@ -3623,7 +3383,7 @@ const T = {
     pWork:'ワークショップ', pWorkSub:'Workshop · 長テーブルの島、各6席',
     pBreak:'朝会ブレックファスト', pBreakSub:'Breakfast · 長テーブル、フード、立ちエリア',
     pEmpty:'空', pEmptySub:'Empty · 可動家具をすべて外す',
-    copyLink:'レイアウトのリンクをコピー', copyLinkSub:'開くとこの配置と当日シートが表示されます', linkCopied:'リンクをコピーしました',
+    copyLink:'レイアウトのリンクをコピー', copyLinkSub:'開くとこの配置がそのまま表示されます', linkCopied:'リンクをコピーしました',
     copyCode:'レイアウトコードをコピー', copyCodeSub:'チームに送って貼り付けてもらう', importCode:'貼り付け・読み込み', importCodeSub:'コードまたは .json ファイルから',
     savePdf:'印刷用PDFを保存', savePdfSub:'A4 縦・レイアウト名と席数入り',
     memo:'当日シート', sign:'貼り紙', print:'印刷用PDF',
@@ -3892,6 +3652,7 @@ function planCSS(c){
   .hit{fill:transparent;stroke:none}
   .zone-body{stroke-width:2.5px;vector-effect:non-scaling-stroke}
   .zone-pill{stroke:none}
+  .zone-lbl-top{pointer-events:none}
   .zone-lbl{fill:#231815;font-family:${c.fontDisplay};font-weight:700;letter-spacing:.02em;dominant-baseline:middle}
   .note-txt{fill:${c.fg};font-family:${c.fontDisplay};font-weight:700;text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:${c.floor};stroke-width:70px;stroke-linejoin:round}
   .sel-box{fill:none;stroke:${c.red};stroke-width:2.5px;vector-effect:non-scaling-stroke}
@@ -4083,20 +3844,28 @@ function drawShape(g, type, w, h, it){
     case 'zone': {
       const key = (it && it.color) || 'sky', col = COLORS[key], dark = DARK_COLORS[key] || col;
       el('rect', {class:'zone-body', x:-hw, y:-hh, width:w, height:h, fill:col, 'fill-opacity':.5, stroke:dark}, g);
-      if (it){
-        // a label pill, top-left of the zone box; a wrapping <g> (see updateZoneLabelSizes) keeps it
-        // readable at any zoom instead of shrinking to nothing when the plan is zoomed far out
-        const label = (it.label || t('zone')).toUpperCase();
-        const FS = 170, PAD = 55, textW = pillTextWidth(label, FS), pillW = Math.max(textW + PAD * 2, FS * 1.6), pillH = FS * 1.9;
-        const wrap = el('g', {class:'zone-lbl-wrap', 'data-x':-hw, 'data-y':-hh}, g);
-        el('rect', {class:'zone-pill', x:0, y:0, width:pillW, height:pillH, rx:6, fill:col}, wrap);
-        txt(wrap, pillW / 2, pillH / 2, label, {class:'zone-lbl', 'font-size':FS, 'text-anchor':'middle'});
-      }
+      // (the label pill is drawn later by zoneLabel(), on top of the furniture)
+      if (it && !it.id) zoneLabel(g, it, w, h, 0);
       break; }
     case 'note': {
       const fs = (it && it.fs) || 320;
       txt(g, 0, 0, (it && it.label) || t('note'), {class:'note-txt', 'font-size':fs}); break; }
   }
+}
+// zone label pill, top-left of the zone box. Drawn in its own group above the furniture so tables never
+// cover it; the font shrinks (to 120) to fit narrow zones, and dy pushes it down past a neighbour's pill.
+// The wrapping <g> (see updateZoneLabelSizes) keeps it readable when the plan is zoomed far out.
+function zonePill(it, w){
+  const label = (it.label || t('zone')).toUpperCase(), PAD = 55;
+  let FS = 210; const fit = (w - PAD * 2) / Math.max(1, pillTextWidth(label, 1));
+  if (fit < FS) FS = Math.max(120, fit);
+  return {label, FS, pillW:Math.max(pillTextWidth(label, FS) + PAD * 2, FS * 1.6), pillH:FS * 1.9};
+}
+function zoneLabel(g, it, w, h, dy){
+  const key = it.color || 'sky', col = COLORS[key], p = zonePill(it, w);
+  const wrap = el('g', {class:'zone-lbl-wrap', 'data-x':-w / 2, 'data-y':-h / 2 + (dy || 0)}, g);
+  el('rect', {class:'zone-pill', x:0, y:0, width:p.pillW, height:p.pillH, rx:6, fill:col}, wrap);
+  txt(wrap, p.pillW / 2, p.pillH / 2, p.label, {class:'zone-lbl', 'font-size':p.FS, 'text-anchor':'middle'});
 }
 function noteBox(it){ const fs = it.fs || 320; const s = it.label || t('note'); let wch = 0; for (const ch of s) wch += ch.charCodeAt(0) > 0x2e80 ? 1 : 0.58; return {w:Math.max(400, wch * fs + 120), h:fs * 1.4}; }
 
@@ -4151,6 +3920,20 @@ function render(){
     el('rect', {class:'hit', x:-s.w / 2, y:-s.h / 2, width:s.w, height:s.h}, g);
     if (clashIds.has(it.id)) el('rect', {class:'warn-box', x:-s.w / 2 - 50, y:-s.h / 2 - 50, width:s.w + 100, height:s.h + 100}, g);
     if (sel.has(it.id)) el('rect', {class:'sel-box' + (it.type === 'zone' ? ' sel-zone' : ''), x:-s.w / 2 - 60, y:-s.h / 2 - 60, width:s.w + 120, height:s.h + 120}, g);
+  });
+  // zone labels last = on top of everything; an unrotated pill that would overlap an earlier one steps down
+  const placed = [];
+  items.filter(it => it.type === 'zone').forEach(it => {
+    const s = size(it), p = zonePill(it, s.w);
+    let dy = 0;
+    if (!it.rot){
+      const box = d => ({x0:it.x - s.w / 2, y0:it.y - s.h / 2 + d, x1:it.x - s.w / 2 + p.pillW, y1:it.y - s.h / 2 + d + p.pillH});
+      const hits = b => placed.some(q => b.x0 < q.x1 && q.x0 < b.x1 && b.y0 < q.y1 && q.y0 < b.y1);
+      for (let i = 0; i < 6 && hits(box(dy)) && dy + p.pillH * 2 <= s.h; i++) dy += p.pillH + 40;
+      placed.push(box(dy));
+    }
+    const g = el('g', {class:'zone-lbl-top', 'data-id':it.id, transform:`translate(${it.x} ${it.y}) rotate(${it.rot || 0})`}, gItems);
+    zoneLabel(g, it, s.w, s.h, dy);
   });
   updateZoneLabelSizes();
   renderUI(); updateInspector(); renderZoneLegend();
@@ -4746,7 +4529,7 @@ function copyImage(){
     } else fallback();
   } catch(e){ fallback(); }
 }
-// layout link: #floor=1F&layout=<base64url of the layout code> opens that layout (and staff sheet) directly
+// layout link: #floor=1F&layout=<base64url of the layout code> opens that layout directly
 const b64u = {
   enc: s => { const b = new TextEncoder().encode(s); let x = ''; for (let i = 0; i < b.length; i += 0x8000) x += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(x).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); },
   dec: s => { const x = atob(s.replace(/-/g, '+').replace(/_/g, '/')); const b = new Uint8Array(x.length); for (let i = 0; i < x.length; i++) b[i] = x.charCodeAt(i); return new TextDecoder().decode(b); }
@@ -5159,7 +4942,7 @@ window.FC_MAP = {
   onFloor: fn => { if (typeof fn === 'function') floorListeners.push(fn); },
   switchFloor: f => switchFloor(f),
   // for scripts / AI agents: layoutCode() → text, loadCode(text) → replaces the layout, layoutLink() → shareable URL;
-  // PDFs: FC_PRINT.savePDF(['map','memo','restore']) downloads one A4 .pdf
+  // PDFs: FC_PRINT.savePDF(['map','restore']) downloads one A4 .pdf
   layoutCode: () => layoutCode(),
   loadCode: text => { $('#modal-err').textContent = ''; doImport(typeof text === 'string' ? text : JSON.stringify(text)); return !$('#modal-err').textContent; },
   layoutLink: () => layoutLink(),
@@ -5322,721 +5105,6 @@ init();
   });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!sign.hidden) showSign(false); });
 })();
-</script>
-
-<!-- ======================= 当日シート (staff event-night sheet) ======================= -->
-<div class="memo" id="memo" role="dialog" aria-modal="true" aria-labelledby="memo-title" lang="ja" hidden>
-  <header class="memo-bar">
-    <button class="btn" id="memo-back" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span class="lbl">マップ</span></button>
-    <h2 class="memo-h" id="memo-title">当日シート<small>アルバイト用・A4 1枚</small></h2>
-    <div class="memo-acts">
-      <span class="memo-confirm" id="memo-confirm" hidden><span>すべて初期値に戻しますか？</span><button class="btn danger" id="memo-reset-yes" type="button">戻す</button><button class="btn" id="memo-reset-no" type="button">やめる</button></span>
-      <button class="btn" id="memo-reset" type="button" title="初期値に戻す / Reset"><svg class="i" viewBox="0 0 24 24"><path d="M4 4v6h6"/><path d="M5 15a8 8 0 1 0 1-7l-2 2"/></svg><span class="lbl">初期値に戻す</span></button>
-      <button class="btn" id="memo-copy" type="button" title="テキストをコピー / Copy as text"><svg class="i" viewBox="0 0 24 24"><path d="M8 8h12v12H8z"/><path d="M4 16V4h12"/></svg><span class="lbl">テキストをコピー</span></button>
-      <button class="btn primary" id="memo-print" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H4v-8h16v8h-3M7 14h10v7H7z"/></svg><span class="lbl">印刷</span></button>
-    </div>
-  </header>
-  <div class="memo-tabs" role="tablist">
-    <button type="button" role="tab" id="memo-tab-form" aria-selected="true" data-tab="form">入力</button>
-    <button type="button" role="tab" id="memo-tab-prev" aria-selected="false" data-tab="prev">プレビュー</button>
-  </div>
-  <div class="memo-body" id="memo-body" data-tab="form">
-    <form class="memo-form" id="memo-form" autocomplete="off" onsubmit="return false"></form>
-    <section class="memo-prev" id="memo-prev" aria-label="印刷プレビュー">
-      <div class="memo-scaler" id="memo-scaler"></div>
-      <p class="memo-prev-note">このまま A4 1枚に印刷されます。空欄は手書き用の線になります。</p>
-    </section>
-  </div>
-  <div class="memo-copybox" id="memo-copybox" hidden>
-    <p>自動でコピーできませんでした。下のテキストを選択してコピーしてください。</p>
-    <textarea id="memo-copy-text" readonly></textarea>
-    <div class="btn-row"><button class="btn" id="memo-copy-close" type="button">閉じる</button></div>
-  </div>
-</div>
-
-<script>
-/* ======================= 当日シート — FabCafe Tokyo event-night sheet for part-time staff =======================
-   window.FC_MEMO = {get, set, open, close, renderSheet, onChange, plainText}
-   Content is the approved notes (baito-notes-ja.md); this file only changes the format.
-   v2: the 5 time cells became a flexible timeline (add/remove/reorder/rename/note/highlight, max 8 rows),
-   with quick-add chips, 3 templates, two optional compact shifts, and a staffing-hint selector.
-   Old saved memos (flat tMeet/tPrep/tOpen/tEnd/tLeave) migrate to rows automatically — see clean(). */
-(() => {
-'use strict';
-const MAP = window.FC_MAP || null;
-// floor-bound names: re-read when the map switches floors (see onFloor below)
-let FLOOR, KEY, MAPNAME, NORMAL;
-function readFloor(){
-  FLOOR = (MAP && MAP.floor && MAP.floor()) || '1F';
-  KEY = FLOOR === '1F' ? 'fabcafe-1f-map:memo:v1' : 'fabcafe-1f-map:' + FLOOR + ':memo:v1';
-  MAPNAME = FLOOR + 'マップ';
-  NORMAL = (MAP && MAP.normalJp && MAP.normalJp()) || '通常営業';
-}
-readFloor();
-const TRASH_DEF = '';
-const ROWS_MAX = 8;
-const TEL = '03-6416-9190';
-const $ = (s, r) => (r || document).querySelector(s);
-const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
-const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
-const toast = s => { if (MAP && MAP.toast) MAP.toast(s); };
-
-const DRINK = {
-  one:  {lab:'ワンドリンク', how:'ワンドリンク：ドリンクチケットを受け取る', sub:'チケットはなくさないように保管。終わったら枚数を数えて担当社員に伝える。追加のドリンクはカウンターで有料。'},
-  order:{lab:'都度注文', how:'都度注文：お客さんにレジで注文と支払いをしてもらう', sub:''},
-  free: {lab:'飲み放題', how:'飲み放題：ドリンク担当が自由に出す', sub:''},
-  '':   {lab:'未定'}
-};
-// staffing hint (house rules) — internal only, never printed on the paper sheet
-const STAFFMODE = {
-  '':       {lab:'未定', hint:''},
-  full3:    {lab:'フル/半面＋ドリンクあり', hint:'目安 3名：ドリンク担当・イベント／AV担当・レギュラーのバリスタ'},
-  client1:  {lab:'お客様がドリンク・設営', hint:'目安 1名＋社員が立ち会い'}
-};
-const STAFFMODE_KEYS = Object.keys(STAFFMODE);
-// quick-add chips for the timeline
-const CHIPS = [
-  ['受付開始', 'Reception start'], ['乾杯', 'Toast'], ['休憩', 'Break'], ['ゲスト到着', 'Guest arrival'],
-  ['ラストオーダー', 'Last order'], ['撤収開始', 'Teardown start'], ['搬入', 'Load-in'], ['搬出', 'Load-out'], ['打ち合わせ', 'Briefing']
-];
-// default timeline (also what "初期値に戻す" restores, and what old flat memos migrate onto)
-const TIMES_DEFAULT = [
-  {id:'meet',  label:'集合・打刻',     sub:'Meet',   note:'', time:'',      highlight:false},
-  {id:'prep',  label:'準備',          sub:'Set-up', note:'', time:'',      highlight:false},
-  {id:'open',  label:'開場',          sub:'Doors',  note:'', time:'',      highlight:false},
-  {id:'end',   label:'終了 → 片付け', sub:'End',    note:'', time:'21:30', highlight:false},
-  {id:'leave', label:'退勤・打刻',    sub:'Leave',  note:'', time:'22:30', highlight:true}
-];
-const LEGACY_TIME_KEY = {meet:'tMeet', prep:'tPrep', open:'tOpen', end:'tEnd', leave:'tLeave'};
-// 3 templates that fill the whole timeline (ids kept so legacy tOpen/tEnd/tLeave lookups keep working)
-const TEMPLATES = {
-  night:    {lab:'夜イベント', en:'Night event', hi:'leave', rows:[
-    ['meet', '集合・打刻', 'Meet', ''], ['prep', '準備', 'Set-up', ''], ['open', '開場', 'Doors', ''],
-    ['toast', '乾杯', 'Toast', ''], ['lastorder', 'ラストオーダー', 'Last order', ''],
-    ['end', '終了 → 片付け', 'End', '21:30'], ['leave', '退勤・打刻', 'Leave', '22:30']
-  ]},
-  workshop: {lab:'昼ワークショップ', en:'Day workshop', hi:'leave', rows:[
-    ['meet', '集合・打刻', 'Meet', ''], ['prep', '準備', 'Set-up', ''], ['reception', '受付開始', 'Reception', ''],
-    ['open', '開始', 'Start', ''], ['break', '休憩', 'Break', ''],
-    ['end', '終了 → 片付け', 'End', ''], ['leave', '退勤・打刻', 'Leave', '']
-  ]},
-  morning:  {lab:'朝会', en:'Morning meeting', hi:'leave', rows:[
-    ['meet', '集合・打刻', 'Meet', ''], ['prep', '準備', 'Set-up', ''], ['open', '開始', 'Start', ''],
-    ['end', '終了 → 片付け', 'End', ''], ['leave', '退勤・打刻', 'Leave', '']
-  ]}
-};
-
-/* ---------- state + storage ---------- */
-const SCALAR_DEF = {eventName:'', date:'', staff:'', staffContact:'', staffMode:'',
-  guests:'', drink:'', keep:'', dishes:'', trash:TRASH_DEF, trashWhen:'', lights:'', lock:'', lostFound:'', extra:''};
-const SCALAR_KEYS = Object.keys(SCALAR_DEF);
-let rowSeq = 0;
-const newRowId = () => 'r' + (Date.now().toString(36)) + (++rowSeq).toString(36);
-function cleanRow(r, usedIds){
-  r = (r && typeof r === 'object') ? r : {};
-  let id = typeof r.id === 'string' && r.id ? r.id.slice(0, 24) : newRowId();
-  while (usedIds.has(id)) id = newRowId();
-  usedIds.add(id);
-  return {
-    id,
-    label: String(r.label == null ? '' : r.label).slice(0, 24),
-    sub: String(r.sub == null ? '' : r.sub).slice(0, 24),
-    note: String(r.note == null ? '' : r.note).slice(0, 40),
-    time: String(r.time == null ? '' : r.time).slice(0, 24),
-    highlight: !!r.highlight
-  };
-}
-function cleanRows(arr){
-  const usedIds = new Set();
-  let rows = Array.isArray(arr) && arr.length ? arr.slice(0, ROWS_MAX).map(r => cleanRow(r, usedIds)) : [];
-  if (!rows.length) rows = TIMES_DEFAULT.map(r => cleanRow(Object.assign({}, r), usedIds));
-  const hi = rows.filter(r => r.highlight);
-  if (hi.length !== 1){ rows.forEach(r => { r.highlight = false; }); rows[rows.length - 1].highlight = true; }
-  return rows;
-}
-function cleanShift(s){
-  s = (s && typeof s === 'object') ? s : {};
-  return {name: String(s.name == null ? '' : s.name).slice(0, 24), people: String(s.people == null ? '' : s.people).slice(0, 12),
-    tMeet: String(s.tMeet == null ? '' : s.tMeet).slice(0, 16), tLeave: String(s.tLeave == null ? '' : s.tLeave).slice(0, 16)};
-}
-function clean(o){
-  const r = Object.assign({}, SCALAR_DEF);
-  if (o && typeof o === 'object') SCALAR_KEYS.forEach(k => { if (o[k] != null && typeof o[k] !== 'object') r[k] = String(o[k]).slice(0, 600); });
-  if (!(r.drink in DRINK)) r.drink = '';
-  if (STAFFMODE_KEYS.indexOf(r.staffMode) === -1) r.staffMode = '';
-  const isLegacyFlat = o && typeof o === 'object' && o.rows == null && (o.tMeet != null || o.tPrep != null || o.tOpen != null || o.tEnd != null || o.tLeave != null);
-  if (isLegacyFlat){
-    r.rows = cleanRows(TIMES_DEFAULT.map(d => Object.assign({}, d, {time: String((o[LEGACY_TIME_KEY[d.id]] != null ? o[LEGACY_TIME_KEY[d.id]] : d.time) || '')})));
-  } else {
-    r.rows = cleanRows(o && o.rows);
-  }
-  const shiftsIn = o && Array.isArray(o.shifts) ? o.shifts : [o && o.shiftA, o && o.shiftB];
-  r.shifts = [cleanShift(shiftsIn[0]), cleanShift(shiftsIn[1])];
-  return r;
-}
-function readStore(){ try { const o = JSON.parse(localStorage.getItem(KEY)); if (o && o.byLayout && typeof o.byLayout === 'object') return o; } catch(e){} return {byLayout:{}}; }
-function writeStore(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e){} }
-let store = readStore();
-const cur0 = MAP ? MAP.getLayout() : {id:'draft', name:''};
-let layoutId = cur0.id || 'draft', layoutName = cur0.name || '';
-let memo = clean(store.byLayout[layoutId]);
-let saveTimer = 0;
-const listeners = [];
-function flush(){ if (!saveTimer) return; clearTimeout(saveTimer); saveTimer = 0; store.byLayout[layoutId] = Object.assign({}, memo); writeStore(); }
-function changed(fromForm){
-  clearTimeout(saveTimer); saveTimer = setTimeout(flush, 350);
-  if (!fromForm) fillForm();
-  renderPreview();
-  const snap = Object.assign({}, memo);
-  listeners.forEach(fn => { try { fn(snap); } catch(e){ console.error(e); } });
-}
-window.addEventListener('pagehide', flush);
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flush(); });
-
-/* ---------- row / shift / staffMode mutators ---------- */
-function rowIndex(id){ return memo.rows.findIndex(r => r.id === id); }
-function addRow(row){
-  if (memo.rows.length >= ROWS_MAX){ toast('これ以上は追加できません（最大8行）'); return; }
-  memo.rows.push(cleanRow(row, new Set(memo.rows.map(r => r.id))));
-  changed(false);
-}
-function addChip(jp, en){ addRow({label: jp, sub: en || '', note: '', time: '', highlight: false}); }
-function addBlankRow(){ addRow({label: '新しい項目', sub: 'New step', note: '', time: '', highlight: false}); }
-function removeRow(id){
-  if (memo.rows.length <= 1) return;
-  const i = rowIndex(id); if (i < 0) return;
-  const wasHi = memo.rows[i].highlight;
-  memo.rows.splice(i, 1);
-  if (wasHi) memo.rows[memo.rows.length - 1].highlight = true;
-  changed(false);
-}
-function moveRow(id, dir){
-  const i = rowIndex(id); if (i < 0) return;
-  const j = i + dir; if (j < 0 || j >= memo.rows.length) return;
-  const tmp = memo.rows[i]; memo.rows[i] = memo.rows[j]; memo.rows[j] = tmp;
-  changed(false);
-}
-function setHighlight(id){
-  if (rowIndex(id) < 0) return;
-  memo.rows.forEach(r => { r.highlight = (r.id === id); });
-  changed(false);
-}
-function setRowField(id, field, value){
-  const r = memo.rows.find(x => x.id === id); if (!r) return;
-  const max = field === 'note' ? 40 : 24;
-  r[field] = String(value == null ? '' : value).slice(0, max);
-  changed(true);
-}
-function applyTemplate(key){
-  const t = TEMPLATES[key]; if (!t) return;
-  const usedIds = new Set();
-  memo.rows = t.rows.map(([id, label, sub, time]) => cleanRow({id, label, sub, note:'', time, highlight: id === t.hi}, usedIds));
-  changed(false);
-  toast(`テンプレート「${t.lab}」を入れました`);
-}
-function setShift(idx, field, value){
-  const s = memo.shifts[idx]; if (!s) return;
-  const max = field === 'name' ? 24 : field === 'people' ? 12 : 16;
-  s[field] = String(value == null ? '' : value).slice(0, max);
-  changed(true);
-}
-
-/* ---------- formatting helpers ---------- */
-const has = v => !!String(v || '').trim();
-const ln = (cls) => `<span class="ln${cls ? ' ' + cls : ''}"></span>`;
-const val = (v, cls, lineCls) => has(v) ? `<span class="${cls || 'c2'}">${esc(v.trim())}</span>` : ln(lineCls);
-const WD = '日月火水木金土';
-function fmtDate(s){
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s || '').trim());
-  if (!m) return String(s || '').trim();
-  const d = new Date(+m[1], +m[2] - 1, +m[3]);
-  return `${+m[1]}年${+m[2]}月${+m[3]}日（${WD[d.getDay()]}）`;
-}
-function normTimeToken(v){
-  let m = /^(\d{1,2})(\d{2})$/.exec(v); if (m) v = m[1] + ':' + m[2];
-  m = /^(\d{1,2})[:.時](\d{2})分?$/.exec(v); if (m && +m[1] < 30 && +m[2] < 60) v = m[1].padStart(2, '0') + ':' + m[2];
-  return v;
-}
-const RANGE_SPLIT = /\s*[-–—~〜]\s*/;
-function normTime(s){
-  let v = String(s || '').replace(/[０-９：]/g, c => c === '：' ? ':' : String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).trim();
-  if (!v) return '';
-  if (/^[-–—~〜ー]+$/.test(v)) return '〜'; // a bare dash/tilde = "ongoing / see handwriting", kept as-is
-  const parts = v.split(RANGE_SPLIT);
-  if (parts.length === 2 && parts[0] && parts[1]) return normTimeToken(parts[0]) + '–' + normTimeToken(parts[1]);
-  return normTimeToken(v);
-}
-const guestsTxt = g => /^\s*\d+\s*$/.test(g) ? g.trim() + '名' : g.trim();
-const timeCell = v => has(v) ? `<span class="num">${esc(v.trim())}</span>` : '<span class="blank"><i></i><b>:</b><i></i></span>';
-function rowTime(m, id){ const r = m.rows.find(x => x.id === id); return r && has(r.time) ? r.time.trim() : ''; }
-function leaveTxt(){
-  const hi = memo.rows.find(r => r.highlight) || memo.rows[memo.rows.length - 1] || {};
-  if (has(hi.time)) return hi.time.trim();
-  return has(hi.label) ? hi.label.trim() : '退勤時刻';
-}
-
-/* ---------- the sheet (one A4 page) ---------- */
-function rowsHTML(m){
-  const rows = m.rows, n = rows.length, two = n > 5;
-  const cols = two ? 4 : Math.max(1, n);
-  const items = rows.map(r => `<li${r.highlight ? ' class="go"' : ''}><span class="k">${esc(r.label.trim() || '（無題）')}</span><span class="v">${timeCell(r.time)}</span>${has(r.note) ? `<span class="rn">${esc(r.note.trim())}</span>` : ''}</li>`).join('');
-  return `<section class="ms-times${two ? ' two-row' : ''}" aria-label="時間">
-  <ol style="--cols:${cols}">${items}</ol>
-  <p class="note"><b>${esc(leaveTxt())}を過ぎそうなとき</b>は、気づいた時点で担当社員に伝えてください。残業は、社員から頼まれたときだけです。</p>
-</section>`;
-}
-function shiftsHTML(m){
-  const labels = ['シフトA', 'シフトB'], parts = [];
-  m.shifts.forEach((s, i) => {
-    if (!(has(s.name) || has(s.people) || has(s.tMeet) || has(s.tLeave))) return;
-    parts.push(`<div class="sh"><b class="tag">${labels[i]}</b>${has(s.name) ? `<span class="nm">${esc(s.name.trim())}</span>` : ''}${has(s.people) ? `<span>${esc(guestsTxt(s.people))}</span>` : ''}${has(s.tMeet) ? `<span>集合<b class="tm"> ${esc(s.tMeet.trim())}</b></span>` : ''}${has(s.tLeave) ? `<span>退勤<b class="tm"> ${esc(s.tLeave.trim())}</b></span>` : ''}</div>`);
-  });
-  return parts.length ? `<section class="ms-shifts" aria-label="シフト">${parts.join('')}</section>` : '';
-}
-function sheetHTML(m){
-  const d = DRINK[m.drink] ? m.drink : '';
-  const drink = d
-    ? `<p class="how">${esc(DRINK[d].how)}</p>${DRINK[d].sub ? `<p>${esc(DRINK[d].sub)}</p>` : ''}`
-    : `<span class="k">ドリンクの出し方（どれかに○）</span><ul>
-        <li><b>ワンドリンク</b>：チケットを受け取って保管。終わったら枚数を担当社員に。追加はカウンターで有料</li>
-        <li><b>都度注文</b>：お客さんにレジで注文と支払いをしてもらう</li>
-        <li><b>飲み放題</b>：ドリンク担当が自由に出す</li></ul>`;
-  const map = has(layoutName) ? `別紙：${MAPNAME}「${esc(layoutName)}」` : '別紙：' + MAPNAME;
-  const ticket = d === 'one' ? '<li>ドリンクチケットの枚数を担当社員に伝えた</li>'
-    : d === '' ? '<li>ドリンクチケットの枚数を伝えた<small>ワンドリンクの日だけ</small></li>' : '';
-  return `
-<header class="ms-head">
-  <div class="ms-top"><span class="ms-tag">FabCafe</span><span class="ms-kind">イベント当日シート<small>Tokyo ${FLOOR}・アルバイト用</small></span><span class="ms-map c2">${map}</span></div>
-  <h1 class="ms-title">${has(m.eventName) ? `<span class="c2">${esc(m.eventName.trim())}</span>` : ln()}</h1>
-  <p class="ms-meta">
-    <span><span class="k">日付</span>${has(m.date) ? `<b class="c1">${esc(fmtDate(m.date))}</b>` : ln()}</span>
-    <span><span class="k">当日担当社員</span>${val(m.staff, 'c1')}${has(m.staffContact) ? `<span class="c1">（${esc(m.staffContact.trim())}）</span>` : ''}</span>
-  </p>
-</header>
-${rowsHTML(m)}
-${shiftsHTML(m)}
-<section class="ms-role" aria-label="今日の担当">
-  <div class="ms-job"><span class="k">今日のあなたの担当</span><b>ドリンクとフードの提供</b></div>
-  <div class="ms-drink">${d ? '<span class="k">ドリンクの出し方</span>' : ''}${drink}</div>
-  <div class="ms-facts">
-    <div><span class="k">人数</span><span class="v">${has(m.guests) ? `<span class="c1">${esc(guestsTxt(m.guests))}</span>` : ln()}</span></div>
-    <div><span class="k">動かさないもの</span><span class="v">${val(m.keep, 'c2')}</span></div>
-  </div>
-</section>
-<section class="ms-cols">
-  <div class="ms-col"><h3><span class="n">1</span>準備${rowTime(m, 'prep') ? `<small class="num">${esc(rowTime(m, 'prep'))}〜</small>` : ''}</h3>
-    <ol>
-      <li>机や椅子を動かす前に、今の配置を<span class="em">スマホで撮る</span>（片付けで元に戻すときに使う）</li>
-      <li>机と椅子を、別紙の<span class="em">「${MAPNAME}」</span>のとおりに並べる</li>
-      <li>他の階から椅子や机を借りたら、<span class="em">マスキングテープで印</span>をつける</li>
-      <li>ドリンクとフードの数と種類を、カフェスタッフともう一度確認する</li>
-    </ol></div>
-  <div class="ms-col"><h3><span class="n">2</span>イベント中${rowTime(m, 'open') ? `<small class="num">${esc(rowTime(m, 'open'))}〜</small>` : ''}</h3>
-    <ol>
-      <li>一般のお客さんが来たら、入口で<span class="em">「本日は貸切です」</span>と伝える</li>
-      <li>ゴミ箱がいっぱいでないか、ときどき見る。ウォーターサーバーが空になったら補充</li>
-      <li>厨房と FabCafe の備品は許可制。使いたいと言われたら担当社員へ</li>
-    </ol>
-    <ul><li>受付・設営の力仕事・マイクやスライドの操作など、<span class="em">カフェ以外の仕事</span>を頼まれたら担当社員に相談</li></ul></div>
-  <div class="ms-col"><h3><span class="n">3</span>片付け${rowTime(m, 'end') ? `<small class="num">${esc(rowTime(m, 'end'))}〜</small>` : ''}</h3>
-    <ol class="order">
-      <li><span class="em">ゴミ出し</span>（下の「ゴミ」を見る）</li>
-      <li><span class="em">テーブル拭き</span></li>
-      <li><span class="em">レイアウトを元に戻す</span>：${MAPNAME}<span class="em">「${NORMAL}」</span>のページと、準備で撮った写真を見て</li>
-    </ol>
-    <ul>
-      <li>借りた椅子と机は、テープの印を見て元の階に返す</li>
-      <li>残った飲み物と食べ物は、キッチン・バー側で片付ける</li>
-      <li>食器とグラスの洗い物：${val(m.dishes, 'c2')}</li>
-    </ul></div>
-</section>
-<section class="ms-low">
-  <div class="ms-box ms-trash"><h3>ゴミ</h3>
-    <dl>
-      <dt>分け方</dt><dd>可燃・生ゴミ／不燃／カン・ビン・PET／段ボール（つぶしてひもで縛る）</dd>
-      <dt>場所</dt><dd>${has(m.trash) ? `<b class="c2">${esc(m.trash.trim())}</b>` : ln()}<br>開け方は担当社員に聞く</dd>
-      <dt>いつ出す</dt><dd>${val(m.trashWhen, 'c2')}</dd>
-    </dl>
-    <ul><li class="no">他のテナントのゴミ置き場には、絶対に捨てない</li><li class="ask">分け方がわからないもの（傘、電球など）は、捨てずに担当社員に渡す</li></ul>
-  </div>
-  <div class="ms-box ms-check"><h3>帰る前チェック</h3>
-    <ul>
-      <li>テーブルを拭いた</li>
-      <li>「${NORMAL}」の配置に戻した</li>
-      <li>借りた椅子・机を返した</li>
-      <li>ゴミを分けて、決められた場所に出した</li>
-      ${ticket}
-      <li>忘れ物がないか見て回った<small>見つけたら：${val(m.lostFound, 'c1')}</small></li>
-      <li>店内に人が残っていないか確認した</li>
-      <li>消灯・空調・機材の電源<small>担当：${val(m.lights, 'c1')}</small></li>
-      <li>施錠と鍵の返却<small>担当：${val(m.lock, 'c1')}</small></li>
-      <li><b>ジョブカンで退勤を打刻した</b></li>
-    </ul>
-  </div>
-</section>
-${has(m.extra) ? `<section class="ms-extra"><span class="k">メモ</span><p class="c3">${esc(m.extra.trim())}</p></section>` : ''}
-<footer class="ms-help"><h3>困ったとき</h3>
-  <dl>
-    <dt>相談</dt><dd>まずは当日担当社員（${has(m.staff) ? esc(m.staff.trim()) : ln('s')}${has(m.staffContact) ? '・' + esc(m.staffContact.trim()) : ''}）に。　お店の電話 <b class="num tel">${TEL}</b></dd>
-    <dt>地震</dt><dd>まず身を守り、揺れが止まるまで動かない。エレベーターは使わず、非常階段で1Fに集まる。帰ってよいかは社員の指示を待つ</dd>
-    <dt>禁煙</dt><dd>建物の中はすべて禁煙</dd>
-    <dt>打刻</dt><dd>失敗したら備考欄に書く。忘れたら理由を書いて修正申請する</dd>
-  </dl>
-</footer>`;
-}
-function renderSheet(container){
-  const a = document.createElement('article');
-  a.className = 'memo-sheet'; a.lang = 'ja';
-  a.setAttribute('aria-label', 'イベント当日シート');
-  a.innerHTML = sheetHTML(memo);
-  if (container) container.appendChild(a);
-  return a;
-}
-
-/* ---------- plain text (LINE / Slack) — includes everything, incl. internal hints ---------- */
-function plainText(){
-  const m = memo, o = v => has(v) ? v.trim() : '（未定）', d = DRINK[m.drink] ? m.drink : '';
-  const L = [];
-  L.push(`【イベント当日シート】${o(m.eventName)}`);
-  L.push(`日付：${has(m.date) ? fmtDate(m.date) : '（未定）'}　当日担当社員：${o(m.staff)}${has(m.staffContact) ? '（' + m.staffContact.trim() + '）' : ''}`);
-  L.push('', '■ 時間');
-  m.rows.forEach(r => L.push(`${has(r.time) ? r.time.trim() : '（未定）'}　${r.label.trim() || '（無題）'}${r.highlight ? '【退勤の目安】' : ''}${has(r.note) ? '　[' + r.note.trim() + ']' : ''}`));
-  L.push(`※${leaveTxt()}を過ぎそうなときは、気づいた時点で担当社員に。残業は社員から頼まれたときだけ。`);
-  const shiftLines = [];
-  m.shifts.forEach((s, i) => {
-    if (!(has(s.name) || has(s.people) || has(s.tMeet) || has(s.tLeave))) return;
-    shiftLines.push(`${['シフトA', 'シフトB'][i]}：${o(s.name)}${has(s.people) ? '　' + guestsTxt(s.people) : ''}　集合 ${has(s.tMeet) ? s.tMeet.trim() : '（未定）'} → 退勤 ${has(s.tLeave) ? s.tLeave.trim() : '（未定）'}`);
-  });
-  if (shiftLines.length){ L.push('', '■ シフト'); shiftLines.forEach(x => L.push(x)); }
-  L.push('', '■ 今日の担当：ドリンクとフードの提供');
-  if (STAFFMODE[m.staffMode] && STAFFMODE[m.staffMode].lab && m.staffMode) L.push(`体制の目安：${STAFFMODE[m.staffMode].lab}（${STAFFMODE[m.staffMode].hint}）※社内メモ`);
-  if (d) L.push(`ドリンク：${DRINK[d].how}${DRINK[d].sub ? '。' + DRINK[d].sub : ''}`);
-  else L.push('ドリンクの出し方：ワンドリンク（チケットを保管→枚数を担当社員に。追加はカウンターで有料）／都度注文（レジで注文と支払い）／飲み放題（ドリンク担当が自由に出す）のどれか');
-  L.push(`人数：${has(m.guests) ? guestsTxt(m.guests) : '（未定）'}`, `動かさないもの：${o(m.keep)}`);
-  L.push('', '■ 準備', '1. 動かす前に、今の配置をスマホで撮る', `2. 机と椅子は「${MAPNAME}」のとおりに並べる`, '3. 他の階から借りた椅子・机にはマスキングテープで印', '4. ドリンクとフードの数と種類をカフェスタッフと再確認');
-  L.push('', '■ イベント中', '1. 一般のお客さんには入口で「本日は貸切です」', '2. ゴミ箱をときどき確認。ウォーターサーバーが空なら補充', '3. 厨房と FabCafe の備品は許可制。使いたいと言われたら担当社員へ', '・カフェ以外の仕事（受付・設営の力仕事・マイクやスライド操作）を頼まれたら担当社員に相談');
-  L.push('', `■ 片付け${rowTime(m, 'end') ? '（' + rowTime(m, 'end') + '〜）' : ''}`, `①ゴミ出し ②テーブル拭き ③レイアウトを元に戻す（${MAPNAME}「${NORMAL}」と準備の写真を見て）`, '・借りた椅子と机は、テープの印を見て元の階へ', '・残った飲み物と食べ物は、キッチン・バー側で片付け', `・食器とグラスの洗い物：${o(m.dishes)}`);
-  L.push('', '■ ゴミ', '分け方：可燃・生ゴミ／不燃／カン・ビン・PET／段ボール（つぶしてひもで縛る）', `場所：${o(m.trash)}（開け方は担当社員に）`, `いつ出す：${o(m.trashWhen)}`, '×他のテナントのゴミ置き場には絶対に捨てない', '?分け方がわからないもの（傘、電球など）は捨てずに担当社員へ');
-  L.push('', '■ 帰る前チェック', '□テーブルを拭いた', `□「${NORMAL}」の配置に戻した`, '□借りた椅子・机を返した', '□ゴミを分けて、決められた場所に出した');
-  if (d === 'one') L.push('□ドリンクチケットの枚数を担当社員に伝えた'); else if (!d) L.push('□ドリンクチケットの枚数を伝えた（ワンドリンクの日だけ）');
-  L.push(`□忘れ物がないか見て回った（見つけたら：${o(m.lostFound)}）`, '□店内に人が残っていないか確認した', `□消灯・空調・機材の電源（担当：${o(m.lights)}）`, `□施錠と鍵の返却（担当：${o(m.lock)}）`, '□ジョブカンで退勤を打刻した');
-  if (has(m.extra)) L.push('', '■ メモ', m.extra.trim());
-  L.push('', '■ 困ったとき', `まずは当日担当社員（${o(m.staff)}${has(m.staffContact) ? '・' + m.staffContact.trim() : ''}）に相談。お店の電話：${TEL}`, '地震：まず身を守り、揺れが止まるまで動かない。エレベーターは使わず非常階段で1Fへ。帰ってよいかは社員の指示を待つ', '建物の中はすべて禁煙', '打刻に失敗したら備考欄に。忘れたら理由を書いて修正申請');
-  return L.join('\n');
-}
-
-/* ---------- form (event owner fills it in on screen) ---------- */
-// [key, label, en hint, width class, opts]
-const FORM_EVENT = ['イベント', 'Event', [
-  ['eventName', 'イベント名', 'Event name', '', {max:80}],
-  ['date', '日付', 'Date', 'w3', {type:'date'}],
-  ['guests', '人数', 'Guests', 'w3', {ph:'例：40', help:'mapSeats'}],
-  ['staff', '当日担当社員', 'Staff in charge', 'w3', {max:30}],
-  ['staffContact', '連絡先', 'Phone / Slack', 'w3', {max:40, ph:'例：090-…'}]
-]];
-const FORM_CLOSE = ['片付け・戸締り', 'Close-up', [
-  ['dishes', '食器とグラスの洗い物', 'Dishes', '', {max:80, hint:'手順が決まっていなければ空欄のまま（手書きの線になります）'}],
-  ['trash', 'ゴミ置き場', 'Trash: where', '', {max:80, hint:'暗証番号は書かない'}],
-  ['trashWhen', 'ゴミをいつ出すか', 'Trash: when', '', {max:60, ph:'例：夜のうちに出す／翌朝まで置く', hint:'夜に出してよいかは担当社員に確認'}],
-  ['lights', '消灯・空調・機材の担当', 'Lights / AC', 'w3', {max:30}],
-  ['lock', '施錠・鍵の返却の担当', 'Lock-up', 'w3', {max:30, hint:'鍵の返却先を確認'}],
-  ['lostFound', '忘れ物を見つけたら', 'Lost & found', '', {max:60, ph:'例：レジ下の箱に入れて担当社員に'}],
-  ['extra', 'メモ（自由記入）', 'Free note — printed only when filled', '', {area:1, max:240, hint:'休憩：6時間以上のシフトなら必須'}]
-]];
-function renderFieldset([jp, en, rows]){
-  return `<fieldset><legend>${jp}<small>${en}</small></legend>${rows.map(([k, lab, hint, w, o]) => {
-    const id = 'mf-' + k;
-    const lbl = `<small>${esc(hint)}</small>`;
-    const ctl = o.area ? `<textarea id="${id}" data-k="${k}" maxlength="${o.max || 240}" rows="3"></textarea>`
-      : `<input id="${id}" data-k="${k}" type="${o.type || 'text'}"${o.max ? ` maxlength="${o.max}"` : ''}${o.ph ? ` placeholder="${esc(o.ph)}"` : ''}>`;
-    return `<div class="mf ${w}"><label for="${id}">${lab}${lbl}</label>${ctl}${o.help ? `<p class="help" data-help="${o.help}"></p>` : ''}${o.hint ? `<p class="hint">${esc(o.hint)}</p>` : ''}</div>`;
-  }).join('')}</fieldset>`;
-}
-function renderNightFieldset(){
-  return `<fieldset><legend>当日のやり方<small>On the night</small></legend>
-  <div class="mf"><span class="lab" id="mf-drink-l">ドリンクの出し方<small>Drinks</small></span>
-    <div class="memo-seg" data-seg="drink" role="group" aria-labelledby="mf-drink-l">${['one', 'order', 'free', ''].map(v => `<button type="button" data-v="${v}" aria-pressed="false">${DRINK[v].lab}</button>`).join('')}</div></div>
-  <div class="mf"><span class="lab" id="mf-staffmode-l">スタッフ体制の目安<small>Staffing — internal hint</small></span>
-    <div class="memo-seg segn3" data-seg="staffMode" role="group" aria-labelledby="mf-staffmode-l">${STAFFMODE_KEYS.map(v => `<button type="button" data-v="${v}" aria-pressed="false">${STAFFMODE[v].lab}</button>`).join('')}</div>
-    <p class="hint">${esc('house rules：フル/半面＋ドリンクあり→3名（ドリンク・イベント/AV・レギュラー）／お客様がドリンク・設営→1名＋社員立ち会い')}</p></div>
-  <div class="mf"><label for="mf-keep">動かさないもの<small>Don't move</small></label><input id="mf-keep" data-k="keep" maxlength="80" placeholder="例：奥の展示台、レジ横の棚"><p class="help" data-help="mapNotes"></p></div>
-</fieldset>`;
-}
-function renderRow(r, i, total){
-  return `<div class="mf-row" data-row-id="${esc(r.id)}">
-    <div class="mf-row-top">
-      <span class="mf-row-ord"><button type="button" data-act="up"${i === 0 ? ' disabled' : ''} aria-label="上へ移動">▲</button><button type="button" data-act="down"${i === total - 1 ? ' disabled' : ''} aria-label="下へ移動">▼</button></span>
-      <input class="mf-row-label" data-field="label" value="${esc(r.label)}" maxlength="24" placeholder="項目名">
-      <button type="button" class="mf-row-del" data-act="del" aria-label="この行を削除"${total <= 1 ? ' disabled' : ''}>✕</button>
-    </div>
-    <div class="mf-row-bot">
-      <input class="mf-row-time" data-field="time" value="${esc(r.time)}" maxlength="24" placeholder="--:--">
-      <input class="mf-row-note" data-field="note" value="${esc(r.note)}" maxlength="40" placeholder="担当・メモ">
-      <label class="mf-row-hi"><input type="radio" name="mf-hi" data-act="hi"${r.highlight ? ' checked' : ''}><span>退勤</span></label>
-    </div>
-  </div>`;
-}
-function renderRowsInner(){ return memo.rows.map((r, i) => renderRow(r, i, memo.rows.length)).join(''); }
-function renderTimelineFieldset(){
-  return `<fieldset class="mf-timeline"><legend>時間（タイムライン）<small>Timeline — add, remove, reorder, up to 8 rows</small></legend>
-    <div class="mf-rows" id="mf-rows">${renderRowsInner()}</div>
-    <div class="mf-rows-add"><button type="button" class="btn" id="mf-row-add"${memo.rows.length >= ROWS_MAX ? ' disabled' : ''}>＋ 行を追加<small>Add row</small></button></div>
-    <div class="mf-chips" role="group" aria-label="よく使う項目を追加">${CHIPS.map(([jp, en]) => `<button type="button" class="mf-chip" data-chip-jp="${esc(jp)}" data-chip-en="${esc(en)}">${esc(jp)}</button>`).join('')}</div>
-    <div class="mf-templates"><span class="lab">テンプレートで入れ替え<small>Replace with a template</small></span>${Object.keys(TEMPLATES).map(k => `<button type="button" class="btn" data-template="${k}">${esc(TEMPLATES[k].lab)}<small>${esc(TEMPLATES[k].en)}</small></button>`).join('')}</div>
-    <p class="hint">時刻は空欄可（印刷すると手書き用の線になります）。「18:00-18:30」「〜」のような書き方もそのまま入ります。「退勤」のラジオを選んだ行が、印刷で赤いセルになります。</p>
-  </fieldset>`;
-}
-function renderShiftsFieldset(){
-  const labels = ['シフトA', 'シフトB'];
-  return `<fieldset class="mf-shifts-fs"><legend>シフト（任意）<small>Shifts — optional, leave blank to skip</small></legend>
-    <div class="mf-shifts">${memo.shifts.map((s, i) => `
-      <div class="mf-shift" data-shift="${i}">
-        <span class="mf-shift-lab">${labels[i]}</span>
-        <div class="mf-shift-grid">
-          <input data-sf="name" value="${esc(s.name)}" maxlength="24" placeholder="名前">
-          <input data-sf="people" value="${esc(s.people)}" maxlength="12" placeholder="人数">
-          <input data-sf="tMeet" value="${esc(s.tMeet)}" maxlength="16" placeholder="集合 --:--">
-          <input data-sf="tLeave" value="${esc(s.tLeave)}" maxlength="16" placeholder="退勤 --:--">
-        </div>
-      </div>`).join('')}</div>
-  </fieldset>`;
-}
-let built = false;
-function buildForm(){
-  const f = $('#memo-form'); if (!f) return;
-  f.innerHTML = renderFieldset(FORM_EVENT) + renderTimelineFieldset() + renderNightFieldset() + renderShiftsFieldset() + renderFieldset(FORM_CLOSE);
-  f.addEventListener('input', e => {
-    const k = e.target.dataset && e.target.dataset.k; if (!k) return;
-    memo[k] = e.target.value; changed(true);
-  });
-  $$('.memo-seg[data-seg] button', f).forEach(b => b.addEventListener('click', () => {
-    const grp = b.closest('.memo-seg').dataset.seg;
-    if (grp === 'drink') memo.drink = b.dataset.v;
-    else if (grp === 'staffMode') memo.staffMode = b.dataset.v;
-    changed(false);
-  }));
-  const rowsBox = $('#mf-rows', f);
-  if (rowsBox){
-    rowsBox.addEventListener('click', e => {
-      const btn = e.target.closest('button[data-act]'); if (!btn) return;
-      const rowEl = btn.closest('.mf-row'); if (!rowEl) return;
-      const id = rowEl.dataset.rowId;
-      if (btn.dataset.act === 'up') moveRow(id, -1);
-      else if (btn.dataset.act === 'down') moveRow(id, 1);
-      else if (btn.dataset.act === 'del') removeRow(id);
-    });
-    rowsBox.addEventListener('input', e => {
-      const field = e.target.dataset.field; if (!field) return;
-      const rowEl = e.target.closest('.mf-row'); if (!rowEl) return;
-      setRowField(rowEl.dataset.rowId, field, e.target.value);
-    });
-    rowsBox.addEventListener('change', e => {
-      const rowEl = e.target.closest('.mf-row'); if (!rowEl) return;
-      const id = rowEl.dataset.rowId;
-      if (e.target.type === 'radio' && e.target.dataset.act === 'hi'){ setHighlight(id); return; }
-      if (e.target.dataset.field === 'time'){
-        const v = normTime(e.target.value);
-        if (v !== e.target.value) e.target.value = v;
-        setRowField(id, 'time', v);
-      }
-    });
-  }
-  const addBtn = $('#mf-row-add', f); if (addBtn) addBtn.addEventListener('click', addBlankRow);
-  $$('.mf-chip', f).forEach(b => b.addEventListener('click', () => addChip(b.dataset.chipJp, b.dataset.chipEn)));
-  $$('[data-template]', f).forEach(b => b.addEventListener('click', () => applyTemplate(b.dataset.template)));
-  $$('.mf-shift', f).forEach(block => {
-    const idx = +block.dataset.shift;
-    $$('input', block).forEach(inp => {
-      inp.addEventListener('input', () => setShift(idx, inp.dataset.sf, inp.value));
-      inp.addEventListener('change', () => {
-        if (inp.dataset.sf === 'tMeet' || inp.dataset.sf === 'tLeave'){
-          const v = normTime(inp.value); if (v !== inp.value){ inp.value = v; setShift(idx, inp.dataset.sf, v); }
-        }
-      });
-    });
-  });
-  built = true;
-}
-function fillForm(){
-  if (!built) return;
-  $$('#memo-form [data-k]').forEach(n => { if (n.value !== memo[n.dataset.k]) n.value = memo[n.dataset.k]; });
-  $$('#memo-form .memo-seg[data-seg="drink"] button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === memo.drink)));
-  $$('#memo-form .memo-seg[data-seg="staffMode"] button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === memo.staffMode)));
-  const rowsBox = $('#mf-rows');
-  if (rowsBox){
-    rowsBox.innerHTML = renderRowsInner();
-    const addBtn = $('#mf-row-add'); if (addBtn) addBtn.disabled = memo.rows.length >= ROWS_MAX;
-  }
-  $$('#memo-form .mf-shift').forEach(block => {
-    const idx = +block.dataset.shift, s = memo.shifts[idx]; if (!s) return;
-    $$('input', block).forEach(inp => { const v = s[inp.dataset.sf] || ''; if (inp.value !== v) inp.value = v; });
-  });
-}
-function fillHelp(){
-  if (!MAP) return;
-  let st = {}, notes = [];
-  try { st = MAP.stats() || {}; notes = (MAP.annotations() || []).map(a => a.label).filter(Boolean); } catch(e){}
-  const h1 = $('#memo-form [data-help="mapSeats"]'), h2 = $('#memo-form [data-help="mapNotes"]');
-  if (h1) h1.textContent = st.seats != null ? `${MAPNAME}：席 ${st.seats}・立ち ${st.standing || 0} 名まで` : '';
-  if (h2) h2.textContent = notes.length ? 'マップのメモ：' + notes.slice(0, 4).join('、') : '';
-}
-
-/* ---------- live preview ---------- */
-const A4W = 793.7, A4H = 1122.5; // 210 × 297 mm in CSS px
-function renderPreview(){
-  const box = $('#memo-scaler'); if (!box || $('#memo').hidden) return;
-  box.textContent = '';
-  renderSheet(box);
-  fit();
-}
-function fit(){
-  const box = $('#memo-scaler'), pv = $('#memo-prev'); if (!box || !pv) return;
-  const w = Math.max(240, (pv.clientWidth || 600) - 32);
-  const s = Math.min(1, w / A4W);
-  box.style.width = (A4W * s) + 'px'; box.style.height = (A4H * s) + 'px';
-  const sh = box.firstElementChild; if (sh) sh.style.transform = `scale(${s})`;
-}
-
-/* ---------- overlay open / close ---------- */
-let pushed = false, lastFocus = null;
-function show(){
-  const o = $('#memo'); if (!o || !o.hidden) return;
-  if (!built) buildForm();
-  lastFocus = document.activeElement;
-  o.hidden = false; document.body.classList.add('memo-open');
-  fillForm(); fillHelp(); renderPreview(); setConfirm(false);
-  setTimeout(() => { const n = $('#mf-eventName'); if (n && !memo.eventName) n.focus(); else { const b = $('#memo-back'); b && b.focus(); } }, 0);
-}
-function hide(){
-  const o = $('#memo'); if (!o || o.hidden) return;
-  flush();
-  o.hidden = true; document.body.classList.remove('memo-open', 'memo-solo-print');
-  $('#memo-copybox') && ($('#memo-copybox').hidden = true);
-  if (lastFocus && lastFocus.focus) try { lastFocus.focus(); } catch(e){}
-}
-function open(){
-  show();
-  if (location.hash !== '#memo'){ try { history.pushState(null, '', '#memo'); pushed = true; } catch(e){ pushed = false; } }
-}
-function close(){
-  hide();
-  if (location.hash === '#memo'){
-    if (pushed){ pushed = false; try { history.back(); return; } catch(e){} }
-    try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
-  }
-}
-const onHash = () => { if (location.hash === '#memo') show(); else { pushed = false; hide(); } };
-window.addEventListener('hashchange', onHash);
-window.addEventListener('popstate', onHash);
-
-function setConfirm(on){
-  const c = $('#memo-confirm'), r = $('#memo-reset'); if (!c || !r) return;
-  c.hidden = !on; r.hidden = on;
-  if (on) setTimeout(() => { const n = $('#memo-reset-no'); n && n.focus(); }, 0);
-}
-function doPrint(){
-  flush();
-  if (window.FC_PRINT && typeof window.FC_PRINT.open === 'function'){ window.FC_PRINT.open(); return; }
-  // no print module: print just this sheet, one A4 page, no margins
-  document.body.classList.add('memo-solo-print');
-  const st = document.createElement('style'); st.id = 'memo-solo-page';
-  st.textContent = '@page{size:A4 portrait;margin:0}';
-  document.head.appendChild(st);
-  const done = () => { document.body.classList.remove('memo-solo-print'); st.remove(); window.removeEventListener('afterprint', done); };
-  window.addEventListener('afterprint', done);
-  const box = $('#memo-scaler'); if (box && box.firstElementChild) box.firstElementChild.style.transform = 'none';
-  try { window.print(); } finally { setTimeout(() => { done(); fit(); }, 0); }
-}
-function copyText(){
-  const s = plainText();
-  const fallback = () => {
-    const ta = document.createElement('textarea'); ta.value = s; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0';
-    document.body.appendChild(ta); ta.select(); let ok = false;
-    try { ok = document.execCommand && document.execCommand('copy'); } catch(e){ ok = false; }
-    ta.remove();
-    if (ok){ toast('テキストをコピーしました'); return; }
-    const box = $('#memo-copybox'), t = $('#memo-copy-text'); if (!box || !t) return;
-    t.value = s; box.hidden = false; setTimeout(() => { t.focus(); t.select(); }, 0);
-  };
-  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(s).then(() => toast('テキストをコピーしました'), fallback);
-  else fallback();
-}
-
-function wire(){
-  const b = $('#btn-memo'); if (b) b.addEventListener('click', open);
-  const on = (id, fn) => { const n = $(id); if (n) n.addEventListener('click', fn); };
-  on('#memo-back', close);
-  on('#memo-print', doPrint);
-  on('#memo-copy', copyText);
-  on('#memo-reset', () => setConfirm(true));
-  on('#memo-reset-no', () => setConfirm(false));
-  on('#memo-reset-yes', () => { memo = clean({}); setConfirm(false); changed(false); toast('初期値に戻しました'); });
-  on('#memo-copy-close', () => { $('#memo-copybox').hidden = true; });
-  $$('.memo-tabs button').forEach(t => t.addEventListener('click', () => {
-    $('#memo-body').dataset.tab = t.dataset.tab;
-    $$('.memo-tabs button').forEach(x => x.setAttribute('aria-selected', String(x === t)));
-    if (t.dataset.tab === 'prev') fit();
-  }));
-  // while open, keys belong to the sheet (the map's shortcuts must not move furniture underneath)
-  window.addEventListener('keydown', e => {
-    const o = $('#memo'); if (!o || o.hidden) return;
-    const pd = document.getElementById('pd'); if (pd && !pd.hidden) return; // print dialog on top owns the keys
-    e.stopPropagation();
-    if (e.key !== 'Escape') return;
-    e.preventDefault();
-    if (!$('#memo-copybox').hidden){ $('#memo-copybox').hidden = true; return; }
-    if (!$('#memo-confirm').hidden){ setConfirm(false); return; }
-    close();
-  }, true);
-  if (window.ResizeObserver){ const pv = $('#memo-prev'); if (pv) new ResizeObserver(() => { if (!$('#memo').hidden) fit(); }).observe(pv); }
-  else window.addEventListener('resize', fit);
-}
-
-/* ---------- follow the map: one memo per layout ---------- */
-if (MAP && MAP.onChange) MAP.onChange(info => {
-  if (!info) return;
-  layoutName = info.name || '';
-  const id = info.id || 'draft';
-  if (id !== layoutId){
-    flush();
-    if (store.byLayout[id]) memo = clean(store.byLayout[id]);
-    else { store.byLayout[id] = Object.assign({}, memo); writeStore(); } // e.g. draft saved as a new layout keeps its memo
-    layoutId = id;
-    changed(false); flush();
-    return;
-  }
-  if (!$('#memo').hidden){ fillHelp(); renderPreview(); }
-});
-// another floor: save this floor's memo, then load that floor's memo store (runs before the map's onChange)
-if (MAP && MAP.onFloor) MAP.onFloor(() => {
-  flush(); readFloor(); store = readStore();
-  const cur = MAP.getLayout(); layoutId = cur.id || 'draft'; layoutName = cur.name || '';
-  memo = clean(store.byLayout[layoutId]);
-  if (!$('#memo').hidden){ fillForm(); fillHelp(); renderPreview(); }
-});
-
-window.FC_MEMO = {
-  get: () => {
-    const snap = Object.assign({}, memo);
-    snap.rows = memo.rows.map(r => Object.assign({}, r));
-    snap.shifts = memo.shifts.map(s => Object.assign({}, s));
-    // legacy convenience fields for older consumers (e.g. print.js) that read the old flat shape
-    const byId = id => { const r = memo.rows.find(x => x.id === id); return r ? r.time : ''; };
-    snap.tMeet = byId('meet'); snap.tPrep = byId('prep'); snap.tOpen = byId('open'); snap.tEnd = byId('end');
-    const hi = memo.rows.find(r => r.highlight);
-    snap.tLeave = hi ? hi.time : '';
-    return snap;
-  },
-  set: o => { memo = clean(o); changed(false); },
-  open, close, fmtDate,
-  renderSheet,
-  onChange: fn => { if (typeof fn === 'function') listeners.push(fn); },
-  plainText
-};
-wire();
-if (location.hash === '#memo') show();
-})();
-
 </script>
 
 <!-- ======================= Print composer (print.html) ======================= -->

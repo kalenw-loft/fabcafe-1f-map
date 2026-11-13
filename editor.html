@@ -256,7 +256,6 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
   .tool-group button{width:34px;height:34px}
   .zoom-read{display:none}
 }
-#btn-memo{display:none} /* staff-only; reachable from the print dialog (編集), kept out of the public toolbar */
 @media (max-width: 420px){
   .brand-sub{display:none}
   .logo-tag{width:80px}
@@ -327,7 +326,6 @@ kbd{justify-self:start;align-self:start;font-family:var(--font-mono);font-size:1
         </div>
       </div>
       <button class="btn" id="btn-sign"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h16v12H4zM12 16v5M8 21h8M12 7v4M12 13v1"/></svg><span class="lbl" data-i18n="sign">貼り紙</span></button>
-      <button class="btn" id="btn-memo"><svg class="i" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM9 11h7M9 15h7M9 7h4"/></svg><span class="lbl" data-i18n="memo">Staff sheet</span></button>
       <button class="btn primary" id="btn-print"><svg class="i" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H4v-8h16v8h-3M7 14h10v7H7z"/></svg><span class="lbl" data-i18n="print">Print</span></button>
       <div class="seg" role="group" aria-label="Language">
         <button id="lang-en" aria-pressed="true">EN</button>
@@ -566,7 +564,7 @@ const T = {
     pWork:'Workshop', pWorkSub:'ワークショップ · long-table islands, 6 seats each',
     pBreak:'Breakfast 朝会', pBreakSub:'Long-table rows, food line, standing zone',
     pEmpty:'Empty', pEmptySub:'空 · clear all movable items',
-    copyLink:'Copy layout link', copyLinkSub:'Opens this layout + staff sheet directly', linkCopied:'Layout link copied',
+    copyLink:'Copy layout link', copyLinkSub:'Opens this layout directly', linkCopied:'Layout link copied',
     copyCode:'Copy layout code', copyCodeSub:'Text a teammate can paste in', importCode:'Paste / import', importCodeSub:'From a code or a .json file',
     savePdf:'Save PDF to print', savePdfSub:'A4 portrait, with layout name and seats',
     memo:'Staff sheet', sign:'Sign', print:'Print PDF',
@@ -612,7 +610,7 @@ const T = {
     pWork:'ワークショップ', pWorkSub:'Workshop · 長テーブルの島、各6席',
     pBreak:'朝会ブレックファスト', pBreakSub:'Breakfast · 長テーブル、フード、立ちエリア',
     pEmpty:'空', pEmptySub:'Empty · 可動家具をすべて外す',
-    copyLink:'レイアウトのリンクをコピー', copyLinkSub:'開くとこの配置と当日シートが表示されます', linkCopied:'リンクをコピーしました',
+    copyLink:'レイアウトのリンクをコピー', copyLinkSub:'開くとこの配置がそのまま表示されます', linkCopied:'リンクをコピーしました',
     copyCode:'レイアウトコードをコピー', copyCodeSub:'チームに送って貼り付けてもらう', importCode:'貼り付け・読み込み', importCodeSub:'コードまたは .json ファイルから',
     savePdf:'印刷用PDFを保存', savePdfSub:'A4 縦・レイアウト名と席数入り',
     memo:'当日シート', sign:'貼り紙', print:'印刷用PDF',
@@ -881,6 +879,7 @@ function planCSS(c){
   .hit{fill:transparent;stroke:none}
   .zone-body{stroke-width:2.5px;vector-effect:non-scaling-stroke}
   .zone-pill{stroke:none}
+  .zone-lbl-top{pointer-events:none}
   .zone-lbl{fill:#231815;font-family:${c.fontDisplay};font-weight:700;letter-spacing:.02em;dominant-baseline:middle}
   .note-txt{fill:${c.fg};font-family:${c.fontDisplay};font-weight:700;text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:${c.floor};stroke-width:70px;stroke-linejoin:round}
   .sel-box{fill:none;stroke:${c.red};stroke-width:2.5px;vector-effect:non-scaling-stroke}
@@ -1072,20 +1071,28 @@ function drawShape(g, type, w, h, it){
     case 'zone': {
       const key = (it && it.color) || 'sky', col = COLORS[key], dark = DARK_COLORS[key] || col;
       el('rect', {class:'zone-body', x:-hw, y:-hh, width:w, height:h, fill:col, 'fill-opacity':.5, stroke:dark}, g);
-      if (it){
-        // a label pill, top-left of the zone box; a wrapping <g> (see updateZoneLabelSizes) keeps it
-        // readable at any zoom instead of shrinking to nothing when the plan is zoomed far out
-        const label = (it.label || t('zone')).toUpperCase();
-        const FS = 170, PAD = 55, textW = pillTextWidth(label, FS), pillW = Math.max(textW + PAD * 2, FS * 1.6), pillH = FS * 1.9;
-        const wrap = el('g', {class:'zone-lbl-wrap', 'data-x':-hw, 'data-y':-hh}, g);
-        el('rect', {class:'zone-pill', x:0, y:0, width:pillW, height:pillH, rx:6, fill:col}, wrap);
-        txt(wrap, pillW / 2, pillH / 2, label, {class:'zone-lbl', 'font-size':FS, 'text-anchor':'middle'});
-      }
+      // (the label pill is drawn later by zoneLabel(), on top of the furniture)
+      if (it && !it.id) zoneLabel(g, it, w, h, 0);
       break; }
     case 'note': {
       const fs = (it && it.fs) || 320;
       txt(g, 0, 0, (it && it.label) || t('note'), {class:'note-txt', 'font-size':fs}); break; }
   }
+}
+// zone label pill, top-left of the zone box. Drawn in its own group above the furniture so tables never
+// cover it; the font shrinks (to 120) to fit narrow zones, and dy pushes it down past a neighbour's pill.
+// The wrapping <g> (see updateZoneLabelSizes) keeps it readable when the plan is zoomed far out.
+function zonePill(it, w){
+  const label = (it.label || t('zone')).toUpperCase(), PAD = 55;
+  let FS = 210; const fit = (w - PAD * 2) / Math.max(1, pillTextWidth(label, 1));
+  if (fit < FS) FS = Math.max(120, fit);
+  return {label, FS, pillW:Math.max(pillTextWidth(label, FS) + PAD * 2, FS * 1.6), pillH:FS * 1.9};
+}
+function zoneLabel(g, it, w, h, dy){
+  const key = it.color || 'sky', col = COLORS[key], p = zonePill(it, w);
+  const wrap = el('g', {class:'zone-lbl-wrap', 'data-x':-w / 2, 'data-y':-h / 2 + (dy || 0)}, g);
+  el('rect', {class:'zone-pill', x:0, y:0, width:p.pillW, height:p.pillH, rx:6, fill:col}, wrap);
+  txt(wrap, p.pillW / 2, p.pillH / 2, p.label, {class:'zone-lbl', 'font-size':p.FS, 'text-anchor':'middle'});
 }
 function noteBox(it){ const fs = it.fs || 320; const s = it.label || t('note'); let wch = 0; for (const ch of s) wch += ch.charCodeAt(0) > 0x2e80 ? 1 : 0.58; return {w:Math.max(400, wch * fs + 120), h:fs * 1.4}; }
 
@@ -1140,6 +1147,20 @@ function render(){
     el('rect', {class:'hit', x:-s.w / 2, y:-s.h / 2, width:s.w, height:s.h}, g);
     if (clashIds.has(it.id)) el('rect', {class:'warn-box', x:-s.w / 2 - 50, y:-s.h / 2 - 50, width:s.w + 100, height:s.h + 100}, g);
     if (sel.has(it.id)) el('rect', {class:'sel-box' + (it.type === 'zone' ? ' sel-zone' : ''), x:-s.w / 2 - 60, y:-s.h / 2 - 60, width:s.w + 120, height:s.h + 120}, g);
+  });
+  // zone labels last = on top of everything; an unrotated pill that would overlap an earlier one steps down
+  const placed = [];
+  items.filter(it => it.type === 'zone').forEach(it => {
+    const s = size(it), p = zonePill(it, s.w);
+    let dy = 0;
+    if (!it.rot){
+      const box = d => ({x0:it.x - s.w / 2, y0:it.y - s.h / 2 + d, x1:it.x - s.w / 2 + p.pillW, y1:it.y - s.h / 2 + d + p.pillH});
+      const hits = b => placed.some(q => b.x0 < q.x1 && q.x0 < b.x1 && b.y0 < q.y1 && q.y0 < b.y1);
+      for (let i = 0; i < 6 && hits(box(dy)) && dy + p.pillH * 2 <= s.h; i++) dy += p.pillH + 40;
+      placed.push(box(dy));
+    }
+    const g = el('g', {class:'zone-lbl-top', 'data-id':it.id, transform:`translate(${it.x} ${it.y}) rotate(${it.rot || 0})`}, gItems);
+    zoneLabel(g, it, s.w, s.h, dy);
   });
   updateZoneLabelSizes();
   renderUI(); updateInspector(); renderZoneLegend();
@@ -1735,7 +1756,7 @@ function copyImage(){
     } else fallback();
   } catch(e){ fallback(); }
 }
-// layout link: #floor=1F&layout=<base64url of the layout code> opens that layout (and staff sheet) directly
+// layout link: #floor=1F&layout=<base64url of the layout code> opens that layout directly
 const b64u = {
   enc: s => { const b = new TextEncoder().encode(s); let x = ''; for (let i = 0; i < b.length; i += 0x8000) x += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(x).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); },
   dec: s => { const x = atob(s.replace(/-/g, '+').replace(/_/g, '/')); const b = new Uint8Array(x.length); for (let i = 0; i < x.length; i++) b[i] = x.charCodeAt(i); return new TextDecoder().decode(b); }
@@ -2148,7 +2169,7 @@ window.FC_MAP = {
   onFloor: fn => { if (typeof fn === 'function') floorListeners.push(fn); },
   switchFloor: f => switchFloor(f),
   // for scripts / AI agents: layoutCode() → text, loadCode(text) → replaces the layout, layoutLink() → shareable URL;
-  // PDFs: FC_PRINT.savePDF(['map','memo','restore']) downloads one A4 .pdf
+  // PDFs: FC_PRINT.savePDF(['map','restore']) downloads one A4 .pdf
   layoutCode: () => layoutCode(),
   loadCode: text => { $('#modal-err').textContent = ''; doImport(typeof text === 'string' ? text : JSON.stringify(text)); return !$('#modal-err').textContent; },
   layoutLink: () => layoutLink(),
